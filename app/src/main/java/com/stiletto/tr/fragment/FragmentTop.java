@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.view.text.ClickableTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,8 +25,7 @@ public class FragmentTop extends Fragment {
     static final String PAGE = "PAGE";
     String page;
 
-    @Bind(R.id.image) ImageView image;
-    @Bind(R.id.title) TextView title;
+    @Bind(R.id.item_content) ClickableTextView textView;
 
     public static FragmentTop newInstance(String page) {
         Bundle args = new Bundle();
@@ -54,8 +55,13 @@ public class FragmentTop extends Fragment {
         ButterKnife.bind(this, view);
 
         if (page != null) {
-//            image.setImageResource(page.getImage());
-            title.setText(page);
+            textView.setText(page);
+//            textView.setOnWordClickListener(new ClickableTextView.OnWordClickListener() {
+//                @Override
+//                public void onClick(String word) {
+//                    Toast.makeText(getContext(), word, Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
 
     }

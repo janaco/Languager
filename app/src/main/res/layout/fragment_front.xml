@@ -2,30 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.FragmentTop">
 
 
-    <ImageView
-        android:id="@+id/image"
+    <com.stiletto.tr.view.text.ClickableTextView
+        android:id="@+id/item_content"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_centerInParent="true"
+        android:textSize="16sp"
+        android:scrollbars="vertical"
+        android:textIsSelectable="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/seychelles" />
+        android:layout_height="match_parent" />
 
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        tools:text="Seychelles"
-        android:textSize="18sp"
-        app:typeface="roboto_thin"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white" />
 
     <View
         android:layout_width="match_parent"
@@ -33,36 +23,4 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/shadow"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal">
-
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="NORTH LAT 36"
-            app:typeface="roboto_medium"
-            android:textColor="@android:color/white" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/circle" />
-
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="EAST LNG 97"
-            app:typeface="roboto_medium"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
 </RelativeLayout>
