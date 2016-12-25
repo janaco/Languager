@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.view.text.ClickableTextView;
 
 import java.util.List;
 
@@ -29,10 +31,16 @@ public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         String content = list.get(position);
         holder.itemContent.setText(content);
+        holder.itemContent.setOnWordClickListener(new ClickableTextView.OnWordClickListener() {
+            @Override
+            public void onClick(String word) {
+                Toast.makeText(holder.itemContent.getContext(), word, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -42,12 +50,12 @@ public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.View
 
      static class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView itemContent;
+        ClickableTextView itemContent;
 
          ViewHolder(View itemView) {
             super(itemView);
 
-             itemContent = (TextView) itemView.findViewById(R.id.item_content);
+             itemContent = (ClickableTextView) itemView.findViewById(R.id.item_content);
         }
     }
 }

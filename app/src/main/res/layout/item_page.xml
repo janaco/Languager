@@ -3,11 +3,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.stiletto.tr.view.text.ClickableTextView
         android:background="@color/white"
         android:padding="10dp"
         android:layout_centerInParent="true"
         android:textSize="16sp"
+        android:scrollbars="vertical"
+        android:textIsSelectable="true"
         android:layout_width="320dp"
         android:layout_height="match_parent"
         android:id="@+id/item_content"

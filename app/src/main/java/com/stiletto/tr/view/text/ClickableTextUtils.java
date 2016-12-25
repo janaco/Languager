@@ -18,12 +18,14 @@ public class ClickableTextUtils {
 
     static {
         Character[] punctuationsCharsArray =
-                new Character[]{',', '.', ';', '!', '"', '，', '。', '！', '；', '、', '：', '“', '”','?','？'};
+                new Character[]{',', '.', ';', '!', '"', '，', '。', '！', '；',
+                        '、', '：', '“', '”', '?', '？', '-', '+', '\n', '\t', '(', ')',
+                        '[', ']', '{', '}', '/', '\\', '|'};
         punctuations = Arrays.asList(punctuationsCharsArray);
     }
 
     @NonNull
-    static List<Word> getEnglishWordIndices(String content) {
+    static List<Word> getWordIndices(String content) {
         List<Integer> separatorIndices = getSeparatorIndices(content, ' ');
         for (Character punctuation : punctuations) {
             separatorIndices.addAll(getSeparatorIndices(content, punctuation));
@@ -47,8 +49,8 @@ public class ClickableTextUtils {
     /**
      * Get every word's index array of text
      *
-     * @param word the content
-     * @param character   separate char
+     * @param word      the content
+     * @param character separate char
      * @return index array
      */
     private static List<Integer> getSeparatorIndices(String word, char character) {

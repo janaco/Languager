@@ -3,6 +3,7 @@ package com.stiletto.tr.view.text;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -12,6 +13,7 @@ import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,6 +26,17 @@ import java.util.List;
  */
 
 public class ClickableTextView extends TextView {
+
+    /**
+     * Consider each "step" between the two pointers as 200 px. In other words, the TV size will grow
+     * every 200 pixels.
+     */
+    private static final float STEP = 150;
+
+    private float ratio = 1.0f;
+    private int baseDistance;
+    private float baseRatio;
+    private boolean zoomEnabled = true;
 
     private CharSequence charSequence;
     private BufferType bufferType;
@@ -74,7 +87,7 @@ public class ClickableTextView extends TextView {
     }
 
     private void splitText() {
-        List<Word> wordInfoList = ClickableTextUtils.getEnglishWordIndices(charSequence.toString());
+        List<Word> wordInfoList = ClickableTextUtils.getWordIndices(charSequence.toString());
         for (Word wordInfo : wordInfoList) {
             spannableString.setSpan(getClickableSpan(), wordInfo.getStart(), wordInfo.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -146,6 +159,62 @@ public class ClickableTextView extends TextView {
 
     public void setHighLightColor(int color) {
         highlightColor = color;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (zoomEnabled && event.getPointerCount() == 2) {
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    setPaintFlags(getPaintFlags() | (Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG));
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    setPaintFlags(getPaintFlags() & ~(Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG));
+                    break;
+            }
+
+            int action = event.getAction();
+            int distance = getDistance(event);
+            int pureAction = action & MotionEvent.ACTION_MASK;
+            if (pureAction == MotionEvent.ACTION_POINTER_DOWN) {
+                baseDistance = distance;
+                baseRatio = ratio;
+            } else {
+                float delta = (distance - baseDistance) / STEP;
+                float multi = (float) Math.pow(2, delta);
+                ratio = Math.min(1024.0f, Math.max(0.1f, baseRatio * multi));
+                setTextSize(ratio + 13);
+            }
+            return true;
+        }
+        return super.onTouchEvent(event);
+    }
+
+
+
+    /**
+     * Returns the distance between two pointers on the screen.
+     */
+    private int getDistance(MotionEvent event) {
+        int dx = (int) (event.getX(0) - event.getX(1));
+        int dy = (int) (event.getY(0) - event.getY(1));
+        return (int) (Math.sqrt(dx * dx + dy * dy));
+    }
+
+    /**
+     * Sets the enabled state of the zoom feature.
+     */
+    public void setZoomEnabled(boolean enabled) {
+        this.zoomEnabled = enabled;
+    }
+
+    /**
+     * Returns the enabled state of the zoom feature.
+     */
+    public boolean isZoomEnabled() {
+        return zoomEnabled;
     }
 
     public interface OnWordClickListener {
