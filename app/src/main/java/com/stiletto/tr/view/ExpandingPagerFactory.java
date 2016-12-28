@@ -28,7 +28,9 @@ public class ExpandingPagerFactory {
 
     public static void setupViewPager(final ViewPager viewPager) {
         ViewGroup.LayoutParams layoutParams = viewPager.getLayoutParams();
-        layoutParams.width = ((Activity) viewPager.getContext()).getWindowManager().getDefaultDisplay().getWidth() / 7 * 5;
+        layoutParams.width =
+                ((Activity) viewPager.getContext()).getWindowManager()
+                        .getDefaultDisplay().getWidth() / 7 * 5;
         layoutParams.height = (int) ((layoutParams.width / 0.75));
 
         viewPager.setOffscreenPageLimit(2);

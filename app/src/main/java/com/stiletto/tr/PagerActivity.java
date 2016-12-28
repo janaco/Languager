@@ -8,12 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.transition.Explode;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.BookPagesAdapter;
+import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.view.ExpandingFragment;
 import com.stiletto.tr.view.ExpandingPagerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +34,15 @@ public class PagerActivity extends AppCompatActivity implements ExpandingFragmen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pager);
         ButterKnife.bind(this);
         setupWindowAnimations();
 
         BookPagesAdapter adapter = new BookPagesAdapter(getSupportFragmentManager());
-        adapter.addAll(generatePagesList());
+        adapter.addAll(splitOnPages(getBookContent()));
         viewPager.setAdapter(adapter);
 
 
@@ -75,17 +81,34 @@ public class PagerActivity extends AppCompatActivity implements ExpandingFragmen
         getWindow().setReenterTransition(slideTransition);
         getWindow().setExitTransition(slideTransition);
     }
+    private List<String> splitOnPages(String text){
+        List<String> list = new ArrayList<>();
 
-    private List<String> generatePagesList(){
-        String text = " The Google Cloud Translation API can dynamically translate text between thousands of language pairs. The Cloud Translation API lets websites and programs integrate with the translation service programmatically. The Google Translation API is part of the larger Cloud Machine Learning API family. ";
-        List<String> pages = new ArrayList<>();
-        for(int i=0;i<5;++i){
-            pages.add(text);
-            pages.add(text);
-            pages.add(text);
-            pages.add(text);
+        int range = 15*24;
+        int indexStart = 0;
+        int indexEnd = range;
+
+
+        while (text.length() > indexEnd){
+            list.add(text.substring(indexStart, indexEnd));
+            indexStart = indexEnd;
+            indexEnd += range;
         }
-        return pages;
+        list.add(text.substring(indexStart));
+
+        return list;
+    }
+
+    private String getBookContent(){
+
+        File file = new File("/storage/emulated/0/Download/451_za_Farenheitom.pdf");
+        try {
+            return PDFReader.parseAsText(file.getPath(), 1, 10);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 //    @SuppressWarnings("unchecked")
 //    private void startInfoActivity(View view, Travel travel) {

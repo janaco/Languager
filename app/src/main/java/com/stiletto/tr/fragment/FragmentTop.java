@@ -23,8 +23,7 @@ public class FragmentTop extends Fragment {
     static final String PAGE = "PAGE";
     String page;
 
-    @Bind(R.id.image) ImageView image;
-    @Bind(R.id.title) TextView title;
+    @Bind(R.id.item_content) TextView textView;
 
     public static FragmentTop newInstance(String page) {
         Bundle args = new Bundle();
@@ -54,8 +53,7 @@ public class FragmentTop extends Fragment {
         ButterKnife.bind(this, view);
 
         if (page != null) {
-//            image.setImageResource(page.getImage());
-            title.setText(page);
+            textView.setText(page);
         }
 
     }
