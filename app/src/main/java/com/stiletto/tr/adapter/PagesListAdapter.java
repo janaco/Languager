@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stiletto.tr.R;
@@ -16,11 +15,11 @@ import java.util.List;
  * Created by yana on 25.12.16.
  */
 
-public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.ViewHolder>{
+public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.ViewHolder> {
 
-    private List<String> list;
+    private List<CharSequence> list;
 
-    public PagesListAdapter(List<String> list) {
+    public PagesListAdapter(List<CharSequence> list) {
         this.list = list;
     }
 
@@ -33,7 +32,7 @@ public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        String content = list.get(position);
+        CharSequence content = list.get(position);
         holder.itemContent.setText(content);
         holder.itemContent.setOnWordClickListener(new ClickableTextView.OnWordClickListener() {
             @Override
@@ -48,14 +47,14 @@ public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.View
         return list != null ? list.size() : 0;
     }
 
-     static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ClickableTextView itemContent;
+        public final ClickableTextView itemContent;
 
-         ViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
 
-             itemContent = (ClickableTextView) itemView.findViewById(R.id.item_content);
+            itemContent = (ClickableTextView) itemView.findViewById(R.id.item_content);
         }
     }
 }
