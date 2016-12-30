@@ -29,6 +29,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.0.1'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.5.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.uncopt:android.justified:1.0'
 
     compile files('libs/epublib-core-latest.jar')
     compile files('libs/epublib-core-latest.jar')

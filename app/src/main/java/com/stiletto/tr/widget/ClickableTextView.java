@@ -1,14 +1,11 @@
-package com.stiletto.tr.view.text;
+package com.stiletto.tr.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -21,6 +18,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.text.ClickableTextUtils;
+import com.stiletto.tr.text.Word;
 import com.uncopt.android.widget.text.justify.JustifiedTextView;
 
 import java.util.List;

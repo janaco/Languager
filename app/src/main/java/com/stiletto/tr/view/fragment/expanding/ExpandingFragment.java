@@ -1,4 +1,4 @@
-package com.stiletto.tr.view;
+package com.stiletto.tr.view.fragment.expanding;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;

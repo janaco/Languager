@@ -1,4 +1,4 @@
-package com.stiletto.tr;
+package com.stiletto.tr.text.style;
 
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;

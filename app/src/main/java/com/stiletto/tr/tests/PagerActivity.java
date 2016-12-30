@@ -1,4 +1,4 @@
-package com.stiletto.tr;
+package com.stiletto.tr.tests;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -13,8 +13,8 @@ import android.view.WindowManager;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.BookPagesAdapter;
 import com.stiletto.tr.readers.PDFReader;
-import com.stiletto.tr.view.ExpandingFragment;
-import com.stiletto.tr.view.ExpandingPagerFactory;
+import com.stiletto.tr.view.fragment.expanding.ExpandingFragment;
+import com.stiletto.tr.view.fragment.expanding.ExpandingPagerFactory;
 
 import java.io.File;
 import java.io.IOException;

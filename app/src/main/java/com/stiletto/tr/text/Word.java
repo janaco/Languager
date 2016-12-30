@@ -1,4 +1,4 @@
-package com.stiletto.tr.view.text;
+package com.stiletto.tr.text;
 
 /**
  * Created by yana on 25.12.16.

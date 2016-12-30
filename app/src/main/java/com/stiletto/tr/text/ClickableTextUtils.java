@@ -1,4 +1,4 @@
-package com.stiletto.tr.view.text;
+package com.stiletto.tr.text;
 
 import android.support.annotation.NonNull;
 
@@ -25,7 +25,7 @@ public class ClickableTextUtils {
     }
 
     @NonNull
-    static List<Word> getWordIndices(String content) {
+    public static List<Word> getWordIndices(String content) {
         List<Integer> separatorIndices = getSeparatorIndices(content, ' ');
         for (Character punctuation : punctuations) {
             separatorIndices.addAll(getSeparatorIndices(content, punctuation));

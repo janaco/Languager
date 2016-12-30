@@ -1,14 +1,10 @@
-package com.stiletto.tr.view;
+package com.stiletto.tr.view.fragment.expanding;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
-import java.lang.ref.WeakReference;
 /**
  * Created by yana on 25.12.16.
  */

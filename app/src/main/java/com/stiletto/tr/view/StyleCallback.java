@@ -1,4 +1,4 @@
-package com.stiletto.tr;
+package com.stiletto.tr.view;
 
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.stiletto.tr.R;
 
 /**
  * Created by yana on 11.12.16.

@@ -1,10 +1,10 @@
-package com.stiletto.tr.fragment;
+package com.stiletto.tr.fragment.expanding;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.stiletto.tr.view.ExpandingFragment;
+import com.stiletto.tr.view.fragment.expanding.ExpandingFragment;
 
 /**
  * Created by yana on 25.12.16.

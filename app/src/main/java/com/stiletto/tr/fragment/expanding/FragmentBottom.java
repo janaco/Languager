@@ -1,4 +1,4 @@
-package com.stiletto.tr.fragment;
+package com.stiletto.tr.fragment.expanding;
 
 
 import android.os.Bundle;

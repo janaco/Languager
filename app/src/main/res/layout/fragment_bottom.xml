@@ -8,7 +8,7 @@
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp"
     android:orientation="vertical"
-    tools:context=".fragment.FragmentBottom">
+    tools:context=".fragment.expanding.FragmentBottom">
 
 
 </LinearLayout>
