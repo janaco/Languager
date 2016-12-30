@@ -13,7 +13,7 @@
         android:textIsSelectable="true"
         android:layout_width="320dp"
         android:gravity="center_vertical"
-        android:layout_height="580dp"
+        android:layout_height="match_parent"
         android:id="@+id/item_content"
         android:layout_margin="30dp" />
 </RelativeLayout>

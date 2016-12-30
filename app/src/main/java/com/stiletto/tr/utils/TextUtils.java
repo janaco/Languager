@@ -1,11 +1,9 @@
-package com.stiletto.tr.tests;
+package com.stiletto.tr.utils;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.stiletto.tr.text.style.InteractiveSpan;
@@ -18,54 +16,51 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * //        setContentView(R.layout.activity_main);
+ //
+ //        TextView textView = (TextView) findViewById(R.id.text_view);
+ //        textView.setMovementMethod(LinkMovementMethod.getInstance());
+ //        textView.setCustomSelectionActionModeCallback(new StyleCallback(textView));
+ //
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        super.onCreate(savedInstanceState);
+ //        File file = new File("/storage/emulated/0/Download/451_za_Farenheitom.pdf");
+ //        try {
+ //            String text = PDFReader.parseAsText(file.getPath(), 1, 10);
+ //            textView.setText(addClickablePart(text), TextView.BufferType.SPANNABLE);
+ //        } catch (IOException e) {
+ //            e.printStackTrace();
+ //            Log.d("IPDF", "ERROR");
+ //        }
 
-//        setContentView(R.layout.activity_main);
-//
-//        TextView textView = (TextView) findViewById(R.id.text_view);
-//        textView.setMovementMethod(LinkMovementMethod.getInstance());
-//        textView.setCustomSelectionActionModeCallback(new StyleCallback(textView));
-//
+ //        File epubFile = new File("/storage/emulated/0/Download/The Picture of Dorian Gray by Oscar Wilde.epub");
+ //
+ //        try {
+ //            InputStream epubInputStream = new FileInputStream(epubFile);
+ //            Book book = (new EpubReader()).readEpub(epubInputStream);
+ //            textView.setText(book.getTitle());
+ //            String text = EPUBReader.readContent(book.getTableOfContents().getTocReferences(), 0);
+ //            Spanned spanned = null;
+ //            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+ //                spanned = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
+ //            }else {
+ //                spanned = Html.fromHtml(text);
+ //            }
+ //            textView.setText(spanned);
+ ////            textView.setText(text);
+ ////            textView.setText(addClickablePart(text), TextView.BufferType.SPANNABLE);
+ //        } catch (IOException e) {
+ //            Log.e("epublib", e.getMessage());
+ //        }
 
-//        File file = new File("/storage/emulated/0/Download/451_za_Farenheitom.pdf");
-//        try {
-//            String text = PDFReader.parseAsText(file.getPath(), 1, 10);
-//            textView.setText(addClickablePart(text), TextView.BufferType.SPANNABLE);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Log.d("IPDF", "ERROR");
-//        }
+ * Created by yana on 30.12.16.
+ */
 
-//        File epubFile = new File("/storage/emulated/0/Download/The Picture of Dorian Gray by Oscar Wilde.epub");
-//
-//        try {
-//            InputStream epubInputStream = new FileInputStream(epubFile);
-//            Book book = (new EpubReader()).readEpub(epubInputStream);
-//            textView.setText(book.getTitle());
-//            String text = EPUBReader.readContent(book.getTableOfContents().getTocReferences(), 0);
-//            Spanned spanned = null;
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//                spanned = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
-//            }else {
-//                spanned = Html.fromHtml(text);
-//            }
-//            textView.setText(spanned);
-////            textView.setText(text);
-////            textView.setText(addClickablePart(text), TextView.BufferType.SPANNABLE);
-//        } catch (IOException e) {
-//            Log.e("epublib", e.getMessage());
-//        }
-
-    }
+public class TextUtils {
 
 
-    private SpannableStringBuilder addClickablePart(String str) {
+
+    public static SpannableStringBuilder addClickablePart(final Context context, String str) {
         SpannableStringBuilder builder = new SpannableStringBuilder(str);
 
         String[] arr = str.split(" ");
@@ -84,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View widget) {
 
                     Log.d("CLICK_STR", "onClick: " + text);
-                    Toast.makeText(MainActivity.this, text,
+                    Toast.makeText(context, text,
                             Toast.LENGTH_SHORT).show();
                 }
 
