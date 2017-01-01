@@ -1,8 +1,10 @@
 package com.stiletto.tr.pagination;
 
+import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,57 +15,67 @@ import java.util.List;
 
 public class Pagination {
 
-    private final boolean mIncludePad;
-    private final int mWidth;
-    private final int mHeight;
-    private final float mSpacingMult;
-    private final float mSpacingAdd;
-    private final CharSequence mText;
-    private final TextPaint mPaint;
-    private final List<CharSequence> mPages;
+    private final boolean includePadding;
+    private final int width;
+    private final int height;
+    private final float lineSpacingMultiplier;
+    private final float lineSpacingExtra;
+    private final CharSequence text;
+    private final TextPaint textPaint;
+    private final List<CharSequence> pages;
 
-    public Pagination(CharSequence text, int pageW, int pageH, TextPaint paint, float spacingMult, float spacingAdd, boolean inclidePad) {
-        this.mText = text;
-        this.mWidth = pageW;
-        this.mHeight = pageH;
-        this.mPaint = paint;
-        this.mSpacingMult = spacingMult;
-        this.mSpacingAdd = spacingAdd;
-        this.mIncludePad = inclidePad;
-        this.mPages = new ArrayList<CharSequence>();
+    public Pagination(CharSequence text, @NonNull TextView view){
+        this.text = text;
+        this.width = view.getWidth();
+        this.height = view.getHeight();
+        this.textPaint = view.getPaint();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            this.lineSpacingMultiplier = view.getLineSpacingMultiplier() + 0.1f;
+            this.lineSpacingExtra = view.getLineSpacingExtra();
+            this.includePadding = view.getIncludeFontPadding();
+        }else {
+            this.lineSpacingMultiplier = 0;
+            this.lineSpacingExtra = 1.1f;
+            this.includePadding = true;
+        }
+
+        this.pages = new ArrayList<>();
 
         layout();
+
     }
 
     @Override
     public String toString() {
         return "Pagination{" + "\n" +
-                "mIncludePad=" + mIncludePad + "\n" +
-                ", mWidth=" + mWidth + "\n" +
-                ", mHeight=" + mHeight + "\n" +
-                ", mSpacingMult=" + mSpacingMult + "\n" +
-                ", mSpacingAdd=" + mSpacingAdd + "\n" +
+                "includePadding=" + includePadding + "\n" +
+                ", width=" + width + "\n" +
+                ", height=" + height + "\n" +
+                ", lineSpacingMultiplier=" + lineSpacingMultiplier + "\n" +
+                ", lineSpacingExtra=" + lineSpacingExtra + "\n" +
                 '}';
     }
 
     private void layout() {
-        final StaticLayout layout = new StaticLayout(mText, mPaint, mWidth,
-                Layout.Alignment.ALIGN_NORMAL, mSpacingMult, mSpacingAdd, mIncludePad);
+        final StaticLayout layout =
+                new StaticLayout(text, textPaint, width, Layout.Alignment.ALIGN_NORMAL,
+                        lineSpacingMultiplier, lineSpacingExtra, includePadding);
 
-        final int lines = layout.getLineCount();
+        final int lineCount = layout.getLineCount();
         final CharSequence text = layout.getText();
         int startOffset = 0;
-        int height = mHeight;
+        int height = this.height;
 
-        for (int i = 0; i < lines; i++) {
+        for (int i = 0; i < lineCount; i++) {
             if (height < layout.getLineBottom(i)) {
                 // When the layout height has been exceeded
                 addPage(text.subSequence(startOffset, layout.getLineStart(i)));
                 startOffset = layout.getLineStart(i);
-                height = layout.getLineTop(i) + mHeight;
+                height = layout.getLineTop(i) + this.height;
             }
 
-            if (i == lines - 1) {
+            if (i == lineCount - 1) {
                 // Put the rest of the text into the last page
                 addPage(text.subSequence(startOffset, layout.getLineEnd(i)));
                 return;
@@ -72,18 +84,18 @@ public class Pagination {
     }
 
     private void addPage(CharSequence text) {
-        mPages.add(text);
+        pages.add(text);
     }
 
-    public int size() {
-        return mPages.size();
+    public int getPagesCount() {
+        return pages.size();
     }
 
     public CharSequence get(int index) {
-        return (index >= 0 && index < mPages.size()) ? mPages.get(index) : null;
+        return (index >= 0 && index < pages.size()) ? pages.get(index) : null;
     }
 
     public List<CharSequence> getPages() {
-        return mPages;
+        return pages;
     }
 }

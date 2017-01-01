@@ -5,9 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.widget.ClickableTextView;
 
 import java.util.List;
@@ -19,32 +21,39 @@ import java.util.List;
 public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.ViewHolder> {
 
     private List<CharSequence> list;
+    private OnListItemClickListener<CharSequence> onClickListener;
 
-    private  int width;
-    private int height;
-
-    public PagesListAdapter(List<CharSequence> list, int width, int heigth) {
+    public PagesListAdapter(List<CharSequence> list) {
         this.list = list;
-        this.width = width;
-        this.height = heigth;
     }
 
+    public void setOnListItemClick(OnListItemClickListener<CharSequence> onClickListener){
+        this.onClickListener = onClickListener;
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_page, null),
-                width, height);
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_page, null));
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        CharSequence content = list.get(position);
+        final CharSequence content = list.get(position);
         holder.itemContent.setText(content);
-        holder.itemContent.setOnWordClickListener(new ClickableTextView.OnWordClickListener() {
+//        holder.itemContent.setOnWordClickListener(new ClickableTextView.OnWordClickListener() {
+//            @Override
+//            public void onClick(String word) {
+//                Toast.makeText(holder.itemContent.getContext(), word, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+
+        holder.itemContent.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(String word) {
-                Toast.makeText(holder.itemContent.getContext(), word, Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                Log.d("LIST_", "onPageClick: " + position);
+                onClickListener.onListItemClick(content, position);
             }
         });
     }
@@ -54,16 +63,14 @@ public class PagesListAdapter extends RecyclerView.Adapter<PagesListAdapter.View
         return list != null ? list.size() : 1;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final ClickableTextView itemContent;
+        private final ClickableTextView itemContent;
 
-        public ViewHolder(View itemView, int width, int heigth) {
+        private ViewHolder(View itemView) {
             super(itemView);
 
             itemContent = (ClickableTextView) itemView.findViewById(R.id.item_content);
-            itemContent.setWidth(width);
-            itemContent.setHeight(heigth);
         }
     }
 }

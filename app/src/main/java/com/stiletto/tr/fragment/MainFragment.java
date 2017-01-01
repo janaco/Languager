@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +17,8 @@ import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.PagesListAdapter;
+import com.stiletto.tr.core.OnListItemClickListener;
+import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.utils.PDFBookParser;
 import com.stiletto.tr.view.Fragment;
@@ -76,29 +77,30 @@ public class MainFragment extends Fragment {
                 itemPage.setWidth(viewWidth);
                 itemPage.setHeight(viewHeight);
 
-                String content = PDFBookParser.getBookContent(
-                        PDFBookParser.ZA_FARENHEITOM, 1, 10);
-                int width = itemPage.getWidth();
-                int height = itemPage.getHeight();
-                TextPaint textPaint = itemPage.getPaint();
-                float lineSpacingMultiplier = itemPage.getLineSpacingMultiplier() + 0.1f;
-                float lineSpacingExtra = itemPage.getLineSpacingExtra();
-                boolean includeFontPadding = itemPage.getIncludeFontPadding();
+                String content = PDFBookParser.getBookContent(PDFBookParser.ZA_FARENHEITOM, 1, 10);
 
-                Pagination pagination = new Pagination(
-                        content, width, height, textPaint,
-                        lineSpacingMultiplier, lineSpacingExtra, includeFontPadding);
+                Pagination pagination = new Pagination(content, itemPage);
 
-
-
-                Log.d("PAGINATION", "" + pagination);
                 itemPage.setVisibility(View.GONE);
-                PagesListAdapter adapter = new PagesListAdapter(pagination.getPages(), width, height);
-                recyclerView.setAdapter(adapter);
-
+                setupPagesAdapter(pagination);
 
             }
         });
+    }
+
+    private void setupPagesAdapter(Pagination pagination) {
+
+        PagesListAdapter adapter = new PagesListAdapter(pagination.getPages());
+
+        adapter.setOnListItemClick(new OnListItemClickListener<CharSequence>() {
+            @Override
+            public void onListItemClick(CharSequence item, int position) {
+
+                Log.d("LIST_", "open page fragment");
+                NavigationManager.addFragment(getActivity(), new PageFragment());
+            }
+        });
+        recyclerView.setAdapter(adapter);
     }
 
 

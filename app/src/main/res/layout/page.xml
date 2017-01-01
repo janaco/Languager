@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tests.MainActivity"
+    tools:context=".fragment.PageFragment"
     android:background="#FFFFFF">
 
     <com.stiletto.tr.widget.ClickableTextView
-        android:id="@+id/tvContent"
+        android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="16sp"
