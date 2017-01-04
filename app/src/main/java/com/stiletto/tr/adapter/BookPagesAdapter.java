@@ -3,8 +3,8 @@ package com.stiletto.tr.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.stiletto.tr.fragment.PageExpandingFragment;
-import com.stiletto.tr.view.ExpandingViewPagerAdapter;
+import com.stiletto.tr.fragment.expanding.PageExpandingFragment;
+import com.stiletto.tr.view.fragment.expanding.ExpandingViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
