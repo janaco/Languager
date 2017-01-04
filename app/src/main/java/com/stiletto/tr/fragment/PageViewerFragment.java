@@ -16,7 +16,9 @@ import com.stiletto.tr.adapter.PagerAdapter;
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.pagination.Pagination;
+import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
+import com.stiletto.tr.readers.TxtReader;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.widget.ClickableTextView;
 
@@ -92,7 +94,7 @@ public class PageViewerFragment extends Fragment {
     }
 
 
-    private String getBookContent() {
+    private CharSequence getBookContent() {
 
         File file = new File(path);
 
@@ -104,10 +106,10 @@ public class PageViewerFragment extends Fragment {
                     return PDFReader.parseAsText(file.getPath(), 1, 20);
 
             case ".epub":
-                break;
+                return EPUBReader.parseAsText(file);
 
             case ".txt":
-                break;
+                return TxtReader.parseAsText(file);
         }
 
 

@@ -35,12 +35,6 @@ public class PDFBookParser {
 
     public static String getBookContent(String pathToBookFile, int pageToStart, int pagesCount) {
 
-        try {
             return PDFReader.parseAsText(pathToBookFile, pageToStart, pagesCount);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "";
     }
 }

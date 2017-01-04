@@ -1,5 +1,8 @@
 package com.stiletto.tr.readers;
 
+import android.text.Html;
+import android.text.Spanned;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +12,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import nl.siegmann.epublib.domain.Book;
-import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubReader;
 
@@ -18,6 +20,29 @@ import nl.siegmann.epublib.epub.EpubReader;
  */
 
 public class EPUBReader {
+
+    public static CharSequence parseAsText(File file) {
+
+        try {
+            InputStream inputStream = new FileInputStream(file);
+            Book book = (new EpubReader()).readEpub(inputStream);
+
+            String text = readContent(book.getTableOfContents().getTocReferences(), 0);
+            Spanned spanned;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                spanned = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                spanned = Html.fromHtml(text);
+            }
+
+            return spanned;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+
+    }
 
     public static String readContent(List<TOCReference> tocReferences, int depth) {
         if (tocReferences == null) {
@@ -31,7 +56,7 @@ public class EPUBReader {
             for (int i = 0; i < depth; i++) {
                 builder.append("\t");
             }
-            builder.append(tocReference.getTitle());
+//            builder.append(tocReference.getTitle());
 //            tocString.append(tocReference.getTitle());
 //            RowData row = new RowData();
 //            row.setTitle(tocString.toString());
@@ -67,7 +92,6 @@ public class EPUBReader {
 
         return sb.toString();
     }
-
 
 
 }
