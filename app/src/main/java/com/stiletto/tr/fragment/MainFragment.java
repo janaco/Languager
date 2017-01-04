@@ -97,7 +97,7 @@ public class MainFragment extends Fragment {
             public void onListItemClick(CharSequence item, int position) {
 
                 Log.d("LIST_", "open page fragment");
-                NavigationManager.addFragment(getActivity(), new PageFragment());
+//                NavigationManager.addFragment(getActivity(), PageFragment.newInstance(PageFragment.RIGHT));
             }
         });
         recyclerView.setAdapter(adapter);
