@@ -11,14 +11,19 @@ import java.io.IOException;
 
 public class PDFReader {
 
-    public static String parseAsText(String filePath, int pageToStart, int pagesCount) throws IOException {
+    public static String parseAsText(String filePath, int pageToStart, int pagesCount) {
 
-        PdfReader reader = new PdfReader(filePath);
         StringBuilder stringBuilder = new StringBuilder();
-        for (int page = pageToStart; page <= pageToStart + pagesCount; page++) {
 
-            stringBuilder.append(PdfTextExtractor.getTextFromPage(reader, page));
+        try {
+            PdfReader reader = new PdfReader(filePath);
+            for (int page = pageToStart; page <= pageToStart + pagesCount; page++) {
+                stringBuilder.append(PdfTextExtractor.getTextFromPage(reader, page));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return stringBuilder.toString();
-    }}
+    }
+}

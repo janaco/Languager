@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.view.ViewTreeObserver;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.PagerAdapter;
+import com.stiletto.tr.emums.FileType;
+import com.stiletto.tr.model.Book;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.view.Fragment;
@@ -36,6 +39,23 @@ public class PageViewerFragment extends Fragment {
 
     private PagerAdapter pagerAdapter;
     private Pagination pagination;
+    private String path;
+
+    public static PageViewerFragment create(Book book){
+
+        PageViewerFragment fragment = new PageViewerFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putString("path", book.getPath());
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        path = getArguments().getString("path");
+    }
 
     @Nullable
     @Override
@@ -74,12 +94,22 @@ public class PageViewerFragment extends Fragment {
 
     private String getBookContent() {
 
-        File file = new File("/storage/emulated/0/Download/451_za_Farenheitom.pdf");
-        try {
-            return PDFReader.parseAsText(file.getPath(), 1, 10);
-        } catch (IOException e) {
-            e.printStackTrace();
+        File file = new File(path);
+
+        String extension = file.getName().substring(file.getName().indexOf(".")).toLowerCase();
+
+        switch (extension){
+
+            case ".pdf":
+                    return PDFReader.parseAsText(file.getPath(), 1, 20);
+
+            case ".epub":
+                break;
+
+            case ".txt":
+                break;
         }
+
 
         return "";
     }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".fragment.viewer.PDFViewPagerFragment">
+    tools:context=".fragment.PageViewerFragment">
 
     <com.stiletto.tr.widget.ClickableTextView
         android:id="@+id/item_content"

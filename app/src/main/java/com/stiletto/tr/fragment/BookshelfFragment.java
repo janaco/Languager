@@ -11,13 +11,11 @@ import android.widget.GridView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.BooksAdapter;
 import com.stiletto.tr.core.OnListItemClickListener;
-import com.stiletto.tr.fragment.viewer.PDFViewPagerFragment;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.utils.FileSeeker;
 import com.stiletto.tr.view.Fragment;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;
@@ -41,11 +39,7 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-
-        Log.d("BookshelfFragment", "gv: " + gridView);
-
         List<Book> bookList = FileSeeker.getBooks();
-        Log.d("BookshelfFragment", "bookList: " + bookList.size());
         BooksAdapter adapter = new BooksAdapter(getContext(), bookList);
         adapter.setOnItemClickListener(this);
         gridView.setAdapter(adapter);
@@ -57,10 +51,8 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
     }
 
     private void openBook(Book book) {
-//        NavigationManager.addFragment(getActivity(), PageFragment.newInstance(PageFragment.RIGHT));
 
-        NavigationManager.addFragment(getActivity(),
-               new PageViewerFragment());
+        NavigationManager.addFragment(getActivity(), PageViewerFragment.create(book));
 
     }
 }
