@@ -1,5 +1,7 @@
 package com.stiletto.tr.readers;
 
+import android.util.Log;
+
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
@@ -11,13 +13,17 @@ import java.io.IOException;
 
 public class PDFReader {
 
-    public static String parseAsText(String filePath, int pageToStart, int pagesCount) {
+    public static String parseAsText(String filePath) {
 
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
             PdfReader reader = new PdfReader(filePath);
-            for (int page = pageToStart; page <= pageToStart + pagesCount; page++) {
+
+            int pages = reader.getNumberOfPages();
+            for (int page = 1; page <= reader.getNumberOfPages(); page++) {
+
+                Log.d("PDF_", "page: " + page + "     of " + pages);
                 stringBuilder.append(PdfTextExtractor.getTextFromPage(reader, page));
             }
         } catch (IOException e) {

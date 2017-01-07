@@ -90,6 +90,41 @@ public class PageViewerFragment extends Fragment {
 
         pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                int visibleItemCount = recyclerView.getChildCount();
+//                int totalItemCount = mLinearLayoutManager.getItemCount();
+//                int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+//
+//                if (loading) {
+//
+//                    if (totalItemCount > previousTotal) {
+//                        loading = false;
+//                        previousTotal = totalItemCount;
+//                    }
+//                }
+//
+//                int visibleThreshold = 30;
+//                if (!loading && (totalItemCount - visibleItemCount)
+//                        <= (firstVisibleItem + visibleThreshold)) {
+//
+//                    onLoadMore(totalItemCount);
+//
+//                    loading = true;
+//                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.d("PageChangeListener", "onPageSelected:\nposition: " + position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
 
     }
 
@@ -103,7 +138,7 @@ public class PageViewerFragment extends Fragment {
         switch (extension){
 
             case ".pdf":
-                    return PDFReader.parseAsText(file.getPath(), 1, 20);
+                    return PDFReader.parseAsText(file.getPath());
 
             case ".epub":
                 return EPUBReader.parseAsText(file);

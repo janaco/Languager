@@ -77,7 +77,7 @@ public class MainFragment extends Fragment {
                 itemPage.setWidth(viewWidth);
                 itemPage.setHeight(viewHeight);
 
-                String content = PDFBookParser.getBookContent(PDFBookParser.ZA_FARENHEITOM, 1, 10);
+                String content = PDFBookParser.getBookContent(PDFBookParser.ZA_FARENHEITOM);
 
                 Pagination pagination = new Pagination(content, itemPage);
 
