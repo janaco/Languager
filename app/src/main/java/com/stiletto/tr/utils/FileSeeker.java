@@ -27,9 +27,7 @@ public class FileSeeker {
 
         for (StorageInfo storageInfo : storageList) {
 
-            Log.d("STORAGE_", "path: " + storageInfo.getPath());
             File file = new File(storageInfo.getPath());
-            Log.d("STORAGE_", "isDirectory: " + file.isDirectory());
 
             if (file.isDirectory()) {
                 textFilesSet.addAll(listDir(file));
@@ -43,7 +41,7 @@ public class FileSeeker {
     }
 
 
-    public static List<Book> listDir(File directory) {
+    private static List<Book> listDir(File directory) {
 
         List<Book> textFilesSet = new ArrayList<>();
 
@@ -51,10 +49,8 @@ public class FileSeeker {
         for (File file : directory.listFiles()) {
 
             if (file.isDirectory()) {
-                Log.d("STORAGE_", "directory: " + directory.getPath());
                 textFilesSet.addAll(listDir(file));
             } else if (isTextFile(file) && file.length() > MIN_LENGTH) {
-                Log.d("STORAGE_", "file: " + file.getPath());
                 textFilesSet.add(new Book(file.getPath(), file.getName(), file.length()));
             }
         }
@@ -62,21 +58,6 @@ public class FileSeeker {
         return textFilesSet;
     }
 
-    private static Collection<? extends File> searchForTextFiles(File directory) {
-
-        File[] files = directory.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return isTextFile(file);
-            }
-        });
-
-        List<File> textFiles = new ArrayList<>();
-        if (files != null) {
-            Collections.addAll(textFiles, files);
-        }
-        return textFiles;
-    }
 
     private static boolean isTextFile(File file) {
 

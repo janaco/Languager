@@ -6,7 +6,7 @@ package com.stiletto.tr.emums;
 
 public enum FileType {
 
-    PDF(".pdf"), EPUB(".epub"), TXT(".txt");
+    PDF(".pdf"), EPUB(".epub"), TXT(".txt"), UNKNOWN("unknown");
 
     private String extension;
 
@@ -17,5 +17,25 @@ public enum FileType {
 
     public String getExtension() {
         return extension;
+    }
+
+    public static FileType getType(String  extension){
+
+        switch (extension.replace(" ", "")){
+
+            case ".pdf":
+                return PDF;
+
+            case ".epub":
+                return EPUB;
+
+            case ".txt":
+                return TXT;
+
+            default:
+                return UNKNOWN;
+        }
+
+
     }
 }

@@ -29,6 +29,7 @@ public class BooksAdapter extends BaseAdapter {
     public BooksAdapter(Context context, List<Book> bookList) {
         this.bookList = bookList;
         Collections.sort(this.bookList);
+        Log.d("BOOKS_", "" + this.bookList);
         lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -57,6 +58,7 @@ public class BooksAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.itemName = (TextView) view.findViewById(R.id.item_name);
             holder.itemCover = (ImageView) view.findViewById(R.id.item_cover);
+            holder.itemExtension = (TextView) view.findViewById(R.id.item_extension);
 
             view.setTag(holder);
         } else {
@@ -64,20 +66,27 @@ public class BooksAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        final Book book = getItem(index);
-        holder.itemName.setText(book.getName());
+        bindView(view, holder, index);
+        return view;
+
+    }
+
+    private void bindView(View view, ViewHolder holder, final int position) {
+        final Book book = getItem(position);
+        holder.itemName.setText(book.getName().length() > 30 ? book.getName().substring(0, 30).concat("...") : book.getName() );
+        holder.itemExtension.setText(book.getFileType().name().toUpperCase());
+
+        if (book.hasCover()){
+            holder.itemCover.setImageBitmap(book.getCover());
+        }
 
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onItemClickListener.onListItemClick(book, index);
+                onItemClickListener.onListItemClick(book, position);
             }
         });
-
-        Log.d("BOOK_", "name: " + book.getName() + ", size: " + book.getSize());
-
-        return view;
 
     }
 
@@ -91,8 +100,10 @@ public class BooksAdapter extends BaseAdapter {
         }
     }
 
-    public class ViewHolder {
-        public TextView itemName;
-        public ImageView itemCover;
+    class ViewHolder {
+        TextView itemName;
+        TextView itemExtension;
+
+        ImageView itemCover;
     }
 }

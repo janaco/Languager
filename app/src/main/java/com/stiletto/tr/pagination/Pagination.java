@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Pagination {
     private final TextPaint textPaint;
     private final List<CharSequence> pages;
 
-    public Pagination(CharSequence text, @NonNull TextView view){
+    public Pagination(CharSequence text, @NonNull TextView view) {
         this.text = text;
         this.width = view.getWidth();
         this.height = view.getHeight();
@@ -34,7 +35,7 @@ public class Pagination {
             this.lineSpacingMultiplier = view.getLineSpacingMultiplier() + 0.1f;
             this.lineSpacingExtra = view.getLineSpacingExtra();
             this.includePadding = view.getIncludeFontPadding();
-        }else {
+        } else {
             this.lineSpacingMultiplier = 0;
             this.lineSpacingExtra = 1.1f;
             this.includePadding = true;

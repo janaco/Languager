@@ -1,7 +1,10 @@
 package com.stiletto.tr.readers;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,14 +15,38 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.domain.MediaType;
+import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubReader;
+import nl.siegmann.epublib.service.MediatypeService;
 
 /**
  * Created by yana on 25.12.16.
  */
 
 public class EPUBReader {
+
+    public static Bitmap getCover(String filePath) {
+
+
+        try {
+            InputStream inputStream = new FileInputStream(filePath);
+            Book book = (new EpubReader()).readEpub(inputStream);
+
+
+            if (book.getCoverImage() != null){
+                return BitmapFactory.decodeStream(book.getCoverImage().getInputStream());
+            }else if (book.getCoverPage() != null){
+                return BitmapFactory.decodeStream(book.getCoverPage().getInputStream());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public static CharSequence parseAsText(File file) {
 

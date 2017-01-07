@@ -37,8 +37,6 @@ public class PageViewerFragment extends Fragment {
     ViewPager viewPager;
     @Bind(R.id.item_content)
     ClickableTextView itemBookPage;
-    @Bind(R.id.button)
-    Button button;
 
     private boolean isFullScreen = false;
 
@@ -85,13 +83,6 @@ public class PageViewerFragment extends Fragment {
                     itemBookPage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
                 setUpPages();
-            }
-        });
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setDecorViewState();
             }
         });
 

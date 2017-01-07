@@ -13,6 +13,19 @@ import java.io.IOException;
 
 public class PDFReader {
 
+    public static String getPage(String filePath, String  fileName, int pageNumber) {
+
+        try {
+            PdfReader reader = new PdfReader(filePath);
+            return PdfTextExtractor.getTextFromPage(reader, pageNumber);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fileName;
+
+    }
+
     public static String parseAsText(String filePath) {
 
         StringBuilder stringBuilder = new StringBuilder();
