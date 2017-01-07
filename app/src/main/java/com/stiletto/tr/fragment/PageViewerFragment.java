@@ -1,5 +1,6 @@
 package com.stiletto.tr.fragment;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.PagerAdapter;
@@ -26,6 +27,7 @@ import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.github.yuweiguocn.lib.squareloading.SquareLoading;
 
 /**
  * Created by yana on 04.01.17.
@@ -37,6 +39,10 @@ public class PageViewerFragment extends Fragment {
     ViewPager viewPager;
     @Bind(R.id.item_content)
     ClickableTextView itemBookPage;
+    @Bind(R.id.item_progress)
+    SquareLoading progressBar;
+    @Bind(R.id.item_alert)
+    TextView itemAlert;
 
     private boolean isFullScreen = false;
 
@@ -88,25 +94,26 @@ public class PageViewerFragment extends Fragment {
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        final View decorView = getActivity().getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(
-                new View.OnSystemUiVisibilityChangeListener() {
-                    @Override
-                    public void onSystemUiVisibilityChange(int i) {
-                        int height = decorView.getHeight();
-                    }
-                });
-    }
-
 
     private void setUpPages() {
-        pagination = new Pagination(getBookContent(), itemBookPage);
 
-        pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
-        viewPager.setAdapter(pagerAdapter);
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                pagination = new Pagination(getBookContent(), itemBookPage);
+                pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                progressBar.setVisibility(View.GONE);
+                itemAlert.setVisibility(View.GONE);
+                viewPager.setAdapter(pagerAdapter);
+            }
+        }.execute();
 
     }
 
