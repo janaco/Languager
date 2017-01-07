@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.PagerAdapter;
-import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.EPUBReader;
@@ -23,7 +23,6 @@ import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.widget.ClickableTextView;
 
 import java.io.File;
-import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,12 +37,16 @@ public class PageViewerFragment extends Fragment {
     ViewPager viewPager;
     @Bind(R.id.item_content)
     ClickableTextView itemBookPage;
+    @Bind(R.id.button)
+    Button button;
+
+    private boolean isFullScreen = false;
 
     private PagerAdapter pagerAdapter;
     private Pagination pagination;
     private String path;
 
-    public static PageViewerFragment create(Book book){
+    public static PageViewerFragment create(Book book) {
 
         PageViewerFragment fragment = new PageViewerFragment();
 
@@ -57,17 +60,20 @@ public class PageViewerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         path = getArguments().getString("path");
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_viewer, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
+        setDecorViewState();
 
         itemBookPage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -82,6 +88,26 @@ public class PageViewerFragment extends Fragment {
             }
         });
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDecorViewState();
+            }
+        });
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final View decorView = getActivity().getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(
+                new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int i) {
+                        int height = decorView.getHeight();
+                    }
+                });
     }
 
 
@@ -90,41 +116,6 @@ public class PageViewerFragment extends Fragment {
 
         pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                int visibleItemCount = recyclerView.getChildCount();
-//                int totalItemCount = mLinearLayoutManager.getItemCount();
-//                int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
-//
-//                if (loading) {
-//
-//                    if (totalItemCount > previousTotal) {
-//                        loading = false;
-//                        previousTotal = totalItemCount;
-//                    }
-//                }
-//
-//                int visibleThreshold = 30;
-//                if (!loading && (totalItemCount - visibleItemCount)
-//                        <= (firstVisibleItem + visibleThreshold)) {
-//
-//                    onLoadMore(totalItemCount);
-//
-//                    loading = true;
-//                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.d("PageChangeListener", "onPageSelected:\nposition: " + position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
 
     }
 
@@ -135,10 +126,10 @@ public class PageViewerFragment extends Fragment {
 
         String extension = file.getName().substring(file.getName().indexOf(".")).toLowerCase();
 
-        switch (extension){
+        switch (extension) {
 
             case ".pdf":
-                    return PDFReader.parseAsText(file.getPath());
+                return PDFReader.parseAsText(file.getPath());
 
             case ".epub":
                 return EPUBReader.parseAsText(file);
@@ -149,5 +140,58 @@ public class PageViewerFragment extends Fragment {
 
 
         return "";
+    }
+
+    /**
+     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+     */
+    public void setDecorViewState() {
+        View decorView = getActivity().getWindow().getDecorView();
+        int newUiOptions = decorView.getSystemUiVisibility();
+
+        if (!isFullScreen) {
+            isFullScreen = true;
+            Log.d("DECOR_VIEW", "hide");
+            if (Build.VERSION.SDK_INT > 18) {
+
+                newUiOptions ^=
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            } else if (Build.VERSION.SDK_INT >= 16) {
+
+                newUiOptions ^= View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+            } else if (Build.VERSION.SDK_INT >= 14) {
+                newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            }
+
+            decorView.setSystemUiVisibility(newUiOptions);
+        } else {
+            Log.d("DECOR_VIEW", "show");
+            isFullScreen = false;
+
+            getActivity().getWindow().clearFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
+            if (Build.VERSION.SDK_INT >= 16) {
+                getActivity().getWindow().clearFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            }
+
+            if (Build.VERSION.SDK_INT >= 19) {
+
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
+            }
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//            ActivitiesCurrentContentView.requestLayout();
+
+//            getView().requestLayout();
+
+
+        }
+
     }
 }
