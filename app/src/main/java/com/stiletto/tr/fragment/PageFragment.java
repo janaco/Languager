@@ -2,16 +2,22 @@ package com.stiletto.tr.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.adapter.DictionaryAdapter;
+import com.stiletto.tr.adapter.TranslationsAdapter;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translation;
 import com.stiletto.tr.translator.yandex.Translator;
+import com.stiletto.tr.translator.yandex.model.Dictionary;
 import com.stiletto.tr.utils.TextUtils;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
@@ -59,7 +65,7 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.page, container, false);
+        view = inflater.inflate(R.layout.page, container, false);
         ButterKnife.bind(this, view);
         textView.setOnWordClickListener(this);
         return view;
@@ -82,22 +88,36 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     @Override
     public void onClick(final String word) {
 
-        start();
+        lookup(word);
 
     }
 
-    public void start() {
+    public void showPopup(String origin, Dictionary dictionary) {
         final PopupFragment mScalingActivityAnimator =
                 new PopupFragment(
                         getActivity(), view, R.layout.pop_view);
         View popView = mScalingActivityAnimator.showPopup();
-        Button mButtonBack = (Button) popView.findViewById(R.id.btn_cancel);
-        mButtonBack.setOnClickListener(new View.OnClickListener() {
+        popView.findViewById(R.id.item_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mScalingActivityAnimator.hidePopup();
             }
         });
+
+        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
+        textOrigin.setText(origin);
+
+        RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+//        TranslationsAdapter translationsAdapter = new TranslationsAdapter(dictionary.getDictionary()[0].getTranslations());
+//        recyclerView.setAdapter(translationsAdapter);
+
+        DictionaryAdapter adapter = new DictionaryAdapter(getContext(), dictionary.getDictionary());
+        recyclerView.setAdapter(adapter);
+
 
     }
 
@@ -116,6 +136,30 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
             @Override
             public void onFailure(Call<Translation> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    private void lookup(final String word) {
+        Log.d("DICTIONARY_", "lookup: " + word);
+
+        Translator.getDictionary(word, Language.ENGLISH, Language.UKRAINIAN, new Callback<Dictionary>() {
+            @Override
+            public void onResponse(Call<Dictionary> call, Response<Dictionary> response) {
+                Log.d("DICTIONARY_", "onResponse: " + response.code() + ", " + response.message());
+
+                if (response.isSuccessful()) {
+                    String res = response.body().toString();
+                    Log.d("DICTIONARY_", "orgin: " + word + "\n" + res);
+                    showPopup(word, response.body());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Dictionary> call, Throwable t) {
 
             }
         });
