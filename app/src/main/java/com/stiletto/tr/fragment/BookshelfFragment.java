@@ -39,12 +39,13 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
     @Bind(R.id.item_alert)
     TextView itemAlert;
 
+    private View view;
     private BooksAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_bookshelf, container, false);
+         view =  inflater.inflate(R.layout.fragment_bookshelf, container, false);
         ButterKnife.bind(this, view);
         itemAlert.setText(getString(R.string.scan_files));
         buttonLoad.setOnClickListener(this);
