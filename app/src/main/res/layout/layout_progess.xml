@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_centerInParent="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <io.github.yuweiguocn.lib.squareloading.SquareLoading
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:squareColor="@color/grey_600"
+        android:id="@+id/item_progress"
+        android:layout_centerInParent="true"
+        app:squareSize="12dp"
+        app:squareCorner="2dp"
+        app:dividerSize="2dp"
+        app:xCount="4"
+        app:yCount="3"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/item_alert"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_progress"
+        android:textSize="@dimen/text_14"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:text="@string/loading"
+        />
+
+</RelativeLayout>

@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
     android:background="@color/grey_600"
     android:orientation="vertical">
-
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridView"
@@ -17,10 +17,50 @@
         android:horizontalSpacing="10dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
+        android:visibility="gone"
         android:verticalSpacing="10dp"
         tools:listitem="@layout/item_book" >
 
     </GridView>
 
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="20dp"
+        android:id="@+id/button_load"
+        android:clickable="true"
+        android:visibility="gone"
+        android:src="@drawable/book_plus" />
+
+    <io.github.yuweiguocn.lib.squareloading.SquareLoading
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:squareColor="@color/white"
+        android:id="@+id/item_progress"
+        android:layout_centerInParent="true"
+        app:squareSize="12dp"
+        app:squareCorner="2dp"
+        app:dividerSize="2dp"
+        app:xCount="4"
+        app:yCount="3"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/item_alert"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_progress"
+        android:textSize="@dimen/text_14"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:text="@string/loading"
+        />
 
 </RelativeLayout>

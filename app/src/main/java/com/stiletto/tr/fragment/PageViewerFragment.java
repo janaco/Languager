@@ -3,6 +3,8 @@ package com.stiletto.tr.fragment;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
@@ -97,6 +99,11 @@ public class PageViewerFragment extends Fragment {
 
     private void setUpPages() {
 
+        if (path.endsWith(".pdf")){
+            parsePdf(new File(path));
+            return;
+        }
+
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -112,6 +119,52 @@ public class PageViewerFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
                 itemAlert.setVisibility(View.GONE);
                 viewPager.setAdapter(pagerAdapter);
+            }
+        }.execute();
+
+    }
+
+    private void parsePdf(final File file) {
+
+        final Handler handler = new Handler(){
+
+            @Override
+            public void handleMessage(Message msg) {
+
+                progressBar.setVisibility(View.GONE);
+                itemAlert.setVisibility(View.GONE);
+                viewPager.setAdapter(pagerAdapter);
+
+                Log.d("PAGES_", "handler: " + pagerAdapter.getCount());
+            }
+        };
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                pagination = new Pagination(PDFReader.parseAsText(file.getPath(), 1, 10),itemBookPage);
+                pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
+
+                handler.sendEmptyMessage(1);
+
+
+                pagination = new Pagination(PDFReader.parseAsText(file.getPath()),itemBookPage);
+                pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                progressBar.setVisibility(View.GONE);
+                itemAlert.setVisibility(View.GONE);
+                int currentPage = viewPager.getCurrentItem();
+                Log.d("PAGES_", "full: " + pagerAdapter.getCount());
+                viewPager.setAdapter(pagerAdapter);
+                viewPager.setCurrentItem(currentPage, false);
+
             }
         }.execute();
 
