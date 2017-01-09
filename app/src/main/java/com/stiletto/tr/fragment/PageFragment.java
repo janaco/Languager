@@ -9,11 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
-import com.stiletto.tr.adapter.TranslationsAdapter;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translation;
 import com.stiletto.tr.translator.yandex.Translator;
@@ -44,6 +42,10 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     public static final String ARG_CONTENT = "content";
     private int pageNumber;
     private CharSequence content;
+
+    private View popView;
+    private PopupFragment popupFragment;
+
 
     public static PageFragment create(int pageNumber, CharSequence content) {
         PageFragment fragment = new PageFragment();
@@ -88,37 +90,38 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     @Override
     public void onClick(final String word) {
 
+        showPopup();
+        setPopupTitle(word);
+        translate(word);
         lookup(word);
 
     }
 
-    public void showPopup(String origin, Dictionary dictionary) {
-        final PopupFragment mScalingActivityAnimator =
-                new PopupFragment(
-                        getActivity(), view, R.layout.pop_view);
-        View popView = mScalingActivityAnimator.showPopup();
+    public void showPopup() {
+        popupFragment = new PopupFragment(getActivity(), view, R.layout.pop_view);
+        popView = popupFragment.showPopup();
         popView.findViewById(R.id.item_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mScalingActivityAnimator.hidePopup();
+                popupFragment.hidePopup();
             }
         });
 
-        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
-        textOrigin.setText(origin);
+    }
 
+    private void setPopupTitle(String title) {
+        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
+        textOrigin.setText(title);
+    }
+
+    private void setUpDictionary(Dictionary dictionary) {
         RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-//        TranslationsAdapter translationsAdapter = new TranslationsAdapter(dictionary.getDictionary()[0].getTranslations());
-//        recyclerView.setAdapter(translationsAdapter);
-
         DictionaryAdapter adapter = new DictionaryAdapter(getContext(), dictionary.getDictionary());
         recyclerView.setAdapter(adapter);
-
-
     }
 
 
@@ -129,7 +132,12 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
                 if (response.isSuccessful()) {
                     String res = response.body().getTranslationAsString();
-                    Toast.makeText(getContext(), word + ": " + res, Toast.LENGTH_SHORT).show();
+
+                    if (popView == null) {
+                        showPopup();
+                    }
+
+                    setPopupTitle(word + " - " + res);
 
                 }
             }
@@ -153,7 +161,10 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
                 if (response.isSuccessful()) {
                     String res = response.body().toString();
                     Log.d("DICTIONARY_", "orgin: " + word + "\n" + res);
-                    showPopup(word, response.body());
+                    if (popView == null) {
+                        showPopup();
+                    }
+                    setUpDictionary(response.body());
 
                 }
             }

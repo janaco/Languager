@@ -104,7 +104,9 @@ public class ClickableTextView extends JustifiedTextView {
         }
         int hIndex = charSequence.toString().indexOf(highlightText);
         while (hIndex != -1) {
-            spannableString.setSpan(new ForegroundColorSpan(highlightColor), hIndex, hIndex + highlightText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(
+                    new ForegroundColorSpan(highlightColor),
+                    hIndex, hIndex + highlightText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             hIndex += highlightText.length();
             hIndex = charSequence.toString().indexOf(highlightText, hIndex);
         }
