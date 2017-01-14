@@ -80,6 +80,8 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
         view = inflater.inflate(R.layout.page, container, false);
         ButterKnife.bind(this, view);
 
+        popupFragment = new PopupFragment(getActivity(), view, R.layout.pop_view);
+
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setCustomSelectionActionModeCallback(new StyleCallback(textView, this));
         textView.setZoomEnabled(false);
@@ -116,8 +118,9 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     }
 
     public void showPopup() {
-        popupFragment = new PopupFragment(getActivity(), view, R.layout.pop_view);
-        popView = popupFragment.showPopup();
+        if ( !popupFragment.isShowing()) {
+            popView = popupFragment.showPopup();
+        }
         popView.findViewById(R.id.item_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

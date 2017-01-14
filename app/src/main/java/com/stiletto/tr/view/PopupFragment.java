@@ -35,8 +35,12 @@ public class PopupFragment {
         popHeight = screenHeight / 2;
     }
 
+    public boolean isShowing() {
+        return popupView != null && popupWindow != null && popupWindow.isShowing();
+    }
+
     public View showPopup() {
-        startAnim();
+            startAnim();
         return popupView;
     }
 
