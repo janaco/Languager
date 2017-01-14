@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
@@ -29,13 +31,14 @@ import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.yuweiguocn.lib.squareloading.SquareLoading;
 
 /**
  * Created by yana on 04.01.17.
  */
 
-public class PageViewerFragment extends Fragment {
+public class PageViewerFragment extends Fragment implements ViewPager.OnPageChangeListener{
 
     @Bind(R.id.pager)
     ViewPager viewPager;
@@ -45,6 +48,14 @@ public class PageViewerFragment extends Fragment {
     SquareLoading progressBar;
     @Bind(R.id.item_alert)
     TextView itemAlert;
+    @Bind(R.id.item_position)
+    TextView itemPageNumber;
+    @Bind(R.id.item_prev)
+    ImageView itemToPrevPage;
+    @Bind(R.id.item_next)
+    ImageView itemToNextPage;
+    @Bind(R.id.layout_page_control)
+    RelativeLayout layoutPageControll;
 
     private boolean isFullScreen = false;
 
@@ -73,12 +84,14 @@ public class PageViewerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_viewer, container, false);
+        View view =  inflater.inflate(R.layout.fragment_viewer, container, false);
+        ButterKnife.bind(this, view);
+        viewPager.addOnPageChangeListener(this);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
         setDecorViewState();
 
         itemBookPage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -93,8 +106,8 @@ public class PageViewerFragment extends Fragment {
                 setUpPages();
             }
         });
-
     }
+
 
 
     private void setUpPages() {
@@ -118,6 +131,7 @@ public class PageViewerFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 progressBar.setVisibility(View.GONE);
                 itemAlert.setVisibility(View.GONE);
+                layoutPageControll.setVisibility(View.VISIBLE);
                 viewPager.setAdapter(pagerAdapter);
             }
         }.execute();
@@ -131,11 +145,10 @@ public class PageViewerFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
 
+                layoutPageControll.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 itemAlert.setVisibility(View.GONE);
                 viewPager.setAdapter(pagerAdapter);
-
-                Log.d("PAGES_", "handler: " + pagerAdapter.getCount());
             }
         };
 
@@ -159,9 +172,9 @@ public class PageViewerFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 progressBar.setVisibility(View.GONE);
+                layoutPageControll.setVisibility(View.VISIBLE);
                 itemAlert.setVisibility(View.GONE);
                 int currentPage = viewPager.getCurrentItem();
-                Log.d("PAGES_", "full: " + pagerAdapter.getCount());
                 viewPager.setAdapter(pagerAdapter);
                 viewPager.setCurrentItem(currentPage, false);
 
@@ -244,5 +257,50 @@ public class PageViewerFragment extends Fragment {
 
         }
 
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+        if (position < 1){
+            itemToPrevPage.setVisibility(View.GONE);
+            itemToNextPage.setVisibility(View.VISIBLE);
+        }else if (position == viewPager.getAdapter().getCount()){
+            itemToNextPage.setVisibility(View.GONE);
+            itemToPrevPage.setVisibility(View.VISIBLE);
+        }else {
+            itemToPrevPage.setVisibility(View.VISIBLE);
+            itemToNextPage.setVisibility(View.VISIBLE);
+        }
+
+        itemPageNumber.setText(String.valueOf(position + 1));
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @OnClick(R.id.item_prev)
+    void toPrevPage(){
+        int currentPage = viewPager.getCurrentItem();
+        if (currentPage >=1) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+        }
+    }
+
+
+    @OnClick(R.id.item_next)
+    void toNextPage(){
+
+        int currentPage = viewPager.getCurrentItem();
+        if (currentPage < viewPager.getAdapter().getCount()) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+        }
     }
 }

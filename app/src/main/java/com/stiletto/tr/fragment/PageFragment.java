@@ -46,8 +46,6 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     @Bind(R.id.item_content)
     ClickableTextView textView;
 
-    private View view;
-
     public static final String ARG_PAGE = "page";
     public static final String ARG_CONTENT = "content";
     private int pageNumber;
@@ -77,7 +75,7 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.page, container, false);
+        View view = inflater.inflate(R.layout.page, container, false);
         ButterKnife.bind(this, view);
 
         popupFragment = new PopupFragment(getActivity(), view, R.layout.pop_view);

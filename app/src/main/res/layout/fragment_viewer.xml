@@ -3,20 +3,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
+    android:clickable="true"
     tools:context=".fragment.PageViewerFragment">
 
     <com.stiletto.tr.widget.ClickableTextView
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="24dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="30dp"
         android:textColor="#000000"
         android:textSize="16sp" />
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_page_control"/>
+
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/layout_page_control"
+        android:visibility="gone"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/item_prev"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_toLeftOf="@+id/item_position"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrow_left"/>
+
+
+        <TextView
+            android:id="@+id/item_position"
+            android:textSize="@dimen/text_18"
+            android:text="1"
+            android:textColor="@color/colorSecondaryText"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:typeface="serif"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/item_next"
+            android:layout_toRightOf="@+id/item_position"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_right"/>
+
+
+    </RelativeLayout>
 
     <include layout="@layout/layout_progess" />
 
