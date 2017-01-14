@@ -24,22 +24,22 @@ import retrofit2.http.QueryMap;
 
 public class Translator {
 
-    public static void translate(String textToTranslate, Language languageFrom, Language languageTo, Callback<Translation> callback) {
+    public static void translate(CharSequence textToTranslate, Language languageFrom, Language languageTo, Callback<Translation> callback) {
 
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_TRANSLATOR_KEY);
         map.put("lang", languageFrom.toString() + "-" + languageTo.toString());
-        map.put("text", textToTranslate);
+        map.put("text", textToTranslate.toString());
         Call<Translation> call = getService(Api.TRANSLATOR_URL).translate(map);
         call.enqueue(callback);
     }
 
-    public static void getDictionary(String textToTranslate, Language languageFrom,
+    public static void getDictionary(CharSequence textToTranslate, Language languageFrom,
                                      Language languageTo, Callback<Dictionary> callback) {
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_DICTIONARY_KEY);
         map.put("lang", languageFrom.toString() + "-" + languageTo.toString());
-        map.put("text", textToTranslate);
+        map.put("text", textToTranslate.toString());
         Call<Dictionary> call = getService(Api.DICTIONARY_URL).lookup(map);
         Log.d("DICTIONARY_", "call: " + call.request().url().toString() );
 

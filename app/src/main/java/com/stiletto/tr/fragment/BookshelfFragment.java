@@ -15,6 +15,7 @@ import com.stiletto.tr.adapter.BooksAdapter;
 import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
+import com.stiletto.tr.test.TestFragment;
 import com.stiletto.tr.utils.FileSeeker;
 import com.stiletto.tr.view.Fragment;
 
@@ -22,13 +23,14 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.yuweiguocn.lib.squareloading.SquareLoading;
 
 /**
  * Created by yana on 02.01.17.
  */
 
-public class BookshelfFragment extends Fragment implements OnListItemClickListener<Book>, View.OnClickListener {
+public class BookshelfFragment extends Fragment implements OnListItemClickListener<Book> {
 
     @Bind(R.id.gridView)
     GridView gridView;
@@ -48,7 +50,6 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
          view =  inflater.inflate(R.layout.fragment_bookshelf, container, false);
         ButterKnife.bind(this, view);
         itemAlert.setText(getString(R.string.scan_files));
-        buttonLoad.setOnClickListener(this);
 
         return view;
     }
@@ -93,14 +94,9 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-            case R.id.button_load:
-                break;
-        }
-
+    @OnClick(R.id.button_load)
+    void addNewBook(){
+        NavigationManager.addFragment(getActivity(), new TestFragment());
     }
+
 }

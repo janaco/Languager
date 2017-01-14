@@ -3,9 +3,14 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/amber_dark</item>
+        <item name="colorPrimary">@color/amber_primary</item>
+        <item name="colorAccent">@color/grey_accent</item>
+        <item name="android:textColorPrimary">@color/grey_primary</item>
+        <item name="android:textColor">@color/grey_primary</item>
+        <item name="android:startColor">@color/amber_dark</item>
+        <item name="android:colorBackground">@color/amber_dark</item>
+
     </style>
 
     <style name="showScalingAnimation" parent="android:Animation">

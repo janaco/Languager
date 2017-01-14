@@ -23,5 +23,11 @@ public class Word {
         return end;
     }
 
-
+    @Override
+    public String toString() {
+        return "Word{" +
+                "start=" + start +
+                ", end=" + end +
+                '}';
+    }
 }

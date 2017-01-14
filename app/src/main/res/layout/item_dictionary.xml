@@ -27,7 +27,7 @@
             android:paddingEnd="5dp"
             android:paddingTop="5dp"
             android:paddingBottom="1dp"
-            android:textColor="@color/grey_900"
+            android:textColor="@color/colorText"
             android:textSize="@dimen/text_18"/>
 
 

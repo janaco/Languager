@@ -63,7 +63,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
 
         text.setSpan(new RelativeSizeSpan(0.85f), originText.length(), originText.length() + transcryption.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.MONOSPACE.getStyle()), originText.length(), originText.length() + transcryption.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.blue_grey_400)),
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorSecondaryText)),
                 originText.length(), originText.length() + transcryption.length(),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         text.setSpan(new RelativeSizeSpan(0.5f), text.length() - type.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

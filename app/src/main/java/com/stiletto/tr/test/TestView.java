@@ -1,7 +1,8 @@
-package com.stiletto.tr.widget;
+package com.stiletto.tr.test;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
@@ -10,11 +11,13 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -22,15 +25,16 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.text.ClickableTextUtils;
 import com.stiletto.tr.text.Word;
+import com.stiletto.tr.widget.ClickableTextView;
 import com.uncopt.android.widget.text.justify.JustifiedTextView;
 
 import java.util.List;
 
 /**
- * Created by yana on 25.12.16.
+ * Created by yana on 10.01.17.
  */
 
-public class ClickableTextView extends JustifiedTextView {
+public class TestView extends JustifiedTextView {
 
     private static final float STEP = 150;
 
@@ -42,7 +46,7 @@ public class ClickableTextView extends JustifiedTextView {
     private CharSequence charSequence;
     private BufferType bufferType;
 
-    private OnWordClickListener onWordClickListener;
+    private ClickableTextView.OnWordClickListener onWordClickListener;
     private SpannableString spannableString;
 
     private ForegroundColorSpan foregroundColorSpan;
@@ -51,24 +55,19 @@ public class ClickableTextView extends JustifiedTextView {
     private int highlightColor;
     private String highlightText;
 
-    public ClickableTextView(Context context) {
+    public TestView(Context context) {
         this(context, null);
-        highlightColor = ContextCompat.getColor(context, R.color.colorPrimary);
-
     }
 
-    public ClickableTextView(Context context, AttributeSet attrs) {
+    public TestView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ClickableTextView);
-        highlightColor = typedArray.getColor(R.styleable.ClickableTextView_highlightColor,
-                ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
-    public ClickableTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TestView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ClickableTextView);
         highlightColor = typedArray.getColor(R.styleable.ClickableTextView_highlightColor,
-                ContextCompat.getColor(context, R.color.colorPrimary));
+                ContextCompat.getColor(context, R.color.colorPrimaryDark));
         highlightText = typedArray.getString(R.styleable.ClickableTextView_highlightText);
         typedArray.recycle();
     }
@@ -82,7 +81,7 @@ public class ClickableTextView extends JustifiedTextView {
     public void setText(CharSequence text, BufferType type) {
         this.charSequence = text;
         bufferType = type;
-        setHighlightColor(highlightColor);
+        setHighlightColor(Color.TRANSPARENT);
         setMovementMethod(LinkMovementMethod.getInstance());
         setText();
     }
@@ -92,12 +91,14 @@ public class ClickableTextView extends JustifiedTextView {
         setHighLightSpan(spannableString);
         splitText();
         super.setText(spannableString, bufferType);
+
     }
 
     private void splitText() {
         List<Word> wordInfoList = ClickableTextUtils.getWordIndices(charSequence.toString());
         for (Word wordInfo : wordInfoList) {
             spannableString.setSpan(getClickableSpan(), wordInfo.getStart(), wordInfo.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         }
     }
 
@@ -121,20 +122,19 @@ public class ClickableTextView extends JustifiedTextView {
             foregroundColorSpan = new ForegroundColorSpan(
                     ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
             characterStyle = new StyleSpan(Typeface.BOLD);
-
         } else {
             spannableString.removeSpan(foregroundColorSpan);
             spannableString.removeSpan(characterStyle);
         }
         spannableString.setSpan(foregroundColorSpan, indexStart, indexEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(characterStyle, indexStart, indexEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ClickableTextView.super.setText(spannableString, bufferType);
+        TestView.super.setText(spannableString, bufferType);
     }
 
     public void dismissSelected() {
         spannableString.removeSpan(foregroundColorSpan);
         spannableString.removeSpan(characterStyle);
-        ClickableTextView.super.setText(spannableString, bufferType);
+        TestView.super.setText(spannableString, bufferType);
     }
 
     private ClickableSpan getClickableSpan() {
@@ -202,6 +202,7 @@ public class ClickableTextView extends JustifiedTextView {
         }
         return super.onTouchEvent(event);
     }
+
 
 
     /**

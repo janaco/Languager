@@ -28,7 +28,7 @@
                 android:layout_height="110dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/grey_600"
+                android:background="@color/amber_dark"
                 android:src="@drawable/book" />
 
 
@@ -65,7 +65,7 @@
             android:maxLines="2"
             android:minLines="2"
             android:text="Author - \'Book name\'"
-            android:textColor="@color/green_900"
+            android:textColor="@color/colorText"
             android:textSize="@dimen/text_14" />
 
 

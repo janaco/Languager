@@ -110,7 +110,7 @@ public class PageViewerFragment extends Fragment {
             protected Void doInBackground(Void... voids) {
 
                 pagination = new Pagination(getBookContent(), itemBookPage);
-                pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
+                pagerAdapter = new PagerAdapter(getChildFragmentManager(), pagination);
                 return null;
             }
 

@@ -9,6 +9,6 @@
         android:textSize="@dimen/text_12"
         android:id="@+id/item_text"
         android:padding="5dp"
-        android:textColor="@color/blue_grey_900"
+        android:textColor="@color/colorText"
         />
 </LinearLayout>

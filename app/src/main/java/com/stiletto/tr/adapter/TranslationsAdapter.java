@@ -61,7 +61,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
         int indexTo = translated.length() + origin.length();
         text.setSpan(new StyleSpan(Typeface.MONOSPACE.getStyle()), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.itemTranslation.getContext(),
-                R.color.blue_grey_400)), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                R.color.colorSecondaryText)), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         indexFrom = translated.length() + origin.length();
         indexTo = indexFrom + type.length();
