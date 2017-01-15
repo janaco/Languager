@@ -32,12 +32,12 @@ public class Pagination {
         this.textPaint = view.getPaint();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            this.lineSpacingMultiplier = view.getLineSpacingMultiplier() + 0.1f;
+            this.lineSpacingMultiplier = view.getLineSpacingMultiplier() + 0.14f;
             this.lineSpacingExtra = view.getLineSpacingExtra();
             this.includePadding = view.getIncludeFontPadding();
         } else {
-            this.lineSpacingMultiplier = 0;
-            this.lineSpacingExtra = 1.1f;
+            this.lineSpacingMultiplier = 1.14f;
+            this.lineSpacingExtra = 0f;
             this.includePadding = true;
         }
 
@@ -67,13 +67,19 @@ public class Pagination {
         final CharSequence text = layout.getText();
         int startOffset = 0;
         int height = this.height;
+        Log.d("PAGINATION_", "\nthis.height: " +this.height);
 
         for (int i = 0; i < lineCount; i++) {
             if (height < layout.getLineBottom(i)) {
                 // When the layout height has been exceeded
-                addPage(text.subSequence(startOffset, layout.getLineStart(i)));
+                Log.d("PAGINATION_", "\n ");
+                Log.d("PAGINATION_", "addPage\nstartOffset: " +startOffset + ", lineStart: " + layout.getLineStart(i));
+                CharSequence t = text.subSequence(startOffset, layout.getLineStart(i));
+                addPage(t);
+                Log.d("PAGINATION_", "text\nlength: " +t.length() );
                 startOffset = layout.getLineStart(i);
                 height = layout.getLineTop(i) + this.height;
+                Log.d("PAGINATION_", "\nlineTop: " +layout.getLineTop(i)  + ", height: " + height);
             }
 
             if (i == lineCount - 1) {

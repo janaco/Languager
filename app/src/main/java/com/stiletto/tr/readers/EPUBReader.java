@@ -83,12 +83,6 @@ public class EPUBReader {
             for (int i = 0; i < depth; i++) {
                 builder.append("\t");
             }
-//            builder.append(tocReference.getTitle());
-//            tocString.append(tocReference.getTitle());
-//            RowData row = new RowData();
-//            row.setTitle(tocString.toString());
-//            row.setResource(tocReference.getResource());
-//            contentDetails.add(row);
             try {
                 builder.append(Reader.readInputStream(tocReference.getResource().getInputStream()));
             } catch (IOException e) {
@@ -98,26 +92,6 @@ public class EPUBReader {
         }
 
         return builder.toString();
-    }
-
-    public String readEpub(File epubFile) throws IOException {
-        InputStream epubInputStream = new FileInputStream(epubFile);
-        Book book = (new EpubReader()).readEpub(epubInputStream);
-
-        InputStream is =
-                book.getSpine().getSpineReferences()
-                        .get(0).getResource().getInputStream();
-
-        BufferedReader reader = new BufferedReader(new
-                InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line + "\n");
-        }
-        is.close();
-
-        return sb.toString();
     }
 
 

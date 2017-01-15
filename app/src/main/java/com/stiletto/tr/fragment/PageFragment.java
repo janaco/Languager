@@ -1,17 +1,10 @@
 package com.stiletto.tr.fragment;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +17,6 @@ import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translation;
 import com.stiletto.tr.translator.yandex.Translator;
 import com.stiletto.tr.translator.yandex.model.Dictionary;
-import com.stiletto.tr.utils.TextUtils;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
@@ -32,7 +24,6 @@ import com.stiletto.tr.widget.ClickableTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,10 +100,10 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     }
 
     private void onTranslate(CharSequence text){
-        showPopup();
-        setPopupTitle(text);
-        translate(text);
-        lookup(text);
+//        showPopup();
+//        setPopupTitle(text);
+//        translate(text);
+//        lookup(text);
     }
 
     public void showPopup() {

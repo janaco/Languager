@@ -144,12 +144,18 @@ public class ClickableTextView extends JustifiedTextView {
                 TextView tv = (TextView) widget;
                 int indexStart = tv.getSelectionStart();
                 int indexEnd = tv.getSelectionEnd();
-                String word = tv.getText()
-                        .subSequence(indexStart, indexEnd).toString();
-                setSelectedSpan(indexStart, indexEnd);
 
-                if (onWordClickListener != null) {
-                    onWordClickListener.onClick(word);
+                try {
+
+                    String word = tv.getText()
+                            .subSequence(indexStart, indexEnd).toString();
+                    setSelectedSpan(indexStart, indexEnd);
+
+                    if (onWordClickListener != null) {
+                        onWordClickListener.onClick(word);
+                    }
+                }catch (StringIndexOutOfBoundsException e){
+                    e.printStackTrace();
                 }
             }
 

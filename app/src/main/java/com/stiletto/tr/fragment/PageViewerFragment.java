@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.PagerAdapter;
 import com.stiletto.tr.model.Book;
+import com.stiletto.tr.pagination.PageSplitter;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
@@ -38,7 +40,7 @@ import io.github.yuweiguocn.lib.squareloading.SquareLoading;
  * Created by yana on 04.01.17.
  */
 
-public class PageViewerFragment extends Fragment implements ViewPager.OnPageChangeListener{
+public class PageViewerFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
@@ -84,7 +86,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view =  inflater.inflate(R.layout.fragment_viewer, container, false);
+        View view = inflater.inflate(R.layout.fragment_viewer, container, false);
         ButterKnife.bind(this, view);
         viewPager.addOnPageChangeListener(this);
         return view;
@@ -103,16 +105,16 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
                 } else {
                     itemBookPage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
+
                 setUpPages();
             }
         });
     }
 
 
-
     private void setUpPages() {
 
-        if (path.endsWith(".pdf")){
+        if (path.endsWith(".pdf")) {
             parsePdf(new File(path));
             return;
         }
@@ -140,7 +142,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
 
     private void parsePdf(final File file) {
 
-        final Handler handler = new Handler(){
+        final Handler handler = new Handler() {
 
             @Override
             public void handleMessage(Message msg) {
@@ -162,8 +164,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
 
                 handler.sendEmptyMessage(1);
 
-
-                pagination = new Pagination(PDFReader.parseAsText(file.getPath()),itemBookPage);
+                pagination = new Pagination(PDFReader.parseAsText(file.getPath()), itemBookPage);
                 pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
 
                 return null;
@@ -267,13 +268,13 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     @Override
     public void onPageSelected(int position) {
 
-        if (position < 1){
+        if (position < 1) {
             itemToPrevPage.setVisibility(View.GONE);
             itemToNextPage.setVisibility(View.VISIBLE);
-        }else if (position == viewPager.getAdapter().getCount()){
+        } else if (position == viewPager.getAdapter().getCount()) {
             itemToNextPage.setVisibility(View.GONE);
             itemToPrevPage.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             itemToPrevPage.setVisibility(View.VISIBLE);
             itemToNextPage.setVisibility(View.VISIBLE);
         }
@@ -287,16 +288,16 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     }
 
     @OnClick(R.id.item_prev)
-    void toPrevPage(){
+    void toPrevPage() {
         int currentPage = viewPager.getCurrentItem();
-        if (currentPage >=1) {
+        if (currentPage >= 1) {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
         }
     }
 
 
     @OnClick(R.id.item_next)
-    void toNextPage(){
+    void toNextPage() {
 
         int currentPage = viewPager.getCurrentItem();
         if (currentPage < viewPager.getAdapter().getCount()) {

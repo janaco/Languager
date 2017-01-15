@@ -9,12 +9,18 @@
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="16sp"
-        android:textColor="#000000"
+        android:scrollbars="vertical"
         android:gravity="center_vertical"
         android:typeface="serif"
-        android:textIsSelectable="true"
-        android:layout_margin="24dp"/>
+        android:layout_centerInParent="true"
+        android:textIsSelectable="false"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="30dp"
+        android:textSize="16sp" />
 
 
 </RelativeLayout>
