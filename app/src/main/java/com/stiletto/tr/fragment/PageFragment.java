@@ -100,10 +100,12 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     }
 
     private void onTranslate(CharSequence text){
-//        showPopup();
-//        setPopupTitle(text);
-//        translate(text);
-//        lookup(text);
+        showPopup();
+        setPopupTitle(text);
+        translate(text);
+        if (text.toString().split(" ").length < 3) {
+            lookup(text);
+        }
     }
 
     public void showPopup() {
