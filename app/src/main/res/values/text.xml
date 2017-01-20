@@ -7,4 +7,7 @@
     <string name="translate">Translate</string>
     <string name="highlight">Highlight</string>
 
+    <string name="in_what_language_book_is_written">The book is written in</string>
+    <string name="in_what_language_book_should_be_translated">And I want to translate it in</string>
+    <string name="during_reading">during reading</string>
 </resources>

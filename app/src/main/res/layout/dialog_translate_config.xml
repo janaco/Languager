@@ -22,7 +22,12 @@
     
     <TextView
         android:layout_width="match_parent"
-        android:text="What is "
+        android:text="@string/in_what_language_book_is_written"
+        android:layout_height="wrap_content" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/in_what_language_book_should_be_translated"
         android:layout_height="wrap_content" />
 
 
