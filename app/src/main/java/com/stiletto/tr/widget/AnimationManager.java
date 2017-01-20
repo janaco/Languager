@@ -10,7 +10,6 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static com.stiletto.tr.widget.BoomEnum.LINE;
 
 /**
  * Created by yana on 20.01.17.
@@ -120,23 +119,6 @@ public class AnimationManager {
             case DEFAULT:
                 for (int i = 0; i < size; i++) indexes.add(i);
                 break;
-            case REVERSE:
-                for (int i = 0; i < size; i++) indexes.add(size - i - 1);
-                break;
-            case RANDOM:
-                boolean[] used = new boolean[size];
-                for (int i = 0; i < used.length; i++) used[i] = false;
-                int count = 0;
-                Random random = new Random();
-                while (count < size) {
-                    int r = random.nextInt(size);
-                    if (!used[r]) {
-                        used[r] = true;
-                        indexes.add(r);
-                        count++;
-                    }
-                }
-                break;
         }
         return indexes;
     }
@@ -148,7 +130,6 @@ public class AnimationManager {
                                        Point endPosition,
                                        float[] xs,
                                        float[] ys) {
-        if (startPosition.x == endPosition.x) boomEnum = LINE;
 
         float x1 = startPosition.x;
         float y1 = startPosition.y;
@@ -156,70 +137,9 @@ public class AnimationManager {
         float y2 = endPosition.y;
         float p = 1.0f / frames;
         float xOffset = x2 - x1;
-        float yOffset = y2 - y1;
         float x3, y3, a, b, c;
 
         switch (boomEnum) {
-            case LINE:
-                for (int i = 0; i < xs.length; i++)
-                {
-                    float offset = i * p;
-                    xs[i] = x1 + offset * xOffset;
-                    ys[i] = y1 + offset * yOffset;
-                }
-                break;
-            case PARABOLA_1:
-                x3 = (x1 + x2) / 2.0f;
-                y3 = Math.min(y1, y2) * 3.0f / 4;
-                a = (y1 * (x2 - x3) + y2 * (x3 - x1) + y3 * (x1 - x2)) / (x1 * x1 * (x2 - x3) + x2 * x2 * (x3 - x1) + x3 * x3 * (x1 - x2));
-                b = (y1 - y2) / (x1 - x2) - a * (x1 + x2);
-                c = y1 - (x1 * x1) * a - x1 * b;
-                for (int i = 0; i < xs.length; i++)
-                {
-                    float offset = i * p;
-                    xs[i] = x1 + offset * xOffset;
-                    ys[i] = a * xs[i] * xs[i] + b * xs[i] + c;
-                }
-                break;
-            case PARABOLA_2:
-                x3 = (x1 + x2) / 2.0f;
-                y3 = (parentSize.y + Math.max(y1, y2)) / 2.0f;
-                a = (y1 * (x2 - x3) + y2 * (x3 - x1) + y3 * (x1 - x2)) / (x1 * x1 * (x2 - x3) + x2 * x2 * (x3 - x1) + x3 * x3 * (x1 - x2));
-                b = (y1 - y2) / (x1 - x2) - a * (x1 + x2);
-                c = y1 - (x1 * x1) * a - x1 * b;
-                for (int i = 0; i < xs.length; i++)
-                {
-                    float offset = i * p;
-                    xs[i] = x1 + offset * xOffset;
-                    ys[i] = a * xs[i] * xs[i] + b * xs[i] + c;
-                }
-                break;
-            case PARABOLA_3:
-                y3 = (y1 + y2) / 2.0f;
-                x3 = Math.min(x1, x2) / 2.0f;
-                a = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / (y1 * y1 * (y2 - y3) + y2 * y2 * (y3 - y1) + y3 * y3 * (y1 - y2));
-                b = (x1 - x2) / (y1 - y2) - a * (y1 + y2);
-                c = x1 - (y1 * y1) * a - y1 * b;
-                for (int i = 0; i < xs.length; i++)
-                {
-                    float offset = i * p;
-                    ys[i] = y1 + offset * yOffset;
-                    xs[i] = a * ys[i] * ys[i] + b * ys[i] + c;
-                }
-                break;
-            case PARABOLA_4:
-                y3 = (y1 + y2) / 2.0f;
-                x3 = (parentSize.x + Math.max(x1, x2)) / 2.0f;
-                a = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / (y1 * y1 * (y2 - y3) + y2 * y2 * (y3 - y1) + y3 * y3 * (y1 - y2));
-                b = (x1 - x2) / (y1 - y2) - a * (y1 + y2);
-                c = x1 - (y1 * y1) * a - y1 * b;
-                for (int i = 0; i < xs.length; i++)
-                {
-                    float offset = i * p;
-                    ys[i] = y1 + offset * yOffset;
-                    xs[i] = a * ys[i] * ys[i] + b * ys[i] + c;
-                }
-                break;
             case HORIZONTAL_THROW_1:
                 x3 = x2 * 2 - x1;
                 y3 = y1;
@@ -272,7 +192,6 @@ public class AnimationManager {
                                        Point endPosition,
                                        float[] xs,
                                        float[] ys) {
-        if (startPosition.x == endPosition.x) boomEnum = LINE;
 
         float x1 = startPosition.x;
         float y1 = startPosition.y;
@@ -280,15 +199,9 @@ public class AnimationManager {
         float y2 = endPosition.y;
         float p = 1.0f / frames;
         float xOffset = x2 - x1;
-        float yOffset = y2 - y1;
         float x3, y3, a, b, c;
 
         switch (boomEnum) {
-            case LINE:
-            case PARABOLA_1:
-            case PARABOLA_2:
-            case PARABOLA_3:
-            case PARABOLA_4:
             case RANDOM:
             case Unknown:
                 calculateShowXY(

@@ -316,13 +316,11 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         ExceptionManager.judge(piecePlaceEnum, buttonPlaceEnum, buttonEnum, boomEnum, boomButtonBuilders);
         removePieces();
         createPieces();
-        placeShareLinesView();
         placePieces();
         placePiecesAtPositions();
         // We have to calculate the start positions again when BMB is used in list-view.
         // So we don't need to calculate them here.
         if (!inFragment) calculateStartPositions();
-        setShareLinesViewData();
     }
 
     private void removePieces() {
@@ -344,11 +342,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void placePieces() {
-        ArrayList<Integer> indexes;
-        if (piecePlaceEnum == PiecePlaceEnum.Share)
-            indexes = AnimationManager.getOrderIndex(OrderEnum.DEFAULT, pieces.size());
-        else
-            indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
+        ArrayList<Integer>
+                indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
         // Reverse to keep the former pieces are above than the latter(z-axis)
         // So the early-animating pieces are above than the later ones
         for (int i = indexes.size() - 1; i >= 0; i--) button.addView(pieces.get(indexes.get(i)));
@@ -358,45 +353,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         int pieceNumber = pieceNumber();
         int w, h;
         switch (piecePlaceEnum) {
-            case DOT_1:
-            case DOT_2_1:
-            case DOT_2_2:
-            case DOT_3_1:
-            case DOT_3_2:
-            case DOT_3_3:
-            case DOT_3_4:
-            case DOT_4_1:
-            case DOT_4_2:
-            case DOT_5_1:
-            case DOT_5_2:
-            case DOT_5_3:
-            case DOT_5_4:
-            case DOT_6_1:
-            case DOT_6_2:
-            case DOT_6_3:
-            case DOT_6_4:
-            case DOT_6_5:
-            case DOT_6_6:
-            case DOT_7_1:
-            case DOT_7_2:
-            case DOT_7_3:
-            case DOT_7_4:
-            case DOT_7_5:
-            case DOT_7_6:
-            case DOT_8_1:
-            case DOT_8_2:
-            case DOT_8_3:
-            case DOT_8_4:
-            case DOT_8_5:
-            case DOT_8_6:
-            case DOT_8_7:
-            case DOT_9_1:
-            case DOT_9_2:
-            case DOT_9_3:
-            case Share:
-                w = 2 * dotRadius;
-                h = 2 * dotRadius;
-                break;
             case HAM_1:
             case HAM_2:
             case HAM_3:
@@ -426,7 +382,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
                 hamHeight,
                 pieceVerticalMargin);
 
-}
+    }
 
     //endregion
 
@@ -511,15 +467,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
                 },
                 Color.TRANSPARENT,
                 dimColor);
-        if (piecePlaceEnum == PiecePlaceEnum.Share) {
-            AnimationManager.animate(
-                    shareLinesView,
-                    "showProcess",
-                    0,
-                    immediately ? 1 : showDuration + showDelay * (pieces.size() - 1),
-                    Ease.getInstance(EaseEnum.Linear),
-                    0f, 1f);
-        }
     }
 
     private void lightBackground(boolean immediately) {
@@ -541,25 +488,14 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
                 },
                 dimColor,
                 Color.TRANSPARENT);
-        if (piecePlaceEnum == PiecePlaceEnum.Share) {
-            AnimationManager.animate(
-                    shareLinesView,
-                    "hideProcess",
-                    0,
-                    immediately ? 1 : hideDuration + hideDelay * (pieces.size() - 1),
-                    Ease.getInstance(EaseEnum.Linear),
-                    0f, 1f);
-        }
+
     }
 
     private void startShowAnimations(boolean immediately) {
         if (background != null) background.removeAllViews();
         calculateEndPositions();
-        ArrayList<Integer> indexes;
-        if (piecePlaceEnum == PiecePlaceEnum.Share)
-            indexes = AnimationManager.getOrderIndex(OrderEnum.DEFAULT, pieces.size());
-        else
-            indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
+        ArrayList<Integer>
+                indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
         // Reverse to keep the former boom-buttons are above than the latter(z-axis)
         // So the early-animating boom-buttons are above than the later ones
         for (int i = indexes.size() - 1; i >= 0; i--) {
@@ -580,11 +516,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void startHideAnimations(boolean immediately) {
-        ArrayList<Integer> indexes;
-        if (piecePlaceEnum == PiecePlaceEnum.Share)
-            indexes = AnimationManager.getOrderIndex(OrderEnum.REVERSE, pieces.size());
-        else
-            indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
+        ArrayList<Integer>
+                indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
         for (Integer index : indexes) boomButtons.get(index).bringToFront();
         for (int i = 0; i < indexes.size(); i++) {
             int index = indexes.get(i);
@@ -874,8 +807,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private int pieceNumber() {
-        if (piecePlaceEnum == PiecePlaceEnum.Share) return boomButtonBuilders.size();
-        else return piecePlaceEnum.pieceNumber();
+         return piecePlaceEnum.pieceNumber();
     }
 
     //endregion
@@ -887,28 +819,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         if (autoHide) reboom();
     }
 
-    private void placeShareLinesView() {
-        if (piecePlaceEnum == PiecePlaceEnum.Share) {
-            shareLinesView = new ShareLinesView(context);
-            shareLinesView.setLine1Color(shareLine1Color);
-            shareLinesView.setLine2Color(shareLine2Color);
-            shareLinesView.setLineWidth(shareLineWidth);
-            button.addView(shareLinesView);
-            shareLinesView.place(0, 0, button.getWidth(), button.getHeight());
-        }
-    }
-
-    private void setShareLinesViewData() {
-        if (piecePlaceEnum == PiecePlaceEnum.Share) {
-            shareLinesView.setData(
-                    piecePositions,
-                    dotRadius,
-                    showDuration,
-                    showDelay,
-                    hideDuration,
-                    hideDelay);
-        }
-    }
 
     private void ___________________________5_Builders_and_Buttons() {
     }
@@ -1460,7 +1370,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
      */
     public void setShowDuration(long showDuration) {
         this.showDuration = showDuration;
-        setShareLinesViewData();
     }
 
     public long getShowDelay() {
@@ -1474,7 +1383,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
      */
     public void setShowDelay(long showDelay) {
         this.showDelay = showDelay;
-        setShareLinesViewData();
     }
 
     public long getHideDuration() {
@@ -1492,7 +1400,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
      */
     public void setHideDuration(long hideDuration) {
         this.hideDuration = hideDuration;
-        setShareLinesViewData();
     }
 
     public long getHideDelay() {
@@ -1506,7 +1413,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
      */
     public void setHideDelay(long hideDelay) {
         this.hideDelay = hideDelay;
-        setShareLinesViewData();
     }
 
     public boolean isCancelable() {

@@ -7,8 +7,6 @@ package com.stiletto.tr.widget;
 public enum OrderEnum {
 
     DEFAULT(0),
-    REVERSE(1),
-    RANDOM (2),
 
     Unknown(-1);
 

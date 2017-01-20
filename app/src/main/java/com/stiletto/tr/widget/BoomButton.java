@@ -217,45 +217,9 @@ public abstract class BoomButton extends FrameLayout {
         textTopMargin = builder.textTopMargin;
         textWidth = builder.textWidth;
         textHeight = builder.textHeight;
-        if (builder instanceof TextOutsideCircleButton.Builder) {
-            int buttonAndShadowWidth = buttonRadius * 2 + shadowOffsetX * 2 + shadowRadius * 2;
-            if (textWidth > buttonAndShadowWidth) {
-                textRect = new Rect(
-                        0,
-                        shadowOffsetY + shadowRadius + buttonRadius * 2 + textTopMargin,
-                        textWidth,
-                        shadowOffsetY + shadowRadius + buttonRadius * 2 + textTopMargin + textHeight);
-            } else {
-                textRect = new Rect(
-                        (buttonAndShadowWidth - textWidth) / 2,
-                        shadowOffsetY + shadowRadius + buttonRadius * 2 + textTopMargin,
-                        (buttonAndShadowWidth - textWidth) / 2 + textWidth,
-                        shadowOffsetY + shadowRadius + buttonRadius * 2 + textTopMargin + textHeight);
-            }
-            trueRadius = (int) (Util.distance(
-                    new Point(
-                            shadowOffsetX + shadowRadius + buttonRadius,
-                            shadowOffsetY + shadowRadius + buttonRadius),
-                    new Point(
-                            textRect.right,
-                            textRect.bottom)) + 1);
-            if (textWidth > buttonAndShadowWidth)
-                textRect.offset(
-                        trueRadius - textWidth / 2,
-                        trueRadius - (shadowOffsetY + shadowRadius + buttonRadius));
-            else
-                textRect.offset(
-                        trueRadius - (shadowOffsetX + shadowRadius + buttonRadius),
-                        trueRadius - (shadowOffsetY + shadowRadius + buttonRadius));
-        }
 
     }
 
-    protected void initTextOutsideCircleButtonLayout() {
-        layout = (ViewGroup) findViewById(R.id.layout);
-        FrameLayout.LayoutParams params = new LayoutParams(trueRadius * 2, trueRadius * 2);
-        layout.setLayoutParams(params);
-    }
 
     protected void initShadow(int shadowCornerRadius) {
         if (shadowEffect) {
@@ -392,52 +356,6 @@ public abstract class BoomButton extends FrameLayout {
         }
     }
 
-    @SuppressLint("NewApi")
-    protected void initCircleButton() {
-        button = (FrameLayout) findViewById(R.id.button);
-        LayoutParams params = (LayoutParams) button.getLayoutParams();
-        params.width = buttonRadius * 2;
-        params.height = buttonRadius * 2;
-        button.setLayoutParams(params);
-        button.setEnabled(!unable);
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) listener.onButtonClick(index, BoomButton.this);
-                if (onBMClickListener != null) onBMClickListener.onBoomButtonClick(index);
-            }
-        });
-
-        initCircleButtonDrawable();
-
-        button.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (Util.pointInView(new PointF(event.getX(), event.getY()), button)) {
-                            toPress();
-                            ableToHighlight = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (Util.pointInView(new PointF(event.getX(), event.getY()), button)) {
-                            toPress();
-                        } else {
-                            ableToHighlight = false;
-                            toNormal();
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        ableToHighlight = false;
-                        toNormal();
-                        break;
-                }
-                return false;
-            }
-        });
-    }
 
     @SuppressLint("NewApi")
     protected void initHamButtonDrawable() {

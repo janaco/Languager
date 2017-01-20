@@ -23,28 +23,12 @@ public class ExceptionManager {
         int buttons = buttonPlaceEnum.buttonNumber();
         int builders = boomButtonBuilders.size();
 
-        if (pieces == -1) {
-            if (PiecePlaceEnum.Share == piecePlaceEnum) {
-                int minPieces = piecePlaceEnum.minPieceNumber();
-                int maxPieces = piecePlaceEnum.maxPieceNumber();
-                if (buttonPlaceEnum.buttonNumber() < minPieces
-                        || buttonPlaceEnum.buttonNumber() > maxPieces) {
-                    throw new RuntimeException("ButtonPlaceEnum(" + buttonPlaceEnum + ") is not match for PiecePlaceEnum(" + piecePlaceEnum + ")!");
-                } else if (builders < minPieces || builders > maxPieces) {
-                    throw new RuntimeException("Number of builders(" + builders + ") is not match for PiecePlaceEnum(" + piecePlaceEnum + ")!");
-                } else if (buttonEnum == ButtonEnum.HAM) {
-                    throw new RuntimeException("Share style BMB is not support ham-boom-buttons");
-                }
-            }
-        }
-
         if (pieces != buttons
                 && buttonPlaceEnum != ButtonPlaceEnum.Horizontal
-                && buttonPlaceEnum != ButtonPlaceEnum.Vertical
-                && piecePlaceEnum != PiecePlaceEnum.Share) {
+                && buttonPlaceEnum != ButtonPlaceEnum.Vertical) {
             throw new RuntimeException("Number of pieces is not equal to buttons'!");
         }
-        if (pieces != builders && piecePlaceEnum != PiecePlaceEnum.Share)
+        if (pieces != builders)
             throw new RuntimeException("Number of builders is not equal to buttons'!");
 
     }
