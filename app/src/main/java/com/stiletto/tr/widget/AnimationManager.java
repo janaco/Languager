@@ -261,7 +261,7 @@ public class AnimationManager {
                         ys);
                 break;
             case Unknown:
-                throw new RuntimeException("Unknown boom-enum!");
+                throw new RuntimeException("UNKNOWN boom-enum!");
         }
     }
 

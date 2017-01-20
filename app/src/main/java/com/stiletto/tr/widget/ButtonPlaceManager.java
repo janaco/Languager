@@ -914,7 +914,7 @@ public class ButtonPlaceManager {
                 offset.x = (int) (parentSize.x - width / 2 - maxWidth - buttonRightMargin);
                 break;
             case Unknown:
-                throw new RuntimeException("Unknown button-place-alignment-enum!");
+                throw new RuntimeException("UNKNOWN button-place-alignment-enum!");
         }
 
         for (int i = 0; i < positions.size(); i++) {

@@ -355,7 +355,7 @@ public class PiecePlaceManager {
                 positions.add(point(-a, -a));
                 break;
             default:
-                throw new RuntimeException("Unknown piece-place-enum!");
+                throw new RuntimeException("UNKNOWN piece-place-enum!");
         }
         for (Point point : positions) point.offset(parentSize.x / 2 - dotRadius, parentSize.y / 2 - dotRadius);
         return positions;
@@ -453,7 +453,7 @@ public class PiecePlaceManager {
             case HAM_6:
                 return createHam(context, color);
         }
-        throw new RuntimeException("Unknown button-enum!");
+        throw new RuntimeException("UNKNOWN button-enum!");
     }
 
     private static Dot createDot(Context context, int color) {

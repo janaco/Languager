@@ -32,7 +32,7 @@ public class ExceptionManager {
                     throw new RuntimeException("ButtonPlaceEnum(" + buttonPlaceEnum + ") is not match for PiecePlaceEnum(" + piecePlaceEnum + ")!");
                 } else if (builders < minPieces || builders > maxPieces) {
                     throw new RuntimeException("Number of builders(" + builders + ") is not match for PiecePlaceEnum(" + piecePlaceEnum + ")!");
-                } else if (buttonEnum == ButtonEnum.Ham) {
+                } else if (buttonEnum == ButtonEnum.HAM) {
                     throw new RuntimeException("Share style BMB is not support ham-boom-buttons");
                 }
             }
@@ -51,12 +51,12 @@ public class ExceptionManager {
 
     private static void judge(PiecePlaceEnum piecePlaceEnum) {
         if (piecePlaceEnum == null || piecePlaceEnum == PiecePlaceEnum.Unknown)
-            throw new RuntimeException("Unknown piece-place-enum!");
+            throw new RuntimeException("UNKNOWN piece-place-enum!");
     }
 
     private static void judge(ButtonPlaceEnum buttonPlaceEnum) {
         if (buttonPlaceEnum == null || buttonPlaceEnum == ButtonPlaceEnum.Unknown)
-            throw new RuntimeException("Unknown button-place-enum!");
+            throw new RuntimeException("UNKNOWN button-place-enum!");
     }
 
     private static void judge(ArrayList<BoomButtonBuilder> boomButtonBuilders) {
@@ -65,13 +65,13 @@ public class ExceptionManager {
     }
 
     private static void judge(ButtonEnum buttonEnum) {
-        if (buttonEnum == null || buttonEnum == ButtonEnum.Unknown)
-            throw new RuntimeException("Unknown button-enum!");
+        if (buttonEnum == null || buttonEnum == ButtonEnum.UNKNOWN)
+            throw new RuntimeException("UNKNOWN button-enum!");
     }
 
     private static void judge(BoomEnum boomEnum) {
         if (boomEnum == null || boomEnum == BoomEnum.Unknown)
-            throw new RuntimeException("Unknown boom-enum!");
+            throw new RuntimeException("UNKNOWN boom-enum!");
     }
 
     private static ExceptionManager ourInstance = new ExceptionManager();

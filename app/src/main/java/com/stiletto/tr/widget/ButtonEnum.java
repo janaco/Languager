@@ -6,27 +6,9 @@ package com.stiletto.tr.widget;
 
 public enum ButtonEnum {
 
-    /**
-     * Boom-buttons which are just simple circles with an image for each.
-     */
-    SimpleCircle(0),
+    HAM(3),
 
-    /**
-     * Boom-buttons which are circles with a text and image inside for each.
-     */
-    TextInsideCircle(1),
-
-    /**
-     * Boom-buttons which are circles with a text outside and image inside for each.
-     */
-    TextOutsideCircle(2),
-
-    /**
-     * Boom-buttons which are rectangles with a title, subtitle and image inside for each.
-     */
-    Ham(3),
-
-    Unknown(-1);
+    UNKNOWN(-1);
 
     private final int value;
 
@@ -39,7 +21,7 @@ public enum ButtonEnum {
     }
 
     public static ButtonEnum getEnum(int value) {
-        if (value < 0 || value > values().length) return Unknown;
+        if (value < 0 || value > values().length) return UNKNOWN;
         else return values()[value];
     }
 }

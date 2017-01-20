@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-
 import com.stiletto.tr.R;
 
 import java.util.ArrayList;
@@ -30,14 +29,11 @@ import java.util.ArrayList;
 
 public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClickListener {
 
-    protected static final String TAG = "BoomMenuButton";
-
     // Basic
     private Context context;
     private boolean needToLayout = true;
     private boolean cacheOptimization;
     private boolean boomInWholeScreen;
-    private boolean inList;
     private boolean inFragment;
     private boolean isBackPressListened = true;
     private Runnable layoutJobsRunnable;
@@ -53,7 +49,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     // Button
     private int buttonRadius;
-    private ButtonEnum buttonEnum = ButtonEnum.Unknown;
+    private ButtonEnum buttonEnum = ButtonEnum.HAM;
     private boolean backgroundEffect;
     private boolean rippleEffect;
     private int normalColor;
@@ -105,15 +101,10 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     // Boom Buttons
     private ArrayList<BoomButton> boomButtons = new ArrayList<>();
     private ArrayList<BoomButtonBuilder> boomButtonBuilders = new ArrayList<>();
-    private float simpleCircleButtonRadius;
-    private float textInsideCircleButtonRadius;
-    private float textOutsideCircleButtonWidth;
-    private float textOutsideCircleButtonHeight;
     private float hamButtonWidth;
     private float hamButtonHeight;
     private ButtonPlaceEnum buttonPlaceEnum = ButtonPlaceEnum.Unknown;
-    private ButtonPlaceAlignmentEnum buttonPlaceAlignmentEnum
-            = ButtonPlaceAlignmentEnum.Center;
+    private ButtonPlaceAlignmentEnum buttonPlaceAlignmentEnum = ButtonPlaceAlignmentEnum.Center;
     private float buttonHorizontalMargin;
     private float buttonVerticalMargin;
     private float buttonInclinedMargin;
@@ -125,7 +116,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private ArrayList<Point> endPositions;
     private Float bottomHamButtonTopMargin;
 
-    private void ___________________________1_Initialization() {}
+    private void ___________________________1_Initialization() {
+    }
     //region Constructor and Initializer
 
     public ListMenuButton(Context context) {
@@ -160,7 +152,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             // Basic
             cacheOptimization = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_cacheOptimization, R.bool.default_bmb_cacheOptimization);
             boomInWholeScreen = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_boomInWholeScreen, R.bool.default_bmb_boomInWholeScreen);
-            inList = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_inList, R.bool.default_bmb_inList);
             inFragment = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_inFragment, R.bool.default_bmb_inFragment);
             isBackPressListened = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_backPressListened, R.bool.default_bmb_backPressListened);
 
@@ -178,7 +169,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             rippleEffect = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_rippleEffect, R.bool.default_bmb_ripple_effect);
             normalColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_normalColor, R.color.default_bmb_normal_color);
             highlightedColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_highlightedColor, R.color.default_bmb_highlighted_color);
-            if (highlightedColor == Color.TRANSPARENT) highlightedColor = Util.getDarkerColor(normalColor);
+            if (highlightedColor == Color.TRANSPARENT)
+                highlightedColor = Util.getDarkerColor(normalColor);
             unableColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_unableColor, R.color.default_bmb_unable_color);
             if (unableColor == Color.TRANSPARENT) unableColor = Util.getLighterColor(normalColor);
 
@@ -237,7 +229,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void initShadow() {
         if (shadow == null) shadow = (BMBShadow) findViewById(R.id.shadow);
-        boolean hasShadow = shadowEffect && backgroundEffect && !inList;
+        boolean hasShadow = shadowEffect && backgroundEffect;
         shadow.setShadowEffect(hasShadow);
         if (hasShadow) {
             shadow.setShadowOffsetX(shadowOffsetX);
@@ -271,7 +263,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void setButtonBackground() {
-        if (backgroundEffect && !inList) {
+        if (backgroundEffect) {
             if (rippleEffect && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 RippleDrawable rippleDrawable = new RippleDrawable(
                         ColorStateList.valueOf(highlightedColor),
@@ -309,7 +301,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     //endregion
 
-    private void ___________________________2_Place_Pieces() {}
+    private void ___________________________2_Place_Pieces() {
+    }
     //region Place Pieces
 
     @Override
@@ -328,7 +321,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         placePiecesAtPositions();
         // We have to calculate the start positions again when BMB is used in list-view.
         // So we don't need to calculate them here.
-        if (!inList && !inFragment) calculateStartPositions();
+        if (!inFragment) calculateStartPositions();
         setShareLinesViewData();
     }
 
@@ -414,48 +407,31 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
                 h = hamHeight;
                 break;
             default:
-                throw new RuntimeException("Unknown piece-place-enum!");
+                throw new RuntimeException("UNKNOWN piece-place-enum!");
         }
-        for (int i = 0; i < pieceNumber; i++) pieces.get(i).place(piecePositions.get(i).x, piecePositions.get(i).y, w, h);
+        for (int i = 0; i < pieceNumber; i++)
+            pieces.get(i).place(piecePositions.get(i).x, piecePositions.get(i).y, w, h);
     }
 
     private void calculatePiecePositions() {
-        switch (buttonEnum) {
-            case SimpleCircle:
-            case TextInsideCircle:
-            case TextOutsideCircle:
-                if (piecePlaceEnum == PiecePlaceEnum.Share) {
-                    piecePositions = PiecePlaceManager.getShareDotPositions(
-                            new Point(button.getWidth(), button.getHeight()),
-                            dotRadius,
-                            boomButtonBuilders.size(),
-                            shareLineLength);
-                } else {
-                    piecePositions = PiecePlaceManager.getDotPositions(
-                            piecePlaceEnum,
-                            new Point(button.getWidth(), button.getHeight()),
-                            dotRadius,
-                            pieceHorizontalMargin,
-                            pieceVerticalMargin,
-                            pieceInclinedMargin);
-                }
-                break;
-            case Ham:
-                piecePositions = PiecePlaceManager.getHamPositions(
-                        piecePlaceEnum,
-                        new Point(button.getWidth(), button.getHeight()),
-                        hamWidth,
-                        hamHeight,
-                        pieceVerticalMargin);
-                break;
-            case Unknown:
-                throw new RuntimeException("The button-enum is unknown!");
+
+        if (buttonEnum != ButtonEnum.HAM) {
+            throw new RuntimeException("The button-enum is unknown!");
         }
-    }
+
+        piecePositions = PiecePlaceManager.getHamPositions(
+                piecePlaceEnum,
+                new Point(button.getWidth(), button.getHeight()),
+                hamWidth,
+                hamHeight,
+                pieceVerticalMargin);
+
+}
 
     //endregion
 
-    private void ___________________________3_Animation() {}
+    private void ___________________________3_Animation() {
+    }
     //region Animation
 
     /**
@@ -479,7 +455,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         if (onBoomListener != null) onBoomListener.onBoomWillShow();
         // We have to calculate the start positions again when BMB is used in list-view
         // or in fragment.
-        if (inList || inFragment) calculateStartPositions();
+        if (inFragment) calculateStartPositions();
         createButtons();
         dimBackground(immediately);
         startShowAnimations(immediately);
@@ -735,7 +711,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     //endregion
 
-    private void ___________________________4_Support_Methods() {}
+    private void ___________________________4_Support_Methods() {
+    }
     //region Support Methods
 
     private void createBackground() {
@@ -773,9 +750,9 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void clearBackground() {
         Util.setVisibility(GONE, background);
-        if (!cacheOptimization || inList || inFragment) {
+        if (!cacheOptimization || inFragment) {
             background.removeAllViews();
-            ((ViewGroup)background.getParent()).removeView(background);
+            ((ViewGroup) background.getParent()).removeView(background);
             background = null;
         }
     }
@@ -784,35 +761,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         boomButtons = new ArrayList<>(pieces.size());
         int buttonNumber = pieces.size();
         switch (buttonEnum) {
-            case SimpleCircle:
-                for (int i = 0; i < buttonNumber; i++) {
-                    SimpleCircleButton.Builder builder =
-                            (SimpleCircleButton.Builder) boomButtonBuilders.get(i);
-                    builder.innerListener(this).index(i);
-                    boomButtons.add(builder.build(context));
-                    simpleCircleButtonRadius = builder.getButtonRadius();
-                }
-                break;
-            case TextInsideCircle:
-                for (int i = 0; i < buttonNumber; i++) {
-                    TextInsideCircleButton.Builder builder =
-                            (TextInsideCircleButton.Builder) boomButtonBuilders.get(i);
-                    builder.innerListener(this).index(i);
-                    boomButtons.add(builder.build(context));
-                    textInsideCircleButtonRadius = builder.getButtonRadius();
-                }
-                break;
-            case TextOutsideCircle:
-                for (int i = 0; i < buttonNumber; i++) {
-                    TextOutsideCircleButton.Builder builder =
-                            (TextOutsideCircleButton.Builder) boomButtonBuilders.get(i);
-                    builder.innerListener(this).index(i);
-                    boomButtons.add(builder.build(context));
-                    textOutsideCircleButtonWidth = builder.getButtonContentWidth();
-                    textOutsideCircleButtonHeight = builder.getButtonContentHeight();
-                }
-                break;
-            case Ham:
+            case HAM:
                 for (int i = 0; i < buttonNumber; i++) {
                     HamButton.Builder builder =
                             (HamButton.Builder) boomButtonBuilders.get(i);
@@ -855,59 +804,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void calculateEndPositions() {
         switch (buttonEnum) {
-            case SimpleCircle:
-                endPositions = ButtonPlaceManager.getCircleButtonPositions(
-                        buttonPlaceEnum,
-                        buttonPlaceAlignmentEnum,
-                        new Point(
-                                background.getLayoutParams().width,
-                                background.getLayoutParams().height),
-                        simpleCircleButtonRadius,
-                        boomButtonBuilders.size(),
-                        buttonHorizontalMargin,
-                        buttonVerticalMargin,
-                        buttonInclinedMargin,
-                        buttonTopMargin,
-                        buttonBottomMargin,
-                        buttonLeftMargin,
-                        buttonRightMargin);
-                break;
-            case TextInsideCircle:
-                endPositions = ButtonPlaceManager.getCircleButtonPositions(
-                        buttonPlaceEnum,
-                        buttonPlaceAlignmentEnum,
-                        new Point(
-                                background.getLayoutParams().width,
-                                background.getLayoutParams().height),
-                        textInsideCircleButtonRadius,
-                        boomButtonBuilders.size(),
-                        buttonHorizontalMargin,
-                        buttonVerticalMargin,
-                        buttonInclinedMargin,
-                        buttonTopMargin,
-                        buttonBottomMargin,
-                        buttonLeftMargin,
-                        buttonRightMargin);
-                break;
-            case TextOutsideCircle:
-                endPositions = ButtonPlaceManager.getCircleButtonPositions(
-                        buttonPlaceEnum,
-                        buttonPlaceAlignmentEnum,
-                        new Point(
-                                background.getLayoutParams().width,
-                                background.getLayoutParams().height),
-                        textOutsideCircleButtonWidth,
-                        textOutsideCircleButtonHeight,
-                        boomButtonBuilders.size(),
-                        buttonHorizontalMargin,
-                        buttonVerticalMargin,
-                        buttonInclinedMargin,
-                        buttonTopMargin,
-                        buttonBottomMargin,
-                        buttonLeftMargin,
-                        buttonRightMargin);
-                break;
-            case Ham:
+            case HAM:
                 endPositions = ButtonPlaceManager.getHamButtonPositions(
                         buttonPlaceEnum,
                         buttonPlaceAlignmentEnum,
@@ -946,7 +843,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void clearViewsAndValues() {
         clearBackground();
-        if (!cacheOptimization || inList || inFragment) {
+        if (!cacheOptimization || inFragment) {
             endPositions.clear();
             endPositions = null;
             boomButtons.clear();
@@ -1013,7 +910,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         }
     }
 
-    private void ___________________________5_Builders_and_Buttons() {}
+    private void ___________________________5_Builders_and_Buttons() {
+    }
 
     //region Builders
 
@@ -1030,7 +928,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     /**
      * Set a builder at index, notice that @needToLayout will be called.
      *
-     * @param index index
+     * @param index   index
      * @param builder builder
      */
     public void setBuilder(int index, BoomButtonBuilder builder) {
@@ -1073,7 +971,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     /**
      * Set enable attribute of the boom-button at index.
      *
-     * @param index index of the boom-button
+     * @param index  index of the boom-button
      * @param enable whether the boom-button should be enable
      */
     public void setEnable(int index, boolean enable) {
@@ -1104,7 +1002,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     //endregion
 
-    private void ___________________________6_Getters_and_Setters() {}
+    private void ___________________________6_Getters_and_Setters() {
+    }
 
     //region Getter and Setter
 
@@ -1134,19 +1033,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
      */
     public void setBoomInWholeScreen(boolean boomInWholeScreen) {
         this.boomInWholeScreen = boomInWholeScreen;
-    }
-
-    public boolean isInList() {
-        return inList;
-    }
-
-    /**
-     * When BMB is used in list-view, it must be setInList(true).
-     *
-     * @param inList use BMB in list-view
-     */
-    public void setInList(boolean inList) {
-        this.inList = inList;
     }
 
     public boolean isInFragment() {
