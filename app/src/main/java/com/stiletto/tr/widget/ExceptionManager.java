@@ -34,12 +34,16 @@ public class ExceptionManager {
     }
 
     private static void judge(PiecePlaceEnum piecePlaceEnum) {
-        if (piecePlaceEnum == null || piecePlaceEnum == PiecePlaceEnum.Unknown)
+        if (piecePlaceEnum == null
+//                || piecePlaceEnum == PiecePlaceEnum.Unknown
+                )
             throw new RuntimeException("UNKNOWN piece-place-enum!");
     }
 
     private static void judge(ButtonPlaceEnum buttonPlaceEnum) {
-        if (buttonPlaceEnum == null || buttonPlaceEnum == ButtonPlaceEnum.Unknown)
+        if (buttonPlaceEnum == null
+//                || buttonPlaceEnum == ButtonPlaceEnum.Unknown
+                )
             throw new RuntimeException("UNKNOWN button-place-enum!");
     }
 
@@ -49,12 +53,16 @@ public class ExceptionManager {
     }
 
     private static void judge(ButtonEnum buttonEnum) {
-        if (buttonEnum == null || buttonEnum == ButtonEnum.UNKNOWN)
+        if (buttonEnum == null
+//                || buttonEnum == ButtonEnum.UNKNOWN
+                )
             throw new RuntimeException("UNKNOWN button-enum!");
     }
 
     private static void judge(BoomEnum boomEnum) {
-        if (boomEnum == null || boomEnum == BoomEnum.Unknown)
+        if (boomEnum == null
+//                || boomEnum == BoomEnum.Unknown
+                )
             throw new RuntimeException("UNKNOWN boom-enum!");
     }
 

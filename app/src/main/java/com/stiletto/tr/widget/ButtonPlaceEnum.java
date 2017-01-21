@@ -14,9 +14,9 @@ public enum ButtonPlaceEnum {
     HAM_6 (40),
 
     Horizontal(Integer.MAX_VALUE - 1),
-    Vertical(Integer.MAX_VALUE),
+    Vertical(Integer.MAX_VALUE);
 
-    Unknown(-1);
+//    Unknown(-1);
 
     private final int value;
 
@@ -28,10 +28,10 @@ public enum ButtonPlaceEnum {
         return value;
     }
 
-    public static ButtonPlaceEnum getEnum(int value) {
-        if (value < 0 || value >= values().length) return Unknown;
-        return values()[value];
-    }
+//    public static ButtonPlaceEnum getEnum(int value) {
+//        if (value < 0 || value >= values().length) return HAM_1;
+//        return values()[value];
+//    }
 
     /**
      * Get the number of boom-button for button-place-enum.

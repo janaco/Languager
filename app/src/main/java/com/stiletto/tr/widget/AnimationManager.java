@@ -180,8 +180,8 @@ public class AnimationManager {
                         xs,
                         ys);
                 break;
-            case Unknown:
-                throw new RuntimeException("UNKNOWN boom-enum!");
+//            case Unknown:
+//                throw new RuntimeException("UNKNOWN boom-enum!");
         }
     }
 
@@ -203,7 +203,7 @@ public class AnimationManager {
 
         switch (boomEnum) {
             case RANDOM:
-            case Unknown:
+//            case Unknown:
                 calculateShowXY(
                         boomEnum,
                         parentSize,

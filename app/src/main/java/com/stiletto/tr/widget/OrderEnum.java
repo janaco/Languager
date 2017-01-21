@@ -6,9 +6,9 @@ package com.stiletto.tr.widget;
 
 public enum OrderEnum {
 
-    DEFAULT(0),
+    DEFAULT(0);
 
-    Unknown(-1);
+//    Unknown(-1);
 
     private final int value;
 
@@ -20,8 +20,8 @@ public enum OrderEnum {
         return value;
     }
 
-    public static OrderEnum getEnum(int value) {
-        if (value < 0 || value >= values().length) return Unknown;
-        return values()[value];
-    }
+//    public static OrderEnum getEnum(int value) {
+//        if (value < 0 || value >= values().length) return Unknown;
+//        return values()[value];
+//    }
 }

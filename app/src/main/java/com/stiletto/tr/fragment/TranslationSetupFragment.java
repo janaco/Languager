@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.stiletto.tr.R;
 import com.stiletto.tr.manager.BuilderManager;
 import com.stiletto.tr.view.Fragment;
+import com.stiletto.tr.widget.ListMenuButton;
 
 /**
  * Created by yana on 20.01.17.
@@ -24,16 +25,18 @@ public class TranslationSetupFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        final BoomMenuButton bmb1 = (BoomMenuButton) view.findViewById(R.id.bmb1);
-//        for (int i = 0; i < bmb1.getPiecePlaceEnum().pieceNumber(); i++) {
-//            bmb1.addBuilder(BuilderManager.getHamButtonBuilder());
-//        }
-//
-//        bmb1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                bmb1.boom();
-//            }
-//        });
+
+        final ListMenuButton bmb1 = (ListMenuButton) view.findViewById(R.id.bmb1);
+
+        for (int i = 0; i < bmb1.getPiecePlaceEnum().pieceNumber(); i++) {
+            bmb1.addBuilder(BuilderManager.getHamButtonBuilder());
+        }
+
+        bmb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bmb1.boom();
+            }
+        });
     }
 }

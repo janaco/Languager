@@ -29,41 +29,6 @@
         <enum name="textOutsideCircle" value="2"/>
         <enum name="ham" value="3"/>
     </attr><attr format="boolean|reference" name="bmb_backgroundEffect"/><attr format="boolean|reference" name="bmb_rippleEffect"/><attr format="color|reference" name="bmb_normalColor"/><attr format="color|reference" name="bmb_highlightedColor"/><attr format="color|reference" name="bmb_unableColor"/><attr format="dimension|reference" name="bmb_dotRadius"/><attr format="dimension|reference" name="bmb_hamWidth"/><attr format="dimension|reference" name="bmb_hamHeight"/><attr format="dimension|reference" name="bmb_pieceHorizontalMargin"/><attr format="dimension|reference" name="bmb_pieceVerticalMargin"/><attr format="dimension|reference" name="bmb_pieceInclinedMargin"/><attr format="enum|reference" name="bmb_piecePlaceEnum">
-        <enum name="piecePlace_dot_1" value="0"/>
-        <enum name="piecePlace_dot_2_1" value="1"/>
-        <enum name="piecePlace_dot_2_2" value="2"/>
-        <enum name="piecePlace_dot_3_1" value="3"/>
-        <enum name="piecePlace_dot_3_2" value="4"/>
-        <enum name="piecePlace_dot_3_3" value="5"/>
-        <enum name="piecePlace_dot_3_4" value="6"/>
-        <enum name="piecePlace_dot_4_1" value="7"/>
-        <enum name="piecePlace_dot_4_2" value="8"/>
-        <enum name="piecePlace_dot_5_1" value="9"/>
-        <enum name="piecePlace_dot_5_2" value="10"/>
-        <enum name="piecePlace_dot_5_3" value="11"/>
-        <enum name="piecePlace_dot_5_4" value="12"/>
-        <enum name="piecePlace_dot_6_1" value="13"/>
-        <enum name="piecePlace_dot_6_2" value="14"/>
-        <enum name="piecePlace_dot_6_3" value="15"/>
-        <enum name="piecePlace_dot_6_4" value="16"/>
-        <enum name="piecePlace_dot_6_5" value="17"/>
-        <enum name="piecePlace_dot_6_6" value="18"/>
-        <enum name="piecePlace_dot_7_1" value="19"/>
-        <enum name="piecePlace_dot_7_2" value="20"/>
-        <enum name="piecePlace_dot_7_3" value="21"/>
-        <enum name="piecePlace_dot_7_4" value="22"/>
-        <enum name="piecePlace_dot_7_5" value="23"/>
-        <enum name="piecePlace_dot_7_6" value="24"/>
-        <enum name="piecePlace_dot_8_1" value="25"/>
-        <enum name="piecePlace_dot_8_2" value="26"/>
-        <enum name="piecePlace_dot_8_3" value="27"/>
-        <enum name="piecePlace_dot_8_4" value="28"/>
-        <enum name="piecePlace_dot_8_5" value="29"/>
-        <enum name="piecePlace_dot_8_6" value="30"/>
-        <enum name="piecePlace_dot_8_7" value="31"/>
-        <enum name="piecePlace_dot_9_1" value="32"/>
-        <enum name="piecePlace_dot_9_2" value="33"/>
-        <enum name="piecePlace_dot_9_3" value="34"/>
 
         <enum name="piecePlace_ham_1" value="35"/>
         <enum name="piecePlace_ham_2" value="36"/>

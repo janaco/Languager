@@ -11,9 +11,9 @@ public enum  PiecePlaceEnum {
     HAM_3  (37),
     HAM_4  (38),
     HAM_5  (39),
-    HAM_6  (40),
+    HAM_6  (40);
 
-    Unknown(-1);
+//    Unknown(-1);
 
     private final int value;
 
@@ -25,10 +25,10 @@ public enum  PiecePlaceEnum {
         return value;
     }
 
-    public static PiecePlaceEnum getEnum(int value) {
-        if (value < 0 || value >= values().length) return Unknown;
-        return values()[value];
-    }
+//    public static PiecePlaceEnum getEnum(int value) {
+//        if (value < 0 || value >= values().length) return HAM_1;
+//        return values()[value];
+//    }
 
     /**
      * Get number of pieces from a piece-place-enum.

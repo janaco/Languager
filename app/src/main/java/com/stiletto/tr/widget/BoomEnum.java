@@ -8,9 +8,9 @@ public enum  BoomEnum {
 
     HORIZONTAL_THROW_1(5),
     HORIZONTAL_THROW_2(6),
-    RANDOM            (7),
+    RANDOM            (7);
 
-    Unknown           (-1);
+//    Unknown           (-1);
 
     private final int value;
 
@@ -21,11 +21,11 @@ public enum  BoomEnum {
     public int getValue() {
         return value;
     }
-
-    public static BoomEnum getEnum(int value) {
-        if (value < 0 || value >= values().length) return Unknown;
-        return values()[value];
-    }
+//
+//    public static BoomEnum getEnum(int value) {
+//        if (value < 0 || value >= values().length) return RANDOM;
+//        return values()[value];
+//    }
 
 }
 

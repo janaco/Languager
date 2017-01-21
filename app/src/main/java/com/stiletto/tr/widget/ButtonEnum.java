@@ -6,9 +6,9 @@ package com.stiletto.tr.widget;
 
 public enum ButtonEnum {
 
-    HAM(3),
+    HAM(3);
 
-    UNKNOWN(-1);
+//    UNKNOWN(-1);
 
     private final int value;
 
@@ -20,8 +20,8 @@ public enum ButtonEnum {
         return value;
     }
 
-    public static ButtonEnum getEnum(int value) {
-        if (value < 0 || value > values().length) return UNKNOWN;
-        else return values()[value];
-    }
+//    public static ButtonEnum getEnum(int value) {
+//        if (value < 0 || value > values().length) return HAM;
+//        else return values()[value];
+//    }
 }

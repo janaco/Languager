@@ -14,9 +14,9 @@ public  enum ButtonPlaceAlignmentEnum {
     TL(5),
     TR(6),
     BL(7),
-    BR(8),
+    BR(8);
 
-    Unknown(-1);
+//    Unknown(-1);
 
     private final int value;
 
@@ -28,9 +28,9 @@ public  enum ButtonPlaceAlignmentEnum {
         return value;
     }
 
-    public static ButtonPlaceAlignmentEnum getEnum(int value) {
-        if (value < 0 || value >= values().length) return Unknown;
-        return values()[value];
-    }
+//    public static ButtonPlaceAlignmentEnum getEnum(int value) {
+//        if (value < 0 || value >= values().length) return Unknown;
+//        return values()[value];
+//    }
 
 }
