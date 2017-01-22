@@ -105,7 +105,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private ArrayList<BoomButtonBuilder> boomButtonBuilders = new ArrayList<>();
     private float hamButtonWidth;
     private float hamButtonHeight;
-    private ButtonPlaceEnum buttonPlaceEnum = ButtonPlaceEnum.HAM_6;
     private ButtonPlaceAlignmentEnum buttonPlaceAlignmentEnum = ButtonPlaceAlignmentEnum.Center;
     private float buttonHorizontalMargin;
     private float buttonVerticalMargin;
@@ -117,6 +116,21 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private ArrayList<Point> startPositions;
     private ArrayList<Point> endPositions;
     private Float bottomHamButtonTopMargin;
+
+
+    private void createButtons() {
+        boomButtons = new ArrayList<>(pieces.size());
+        int buttonNumber = pieces.size();
+
+        for (int i = 0; i < buttonNumber; i++) {
+            HamButton.Builder builder =
+                    (HamButton.Builder) boomButtonBuilders.get(i);
+            builder.innerListener(this).index(i);
+            boomButtons.add(builder.build(context));
+            hamButtonWidth = builder.getButtonWidth();
+            hamButtonHeight = builder.getButtonHeight();
+        }
+    }
 
     //region Constructor and Initializer
 
@@ -216,7 +230,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             rotateDegree = Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_rotateDegree, R.integer.default_bmb_rotateDegree);
 
             // Boom buttons
-            buttonPlaceEnum = ButtonPlaceEnum.Vertical;
 //                    getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_buttonPlaceEnum, R.integer.default_bmb_buttonPlaceEnum));
 //            buttonPlaceAlignmentEnum = ButtonPlaceAlignmentEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_buttonPlaceAlignmentEnum, R.integer.default_bmb_buttonPlaceAlignmentEnum));
             buttonPlaceAlignmentEnum = ButtonPlaceAlignmentEnum.Center;
@@ -323,7 +336,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void doLayoutJobs() {
-        ExceptionManager.judge(piecePlaceEnum, buttonPlaceEnum, boomEnum, boomButtonBuilders);
+        ExceptionManager.judge(piecePlaceEnum,  boomEnum, boomButtonBuilders);
         removePieces();
         createPieces();
         placePieces();
@@ -408,7 +421,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void innerBoom(boolean immediately) {
-        ExceptionManager.judge(piecePlaceEnum, buttonPlaceEnum, boomEnum, boomButtonBuilders);
+        ExceptionManager.judge(piecePlaceEnum, boomEnum, boomButtonBuilders);
         if (isAnimating() || boomStateEnum != MenuStateEnum.DidHide) return;
         boomStateEnum = MenuStateEnum.WillShow;
         if (onBoomListener != null) onBoomListener.onBoomWillShow();
@@ -692,20 +705,20 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             background = null;
         }
     }
-
-    private void createButtons() {
-        boomButtons = new ArrayList<>(pieces.size());
-        int buttonNumber = pieces.size();
-
-        for (int i = 0; i < buttonNumber; i++) {
-            HamButton.Builder builder =
-                    (HamButton.Builder) boomButtonBuilders.get(i);
-            builder.innerListener(this).index(i);
-            boomButtons.add(builder.build(context));
-            hamButtonWidth = builder.getButtonWidth();
-            hamButtonHeight = builder.getButtonHeight();
-        }
-    }
+//
+//    private void createButtons() {
+//        boomButtons = new ArrayList<>(pieces.size());
+//        int buttonNumber = pieces.size();
+//
+//        for (int i = 0; i < buttonNumber; i++) {
+//            HamButton.Builder builder =
+//                    (HamButton.Builder) boomButtonBuilders.get(i);
+//            builder.innerListener(this).index(i);
+//            boomButtons.add(builder.build(context));
+//            hamButtonWidth = builder.getButtonWidth();
+//            hamButtonHeight = builder.getButtonHeight();
+//        }
+//    }
 
     private void onBackgroundClicked() {
         if (isAnimating()) return;
@@ -737,7 +750,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void calculateEndPositions() {
         endPositions = ButtonPlaceManager.getHamButtonPositions(
-                buttonPlaceEnum,
                 buttonPlaceAlignmentEnum,
                 new Point(
                         background.getLayoutParams().width,
@@ -1277,10 +1289,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         return piecePlaceEnum;
     }
 
-    public ButtonPlaceEnum getButtonPlaceEnum() {
-        return buttonPlaceEnum;
-    }
-
     /**
      * Set the piece-place-enum, notice that @requestLayout() will be called.
      *
@@ -1552,15 +1560,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
      */
     public void setRotateDegree(int rotateDegree) {
         this.rotateDegree = rotateDegree;
-    }
-
-    /**
-     * Set the button-place-enum.
-     *
-     * @param buttonPlaceEnum button-place-enum
-     */
-    public void setButtonPlaceEnum(ButtonPlaceEnum buttonPlaceEnum) {
-        this.buttonPlaceEnum = buttonPlaceEnum;
     }
 
     public ButtonPlaceAlignmentEnum getButtonPlaceAlignmentEnum() {

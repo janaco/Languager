@@ -106,12 +106,6 @@ public abstract class BoomButton extends FrameLayout {
     protected TextUtils.TruncateAt subEllipsize;
     protected int subTextSize;
 
-    // Text for text-outside-circle-button
-    protected int textTopMargin;
-    protected int textWidth;
-    protected int textHeight;
-    protected int trueRadius;
-
     // Button Colors
     protected boolean rippleEffect = true;
     protected int normalColor;
@@ -215,12 +209,6 @@ public abstract class BoomButton extends FrameLayout {
         buttonHeight = builder.buttonHeight;
         buttonCornerRadius = builder.buttonCornerRadius;
         rippleEffectWorks = rippleEffect && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-
-        // for text-outside-circle-button
-        textTopMargin = builder.textTopMargin;
-        textWidth = builder.textWidth;
-        textHeight = builder.textHeight;
-
     }
 
 

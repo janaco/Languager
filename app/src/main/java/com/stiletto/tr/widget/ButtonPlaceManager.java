@@ -11,57 +11,35 @@ import java.util.ArrayList;
 public class ButtonPlaceManager {
 
 
-    public static ArrayList<Point> getHamButtonPositions(ButtonPlaceEnum placeEnum,
-                                                         ButtonPlaceAlignmentEnum alignmentEnum,
-                                                         Point parentSize,
-                                                         float buttonWidth,
-                                                         float buttonHeight,
-                                                         int buttonNumber,
-                                                         float buttonHorizontalMargin,
-                                                         float buttonVerticalMargin,
-                                                         float buttonTopMargin,
-                                                         float buttonBottomMargin,
-                                                         float buttonLeftMargin,
-                                                         float buttonRightMargin,
-                                                         Float bottomHamButtonTopMargin) {
+    public static ArrayList<Point> getHamButtonPositions(
+            ButtonPlaceAlignmentEnum alignmentEnum,
+            Point parentSize,
+            float buttonWidth,
+            float buttonHeight,
+            int buttonNumber,
+            float buttonHorizontalMargin,
+            float buttonVerticalMargin,
+            float buttonTopMargin,
+            float buttonBottomMargin,
+            float buttonLeftMargin,
+            float buttonRightMargin,
+            Float bottomHamButtonTopMargin) {
         ArrayList<Point> positions = new ArrayList<>(buttonNumber);
         float w = buttonWidth, h = buttonHeight;
         float hm = buttonHorizontalMargin, vm = buttonVerticalMargin;
         int half = buttonNumber / 2;
 
-        switch (placeEnum) {
-            case Horizontal:
-                if (buttonNumber % 2 == 0) {
-                    for (int i = half - 1; i >= 0; i--)
-                        positions.add(point(-w / 2 - hm / 2 - i * (w + hm), 0));
-                    for (int i = 0; i < half; i++)
-                        positions.add(point(w / 2 + hm / 2 + i * (w + hm), 0));
-                } else {
-                    for (int i = half - 1; i >= 0; i--)
-                        positions.add(point(-w - hm - i * (w + hm), 0));
-                    positions.add(point(0, 0));
-                    for (int i = 0; i < half; i++) positions.add(point(w + hm + i * (w + hm), 0));
-                }
-                break;
-            case Vertical:
-            case HAM_1:
-            case HAM_2:
-            case HAM_3:
-            case HAM_4:
-            case HAM_5:
-            case HAM_6:
-                if (buttonNumber % 2 == 0) {
-                    for (int i = half - 1; i >= 0; i--) positions.add(point(0, -h / 2 - vm / 2 - i * (h + vm)));
-                    for (int i = 0; i < half; i++) positions.add(point(0, h / 2 + vm / 2 + i * (h + vm)));
-                } else {
-                    for (int i = half - 1; i >= 0; i--) positions.add(point(0, -h - vm - i * (h + vm)));
-                    positions.add(point(0, 0));
-                    for (int i = 0; i < half; i++) positions.add(point(0, h + vm + i * (h + vm)));
-                }
-                if (buttonNumber >= 2 && bottomHamButtonTopMargin != null)
-                    positions.get(positions.size() - 1).offset(0, (int) (bottomHamButtonTopMargin - vm));
-                break;
+        if (buttonNumber % 2 == 0) {
+            for (int i = half - 1; i >= 0; i--)
+                positions.add(point(0, -h / 2 - vm / 2 - i * (h + vm)));
+            for (int i = 0; i < half; i++) positions.add(point(0, h / 2 + vm / 2 + i * (h + vm)));
+        } else {
+            for (int i = half - 1; i >= 0; i--) positions.add(point(0, -h - vm - i * (h + vm)));
+            positions.add(point(0, 0));
+            for (int i = 0; i < half; i++) positions.add(point(0, h + vm + i * (h + vm)));
         }
+        if (buttonNumber >= 2 && bottomHamButtonTopMargin != null)
+            positions.get(positions.size() - 1).offset(0, (int) (bottomHamButtonTopMargin - vm));
 
         calculatePositionsInParent(positions, parentSize);
 

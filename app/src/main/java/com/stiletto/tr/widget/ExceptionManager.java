@@ -9,23 +9,15 @@ import java.util.ArrayList;
 public class ExceptionManager {
 
     static void judge(PiecePlaceEnum piecePlaceEnum,
-                      ButtonPlaceEnum buttonPlaceEnum,
                       BoomEnum boomEnum,
                       ArrayList<BoomButtonBuilder> boomButtonBuilders) {
         judge(piecePlaceEnum);
-        judge(buttonPlaceEnum);
         judge(boomEnum);
         judge(boomButtonBuilders);
 
         int pieces = piecePlaceEnum.pieceNumber();
-        int buttons = buttonPlaceEnum.buttonNumber();
         int builders = boomButtonBuilders.size();
 
-        if (pieces != buttons
-                && buttonPlaceEnum != ButtonPlaceEnum.Horizontal
-                && buttonPlaceEnum != ButtonPlaceEnum.Vertical) {
-            throw new RuntimeException("Number of pieces is not equal to buttons'!");
-        }
         if (pieces != builders)
             throw new RuntimeException("Number of builders is not equal to buttons'!");
 
@@ -38,12 +30,6 @@ public class ExceptionManager {
             throw new RuntimeException("UNKNOWN piece-place-enum!");
     }
 
-    private static void judge(ButtonPlaceEnum buttonPlaceEnum) {
-        if (buttonPlaceEnum == null
-//                || buttonPlaceEnum == ButtonPlaceEnum.Unknown
-                )
-            throw new RuntimeException("UNKNOWN button-place-enum!");
-    }
 
     private static void judge(ArrayList<BoomButtonBuilder> boomButtonBuilders) {
         if (boomButtonBuilders == null || boomButtonBuilders.size() == 0)
