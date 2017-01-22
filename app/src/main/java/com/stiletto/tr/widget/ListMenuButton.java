@@ -39,12 +39,12 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private Runnable layoutJobsRunnable;
 
     // Shadow
-    private boolean shadowEffect;
-    private int shadowOffsetX;
-    private int shadowOffsetY;
-    private int shadowRadius;
-    private int shadowColor;
-    private BMBShadow shadow;
+//    private boolean shadowEffect;
+//    private int shadowOffsetX;
+//    private int shadowOffsetY;
+//    private int shadowRadius;
+//    private int shadowColor;
+//    private BMBShadow shadow;
 
 
     // Button
@@ -56,8 +56,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private int unableColor;
     private FrameLayout button;
 
-    private int buttonWidth = 100;
-    private int buttonHeight = 20;
+    private int buttonWidth = 300;
+    private int buttonHeight = 60;
     private int cornerRadius = 15;
 
     // Piece
@@ -156,11 +156,11 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             isBackPressListened = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_backPressListened, R.bool.default_bmb_backPressListened);
 
             // Shadow
-            shadowEffect = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_shadowEffect, R.bool.default_bmb_shadow_effect);
-            shadowRadius = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_shadowRadius, R.dimen.default_bmb_shadow_radius);
-            shadowOffsetX = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_shadowOffsetX, R.dimen.default_bmb_shadow_offset_x);
-            shadowOffsetY = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_shadowOffsetY, R.dimen.default_bmb_shadow_offset_y);
-            shadowColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_shadowColor, R.color.default_bmb_shadow_color);
+//            shadowEffect = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_shadowEffect, R.bool.default_bmb_shadow_effect);
+//            shadowRadius = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_shadowRadius, R.dimen.default_bmb_shadow_radius);
+//            shadowOffsetX = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_shadowOffsetX, R.dimen.default_bmb_shadow_offset_x);
+//            shadowOffsetY = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_shadowOffsetY, R.dimen.default_bmb_shadow_offset_y);
+//            shadowColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_shadowColor, R.color.default_bmb_shadow_color);
 
             // Button
             buttonRadius = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_buttonRadius, R.dimen.default_bmb_button_radius);
@@ -240,18 +240,18 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void initShadow() {
-        if (shadow == null) shadow = (BMBShadow) findViewById(R.id.shadow);
-        boolean hasShadow = shadowEffect && backgroundEffect;
-        shadow.setShadowEffect(hasShadow);
-        if (hasShadow) {
-            shadow.setShadowOffsetX(shadowOffsetX);
-            shadow.setShadowOffsetY(shadowOffsetY);
-            shadow.setShadowColor(shadowColor);
-            shadow.setShadowRadius(shadowRadius);
-            shadow.setShadowCornerRadius(shadowRadius + buttonRadius);
-        } else {
-            shadow.clearShadow();
-        }
+//        if (shadow == null) shadow = (BMBShadow) findViewById(R.id.shadow);
+//        boolean hasShadow = shadowEffect && backgroundEffect;
+//        shadow.setShadowEffect(hasShadow);
+//        if (hasShadow) {
+//            shadow.setShadowOffsetX(shadowOffsetX);
+//            shadow.setShadowOffsetY(shadowOffsetY);
+//            shadow.setShadowColor(shadowColor);
+//            shadow.setShadowRadius(shadowRadius);
+//            shadow.setShadowCornerRadius(shadowRadius + buttonRadius);
+//        } else {
+//            shadow.clearShadow();
+//        }
     }
 
     private void initButton() {
@@ -966,79 +966,79 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         isBackPressListened = backPressListened;
     }
 
-    public boolean isShadowEffect() {
-        return shadowEffect;
-    }
-
-    /**
-     * Whether BMB should have a shadow-effect.
-     * Notice that when you set @backgroundEffect to false, this value will set to false too.
-     *
-     * @param shadowEffect shadow-effect
-     */
-    public void setShadowEffect(boolean shadowEffect) {
-        this.shadowEffect = shadowEffect;
-        initShadow();
-    }
-
-    public int getShadowOffsetX() {
-        return shadowOffsetX;
-    }
-
-    /**
-     * Set the BMB's shadow offset in the x-axis.
-     *
-     * @param shadowOffsetX x-axis shadow offset
-     */
-    public void setShadowOffsetX(int shadowOffsetX) {
-        this.shadowOffsetX = shadowOffsetX;
-        initShadow();
-    }
-
-    public int getShadowOffsetY() {
-        return shadowOffsetY;
-    }
-
-    /**
-     * Set the BMB's shadow offset in the y-axis.
-     *
-     * @param shadowOffsetY y-axis shadow offset
-     */
-    public void setShadowOffsetY(int shadowOffsetY) {
-        this.shadowOffsetY = shadowOffsetY;
-        initShadow();
-    }
-
-    public int getShadowRadius() {
-        return shadowRadius;
-    }
-
-    /**
-     * Set the shadow-radius of BMB, please notice that the "radius" here means the extra
-     * radius of BMB.
-     * For example, if the radius of BMB is 30dp and the shadow-radius is 5dp, then the
-     * radius of shadow-circle behind the BMB if 35dp.
-     *
-     * @param shadowRadius extra shadow radius
-     */
-    public void setShadowRadius(int shadowRadius) {
-        this.shadowRadius = shadowRadius;
-        initShadow();
-    }
-
-    public int getShadowColor() {
-        return shadowColor;
-    }
-
-    /**
-     * Set the color of shadow.
-     *
-     * @param shadowColor color of shadow
-     */
-    public void setShadowColor(int shadowColor) {
-        this.shadowColor = shadowColor;
-        initShadow();
-    }
+//    public boolean isShadowEffect() {
+//        return shadowEffect;
+//    }
+//
+//    /**
+//     * Whether BMB should have a shadow-effect.
+//     * Notice that when you set @backgroundEffect to false, this value will set to false too.
+//     *
+//     * @param shadowEffect shadow-effect
+//     */
+//    public void setShadowEffect(boolean shadowEffect) {
+//        this.shadowEffect = shadowEffect;
+//        initShadow();
+//    }
+//
+//    public int getShadowOffsetX() {
+//        return shadowOffsetX;
+//    }
+//
+//    /**
+//     * Set the BMB's shadow offset in the x-axis.
+//     *
+//     * @param shadowOffsetX x-axis shadow offset
+//     */
+//    public void setShadowOffsetX(int shadowOffsetX) {
+//        this.shadowOffsetX = shadowOffsetX;
+//        initShadow();
+//    }
+//
+//    public int getShadowOffsetY() {
+//        return shadowOffsetY;
+//    }
+//
+//    /**
+//     * Set the BMB's shadow offset in the y-axis.
+//     *
+//     * @param shadowOffsetY y-axis shadow offset
+//     */
+//    public void setShadowOffsetY(int shadowOffsetY) {
+//        this.shadowOffsetY = shadowOffsetY;
+//        initShadow();
+//    }
+//
+//    public int getShadowRadius() {
+//        return shadowRadius;
+//    }
+//
+//    /**
+//     * Set the shadow-radius of BMB, please notice that the "radius" here means the extra
+//     * radius of BMB.
+//     * For example, if the radius of BMB is 30dp and the shadow-radius is 5dp, then the
+//     * radius of shadow-circle behind the BMB if 35dp.
+//     *
+//     * @param shadowRadius extra shadow radius
+//     */
+//    public void setShadowRadius(int shadowRadius) {
+//        this.shadowRadius = shadowRadius;
+//        initShadow();
+//    }
+//
+//    public int getShadowColor() {
+//        return shadowColor;
+//    }
+//
+//    /**
+//     * Set the color of shadow.
+//     *
+//     * @param shadowColor color of shadow
+//     */
+//    public void setShadowColor(int shadowColor) {
+//        this.shadowColor = shadowColor;
+//        initShadow();
+//    }
 
     public int getButtonRadius() {
         return buttonRadius;
