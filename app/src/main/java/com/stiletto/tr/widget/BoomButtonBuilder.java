@@ -80,11 +80,6 @@ public abstract class BoomButtonBuilder {
     TextUtils.TruncateAt subEllipsize = TextUtils.TruncateAt.MARQUEE;
     int subTextSize = 10;
 
-    // Text for text-outside-circle-button
-    int textTopMargin = Util.dp2px(5);
-    int textWidth = Util.dp2px(80);
-    int textHeight = Util.dp2px(20);
-
     // Button
     boolean rippleEffect = true;
     int normalColor = Util.getColor();
@@ -94,7 +89,6 @@ public abstract class BoomButtonBuilder {
     int unableColor = Util.getColor();
     Integer unableColorRes = null;
     boolean unable = false;
-    int buttonRadius = Util.dp2px(40);
     int buttonWidth = Util.dp2px(300);
     int buttonHeight = Util.dp2px(60);
     int buttonCornerRadius = Util.dp2px(5);

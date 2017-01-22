@@ -8,11 +8,11 @@ import android.widget.FrameLayout;
  * Created by yana on 20.01.17.
  */
 
-public abstract class BoomPiece extends View {
+public abstract class InnerItemView extends View {
 
-    private boolean requestLayoutNotFinish = false;
+    private boolean isLayoutBuilding = false;
 
-    public BoomPiece(Context context) {
+    public InnerItemView(Context context) {
         super(context);
     }
 
@@ -20,7 +20,7 @@ public abstract class BoomPiece extends View {
 
     public abstract void setColor(int color);
 
-    public void place(int left, int top, int width, int height) {
+    public void setupLayoutParams(int left, int top, int width, int height) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
         if (layoutParams != null) {
             layoutParams.leftMargin = left;
@@ -33,14 +33,14 @@ public abstract class BoomPiece extends View {
 
     @Override
     public void requestLayout() {
-        if (requestLayoutNotFinish) return;
-        requestLayoutNotFinish = true;
+        if (isLayoutBuilding) {return;}
+        isLayoutBuilding = true;
         super.requestLayout();
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        requestLayoutNotFinish = false;
+        isLayoutBuilding = false;
     }
 }

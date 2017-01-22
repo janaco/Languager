@@ -113,15 +113,6 @@ public class AnimationManager {
         return animator;
     }
 
-    public static ArrayList<Integer> getOrderIndex(OrderEnum orderEnum, int size) {
-        ArrayList<Integer> indexes = new ArrayList<>();
-        switch (orderEnum) {
-            case DEFAULT:
-                for (int i = 0; i < size; i++) indexes.add(i);
-                break;
-        }
-        return indexes;
-    }
 
     public static void calculateShowXY(BoomEnum boomEnum,
                                        Point parentSize,

@@ -11,7 +11,7 @@ import com.stiletto.tr.R;
  * Created by yana on 20.01.17.
  */
 
-public final class Ham extends BoomPiece {
+public final class Ham extends InnerItemView {
 
     public Ham(Context context) {
         super(context);

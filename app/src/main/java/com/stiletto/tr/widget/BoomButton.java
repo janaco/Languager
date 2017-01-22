@@ -39,7 +39,6 @@ public abstract class BoomButton extends FrameLayout {
     protected boolean lastStateIsNormal = true;
     protected boolean ableToHighlight = true;
     protected FrameLayout button;
-    protected int buttonRadius;  // for simple/text-inside/text-outside circle button
     protected int buttonWidth;  // for ham button
     protected int buttonHeight;  // for ham button
     protected int buttonCornerRadius;  // for ham button
@@ -204,7 +203,6 @@ public abstract class BoomButton extends FrameLayout {
         unableColor = builder.unableColor;
         unableColorRes = builder.unableColorRes;
         unable = builder.unable;
-        buttonRadius = builder.buttonRadius;
         buttonWidth = builder.buttonWidth;
         buttonHeight = builder.buttonHeight;
         buttonCornerRadius = builder.buttonCornerRadius;

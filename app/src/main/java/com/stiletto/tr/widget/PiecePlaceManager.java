@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Point;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by yana on 20.01.17.
@@ -36,7 +34,7 @@ public class PiecePlaceManager {
     }
 
 
-    public static BoomPiece createPiece(Context context, int color) {
+    public static InnerItemView createPiece(Context context, int color) {
         return createHam(context, color);
     }
 

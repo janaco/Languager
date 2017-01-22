@@ -61,7 +61,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private int cornerRadius = 15;
 
     // Piece
-    private ArrayList<BoomPiece> pieces;
+    private ArrayList<InnerItemView> itemViews;
     private ArrayList<Point> piecePositions;
     private int dotRadius;
     private int hamWidth;
@@ -84,7 +84,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private long hideDelay;
     private boolean cancelable;
     private boolean autoHide;
-    private OrderEnum orderEnum;
     private int frames;
     private BoomEnum boomEnum;
     private EaseEnum showMoveEaseEnum;
@@ -120,10 +119,9 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
 
     private void createButtons() {
-        boomButtons = new ArrayList<>(pieces.size());
-        int buttonNumber = pieces.size();
+        boomButtons = new ArrayList<>(itemViews.size());
 
-        for (int i = 0; i < buttonNumber; i++) {
+        for (int i = 0; i < itemViews.size(); i++) {
             HamButton.Builder builder =
                     (HamButton.Builder) boomButtonBuilders.get(i);
             builder.innerListener(this).index(i);
@@ -210,7 +208,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             cancelable = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_cancelable, R.bool.default_bmb_cancelable);
             autoHide = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_autoHide, R.bool.default_bmb_autoHide);
 //            orderEnum = OrderEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_orderEnum, R.integer.default_bmb_orderEnum));
-            orderEnum = OrderEnum.DEFAULT;
             frames = Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_frames, R.integer.default_bmb_frames);
 //            boomEnum = BoomEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_boomEnum, R.integer.default_bmb_boomEnum));
             boomEnum = BoomEnum.HORIZONTAL_THROW_2;
@@ -347,26 +344,26 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void removePieces() {
         button.removeAllViews();
-        if (pieces != null) pieces.clear();
+        if (itemViews != null) itemViews.clear();
     }
 
     private void createPieces() {
         calculatePiecePositions();
-        pieces = new ArrayList<>(pieceNumber);
+        itemViews = new ArrayList<>(pieceNumber);
         for (int i = 0; i < pieceNumber; i++) {
-            BoomPiece piece = PiecePlaceManager.createPiece(
+            InnerItemView piece = PiecePlaceManager.createPiece(
                     context,
                     boomButtonBuilders.get(i).pieceColor(context));
-            pieces.add(piece);
+            itemViews.add(piece);
         }
     }
 
     private void placePieces() {
-        ArrayList<Integer>
-                indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
-        // Reverse to keep the former pieces are above than the latter(z-axis)
-        // So the early-animating pieces are above than the later ones
-        for (int i = indexes.size() - 1; i >= 0; i--) button.addView(pieces.get(indexes.get(i)));
+        // Reverse to keep the former itemViews are above than the latter(z-axis)
+        // So the early-animating itemViews are above than the later ones
+        for (int i = itemViews.size() - 1; i >= 0; i--) {
+            button.addView(itemViews.get(i));
+        }
     }
 
     private void placePiecesAtPositions() {
@@ -375,7 +372,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         h = hamHeight;
 
         for (int i = 0; i < pieceNumber; i++)
-            pieces.get(i).place(piecePositions.get(i).x, piecePositions.get(i).y, w, h);
+            itemViews.get(i).setupLayoutParams(piecePositions.get(i).x, piecePositions.get(i).y, w, h);
     }
 
     private void calculatePiecePositions() {
@@ -456,7 +453,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
                 background,
                 "backgroundColor",
                 0,
-                immediately ? 1 : showDuration + showDelay * (pieces.size() - 1),
+                immediately ? 1 : showDuration + showDelay * (itemViews.size() - 1),
                 new ArgbEvaluator(),
                 new AnimatorListenerAdapter() {
                     @Override
@@ -476,7 +473,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
                 background,
                 "backgroundColor",
                 0,
-                immediately ? 1 : hideDuration + hideDelay * (pieces.size() - 1),
+                immediately ? 1 : hideDuration + hideDelay * (itemViews.size() - 1),
                 new ArgbEvaluator(),
                 new AnimatorListenerAdapter() {
                     @Override
@@ -495,48 +492,45 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private void startShowAnimations(boolean immediately) {
         if (background != null) background.removeAllViews();
         calculateEndPositions();
-        ArrayList<Integer>
-                indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
         // Reverse to keep the former boom-buttons are above than the latter(z-axis)
         // So the early-animating boom-buttons are above than the later ones
-        for (int i = indexes.size() - 1; i >= 0; i--) {
-            int index = indexes.get(i);
+        for (int index = itemViews.size() - 1; index >= 0; index--) {
             BoomButton boomButton = boomButtons.get(index);
             Point startPosition = new Point(
                     (int) (startPositions.get(index).x - boomButton.centerPoint.x),
                     (int) (startPositions.get(index).y - boomButton.centerPoint.y));
             putBoomButtonInBackground(boomButton, startPosition);
             startEachShowAnimation(
-                    pieces.get(index),
+                    itemViews.get(index),
                     boomButton,
                     startPosition,
                     new Point(endPositions.get(index)),
-                    i,
+                    index,
                     immediately);
         }
     }
 
     private void startHideAnimations(boolean immediately) {
-        ArrayList<Integer>
-                indexes = AnimationManager.getOrderIndex(orderEnum, pieces.size());
-        for (Integer index : indexes) boomButtons.get(index).bringToFront();
-        for (int i = 0; i < indexes.size(); i++) {
-            int index = indexes.get(i);
+        
+        for (int i = 0; i < itemViews.size(); i++){
+            boomButtons.get(i).bringToFront();
+        }
+        for (int index = 0; index < itemViews.size(); index++) {
             BoomButton boomButton = boomButtons.get(index);
             Point startPosition = new Point(
                     (int) (startPositions.get(index).x - boomButton.centerPoint.x),
                     (int) (startPositions.get(index).y - boomButton.centerPoint.y));
             startEachHideAnimation(
-                    pieces.get(index),
+                    itemViews.get(index),
                     boomButton,
                     new Point(endPositions.get(index)),
                     startPosition,
-                    i,
+                    index,
                     immediately);
         }
     }
 
-    private void startEachShowAnimation(final BoomPiece piece,
+    private void startEachShowAnimation(final InnerItemView piece,
                                         final BoomButton boomButton,
                                         Point startPosition,
                                         Point endPosition,
@@ -591,7 +585,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
                 }, scaleY, 1);
     }
 
-    private void startEachHideAnimation(final BoomPiece piece,
+    private void startEachHideAnimation(final InnerItemView piece,
                                         final BoomButton boomButton,
                                         Point startPosition,
                                         Point endPosition,
@@ -692,8 +686,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 //
 //    private void createButtons() {
-//        boomButtons = new ArrayList<>(pieces.size());
-//        int buttonNumber = pieces.size();
+//        boomButtons = new ArrayList<>(itemViews.size());
+//        int buttonNumber = itemViews.size();
 //
 //        for (int i = 0; i < buttonNumber; i++) {
 //            HamButton.Builder builder =
@@ -720,14 +714,14 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         ViewGroup rootView = getParentView();
         int[] rootViewLocation = new int[2];
         rootView.getLocationOnScreen(rootViewLocation);
-        for (int i = 0; i < pieces.size(); i++) {
+        for (int i = 0; i < itemViews.size(); i++) {
             Point pieceCenterInRootView = new Point();
             int[] buttonLocation = new int[2];
             button.getLocationOnScreen(buttonLocation);
             pieceCenterInRootView.x = buttonLocation[0] + piecePositions.get(i).x
-                    - rootViewLocation[0] + pieces.get(i).getLayoutParams().width / 2;
+                    - rootViewLocation[0] + itemViews.get(i).getLayoutParams().width / 2;
             pieceCenterInRootView.y = buttonLocation[1] + piecePositions.get(i).y
-                    - rootViewLocation[1] + pieces.get(i).getLayoutParams().height / 2;
+                    - rootViewLocation[1] + itemViews.get(i).getLayoutParams().height / 2;
             startPositions.add(pieceCenterInRootView);
         }
     }
@@ -1176,9 +1170,9 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the horizontal margin between pieces(dots, blocks or hams) in BMB.
+     * Set the horizontal margin between itemViews(dots, blocks or hams) in BMB.
      *
-     * @param pieceHorizontalMargin horizontal margin between pieces
+     * @param pieceHorizontalMargin horizontal margin between itemViews
      */
     public void setPieceHorizontalMargin(int pieceHorizontalMargin) {
         this.pieceHorizontalMargin = pieceHorizontalMargin;
@@ -1190,9 +1184,9 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the vertical margin between pieces(dots, blocks or hams) in BMB.
+     * Set the vertical margin between itemViews(dots, blocks or hams) in BMB.
      *
-     * @param pieceVerticalMargin vertical margin between pieces
+     * @param pieceVerticalMargin vertical margin between itemViews
      */
     public void setPieceVerticalMargin(int pieceVerticalMargin) {
         this.pieceVerticalMargin = pieceVerticalMargin;
@@ -1204,9 +1198,9 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the inclined margin between pieces(dots, blocks or hams) in BMB.
+     * Set the inclined margin between itemViews(dots, blocks or hams) in BMB.
      *
-     * @param pieceInclinedMargin inclined margin between pieces
+     * @param pieceInclinedMargin inclined margin between itemViews
      */
     public void setPieceInclinedMargin(int pieceInclinedMargin) {
         this.pieceInclinedMargin = pieceInclinedMargin;
@@ -1218,7 +1212,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the length of share-lines in BMB, only works when piece-place-enum is Share.
+     * Set the length of share-lines in BMB, only works when piece-setupLayoutParams-enum is Share.
      *
      * @param shareLineLength length of share-lines, in pixel
      */
@@ -1231,7 +1225,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the color of share-line 1(the above), only works when piece-place-enum is Share.
+     * Set the color of share-line 1(the above), only works when piece-setupLayoutParams-enum is Share.
      *
      * @param shareLine1Color color of share-line 1
      */
@@ -1244,7 +1238,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the color of share-line 2(the below), only works when piece-place-enum is Share.
+     * Set the color of share-line 2(the below), only works when piece-setupLayoutParams-enum is Share.
      *
      * @param shareLine2Color color of share-line 2
      */
@@ -1257,7 +1251,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the width of share-lines in BMB, only works when piece-place-enum is Share.
+     * Set the width of share-lines in BMB, only works when piece-setupLayoutParams-enum is Share.
      *
      * @param shareLineWidth width of share-lines, in pixel
      */
@@ -1267,9 +1261,9 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
 
 //    /**
-//     * Set the piece-place-enum, notice that @requestLayout() will be called.
+//     * Set the piece-setupLayoutParams-enum, notice that @requestLayout() will be called.
 //     *
-//     * @param piecePlaceEnum piece-place-enum
+//     * @param piecePlaceEnum piece-setupLayoutParams-enum
 //     */
 //    public void setPiecePlaceEnum(PiecePlaceEnum piecePlaceEnum) {
 //        this.piecePlaceEnum = piecePlaceEnum;
@@ -1408,19 +1402,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         this.autoHide = autoHide;
     }
 
-    public OrderEnum getOrderEnum() {
-        return orderEnum;
-    }
-
-    /**
-     * Set the order-enum for BMB.
-     *
-     * @param orderEnum order-enum
-     */
-    public void setOrderEnum(OrderEnum orderEnum) {
-        this.orderEnum = orderEnum;
-    }
-
     public int getFrames() {
         return frames;
     }
@@ -1544,9 +1525,9 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     /**
-     * Set the button-place-alignment-enum.
+     * Set the button-setupLayoutParams-alignment-enum.
      *
-     * @param buttonPlaceAlignmentEnum button-place-alignment-enum
+     * @param buttonPlaceAlignmentEnum button-setupLayoutParams-alignment-enum
      */
     public void setButtonPlaceAlignmentEnum(ButtonPlaceAlignmentEnum buttonPlaceAlignmentEnum) {
         this.buttonPlaceAlignmentEnum = buttonPlaceAlignmentEnum;
