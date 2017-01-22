@@ -132,6 +132,9 @@ public abstract class BoomButton extends FrameLayout {
     protected TextView text;
     protected TextView subText;
 
+    public PointF centerPoint;
+
+
     protected BoomButton(Context context) {
         super(context);
     }
@@ -328,32 +331,6 @@ public abstract class BoomButton extends FrameLayout {
             });
         }
         parent.addView(subText, params);
-    }
-
-    @SuppressLint("NewApi")
-    protected void initCircleButtonDrawable() {
-        if (rippleEffectWorks) {
-            RippleDrawable rippleDrawable = new RippleDrawable(
-                    ColorStateList.valueOf(highlightedColor()),
-                    Util.getOvalDrawable(button, unable ? unableColor() : normalColor()),
-                    null);
-            Util.setDrawable(button, rippleDrawable);
-            this.rippleDrawable = rippleDrawable;
-        } else {
-            nonRippleBitmapDrawable = Util.getOvalStateListBitmapDrawable(
-                    button,
-                    buttonRadius,
-                    normalColor(),
-                    highlightedColor(),
-                    unableColor());
-            if (isNeededColorAnimation()) {
-                // Then we need to create 2 drawables to perform the color-transaction effect.
-                // Because gradient-drawable is able to change the color,
-                // but not able to perform a click-effect.
-                nonRippleGradientDrawable = Util.getOvalDrawable(button, unable ? unableColor() : normalColor());
-            }
-            Util.setDrawable(button, nonRippleBitmapDrawable);
-        }
     }
 
 
@@ -607,5 +584,4 @@ public abstract class BoomButton extends FrameLayout {
     protected abstract void toNormal();
     public abstract void setRotateAnchorPoints();
     public abstract void setSelfScaleAnchorPoints();
-    public PointF centerPoint;
 }

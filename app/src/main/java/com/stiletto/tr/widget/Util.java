@@ -104,30 +104,6 @@ public class Util {
         }
     }
 
-    public static GradientDrawable getOvalDrawable(View view, int color) {
-        GradientDrawable gradientDrawable = (GradientDrawable) getDrawable(
-                view,
-                R.drawable.shape_oval_normal);
-        gradientDrawable.setColor(color);
-        return gradientDrawable;
-    }
-
-    public static BitmapDrawable getOvalBitmapDrawable(View view, int radius, int color) {
-        Bitmap bitmap = Bitmap.createBitmap(
-                2 * radius,
-                2 * radius,
-                Bitmap.Config.ARGB_8888);
-        Canvas canvasPressed = new Canvas(bitmap);
-        Paint paintPressed = new Paint();
-        paintPressed.setAntiAlias(true);
-        paintPressed.setColor(color);
-        canvasPressed.drawCircle(
-                radius,
-                radius,
-                radius, paintPressed);
-        return new BitmapDrawable(view.getResources(), bitmap);
-    }
-
     public static GradientDrawable getRectangleDrawable(View view, int cornerRadius, int color) {
         GradientDrawable gradientDrawable = (GradientDrawable) getDrawable(
                 view,
@@ -154,42 +130,6 @@ public class Util {
         return (float) Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
     }
 
-    // Bitmap drawable in state-list drawable is able to perform a click-effect.
-    public static StateListDrawable getOvalStateListBitmapDrawable(View view,
-                                                                   int radius,
-                                                                   int normalColor,
-                                                                   int highlightedColor,
-                                                                   int unableColor) {
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(
-                new int[]{android.R.attr.state_pressed},
-                getOvalBitmapDrawable(view, radius, highlightedColor));
-        stateListDrawable.addState(
-                new int[]{-android.R.attr.state_enabled},
-                getOvalBitmapDrawable(view, radius, unableColor));
-        stateListDrawable.addState(
-                StateSet.WILD_CARD,
-                getOvalBitmapDrawable(view, radius, normalColor));
-        return stateListDrawable;
-    }
-
-    // Gradient drawable in state-list drawable is not able to perform a click-effect.
-    public static StateListDrawable getOvalStateListGradientDrawable(View view,
-                                                                     int normalColor,
-                                                                     int highlightedColor,
-                                                                     int unableColor) {
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(
-                new int[]{android.R.attr.state_pressed},
-                getOvalDrawable(view, highlightedColor));
-        stateListDrawable.addState(
-                new int[]{-android.R.attr.state_enabled},
-                getOvalDrawable(view, unableColor));
-        stateListDrawable.addState(
-                StateSet.WILD_CARD,
-                getOvalDrawable(view, normalColor));
-        return stateListDrawable;
-    }
 
     // Bitmap drawable in state-list drawable is able to perform a click-effect.
     public static StateListDrawable getRectangleStateListBitmapDrawable(View view,

@@ -10,12 +10,10 @@ public class ExceptionManager {
 
     static void judge(PiecePlaceEnum piecePlaceEnum,
                       ButtonPlaceEnum buttonPlaceEnum,
-                      ButtonEnum buttonEnum,
                       BoomEnum boomEnum,
                       ArrayList<BoomButtonBuilder> boomButtonBuilders) {
         judge(piecePlaceEnum);
         judge(buttonPlaceEnum);
-        judge(buttonEnum);
         judge(boomEnum);
         judge(boomButtonBuilders);
 
@@ -52,12 +50,6 @@ public class ExceptionManager {
             throw new RuntimeException("Empty builders!");
     }
 
-    private static void judge(ButtonEnum buttonEnum) {
-        if (buttonEnum == null
-//                || buttonEnum == ButtonEnum.UNKNOWN
-                )
-            throw new RuntimeException("UNKNOWN button-enum!");
-    }
 
     private static void judge(BoomEnum boomEnum) {
         if (boomEnum == null
