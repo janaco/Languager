@@ -73,7 +73,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private int shareLine1Color;
     private int shareLine2Color;
     private int shareLineWidth;
-    private PiecePlaceEnum piecePlaceEnum = PiecePlaceEnum.HAM_6;
 
     // Animation
     private int animatingViewNumber = 0;
@@ -116,6 +115,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private ArrayList<Point> startPositions;
     private ArrayList<Point> endPositions;
     private Float bottomHamButtonTopMargin;
+
+    private int pieceNumber = 10;
 
 
     private void createButtons() {
@@ -199,7 +200,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             shareLine2Color = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_shareLine2Color, R.color.default_bmb_shareLine2Color);
             shareLineWidth = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_shareLineWidth, R.dimen.default_bmb_shareLineWidth);
 //            piecePlaceEnum = PiecePlaceEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_piecePlaceEnum, R.integer.default_bmb_pieceEnum));
-            piecePlaceEnum = PiecePlaceEnum.HAM_6;
 
             // Animation
             dimColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_dimColor, R.color.default_bmb_dimColor);
@@ -336,7 +336,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void doLayoutJobs() {
-        ExceptionManager.judge(piecePlaceEnum,  boomEnum, boomButtonBuilders);
         removePieces();
         createPieces();
         placePieces();
@@ -353,12 +352,10 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void createPieces() {
         calculatePiecePositions();
-        int pieceNumber = pieceNumber();
         pieces = new ArrayList<>(pieceNumber);
         for (int i = 0; i < pieceNumber; i++) {
             BoomPiece piece = PiecePlaceManager.createPiece(
                     context,
-                    piecePlaceEnum,
                     boomButtonBuilders.get(i).pieceColor(context));
             pieces.add(piece);
         }
@@ -373,21 +370,10 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void placePiecesAtPositions() {
-        int pieceNumber = pieceNumber();
         int w, h;
-        switch (piecePlaceEnum) {
-            case HAM_1:
-            case HAM_2:
-            case HAM_3:
-            case HAM_4:
-            case HAM_5:
-            case HAM_6:
-                w = hamWidth;
-                h = hamHeight;
-                break;
-            default:
-                throw new RuntimeException("UNKNOWN piece-place-enum!");
-        }
+        w = hamWidth;
+        h = hamHeight;
+
         for (int i = 0; i < pieceNumber; i++)
             pieces.get(i).place(piecePositions.get(i).x, piecePositions.get(i).y, w, h);
     }
@@ -395,7 +381,7 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private void calculatePiecePositions() {
 
         piecePositions = PiecePlaceManager.getHamPositions(
-                piecePlaceEnum,
+                pieceNumber,
                 new Point(button.getWidth(), button.getHeight()),
                 hamWidth,
                 hamHeight,
@@ -421,7 +407,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void innerBoom(boolean immediately) {
-        ExceptionManager.judge(piecePlaceEnum, boomEnum, boomButtonBuilders);
         if (isAnimating() || boomStateEnum != MenuStateEnum.DidHide) return;
         boomStateEnum = MenuStateEnum.WillShow;
         if (onBoomListener != null) onBoomListener.onBoomWillShow();
@@ -731,7 +716,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void calculateStartPositions() {
-        int pieceNumber = pieceNumber();
         startPositions = new ArrayList<>(pieceNumber);
         ViewGroup rootView = getParentView();
         int[] rootViewLocation = new int[2];
@@ -815,9 +799,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         post(layoutJobsRunnable);
     }
 
-    private int pieceNumber() {
-        return piecePlaceEnum.pieceNumber();
-    }
 
     //endregion
 
@@ -827,7 +808,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         if (onBoomListener != null) onBoomListener.onClicked(index, boomButton);
         if (autoHide) reboom();
     }
-
 
 
     //region Builders
@@ -1285,19 +1265,16 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         this.shareLineWidth = shareLineWidth;
     }
 
-    public PiecePlaceEnum getPiecePlaceEnum() {
-        return piecePlaceEnum;
-    }
 
-    /**
-     * Set the piece-place-enum, notice that @requestLayout() will be called.
-     *
-     * @param piecePlaceEnum piece-place-enum
-     */
-    public void setPiecePlaceEnum(PiecePlaceEnum piecePlaceEnum) {
-        this.piecePlaceEnum = piecePlaceEnum;
-        toLayout();
-    }
+//    /**
+//     * Set the piece-place-enum, notice that @requestLayout() will be called.
+//     *
+//     * @param piecePlaceEnum piece-place-enum
+//     */
+//    public void setPiecePlaceEnum(PiecePlaceEnum piecePlaceEnum) {
+//        this.piecePlaceEnum = piecePlaceEnum;
+//        toLayout();
+//    }
 
     public OnBoomListener getOnBoomListener() {
         return onBoomListener;
@@ -1680,6 +1657,10 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
      */
     public void setBottomHamButtonTopMargin(float bottomHamButtonTopMargin) {
         this.bottomHamButtonTopMargin = bottomHamButtonTopMargin;
+    }
+
+    public int getPieceNumber() {
+        return pieceNumber;
     }
 
     //endregion

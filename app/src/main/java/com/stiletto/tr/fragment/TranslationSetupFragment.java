@@ -28,7 +28,7 @@ public class TranslationSetupFragment extends Fragment {
 
         final ListMenuButton bmb1 = (ListMenuButton) view.findViewById(R.id.bmb1);
 
-        for (int i = 0; i < bmb1.getPiecePlaceEnum().pieceNumber(); i++) {
+        for (int i = 0; i < bmb1.getPieceNumber(); i++) {
             bmb1.addBuilder(BuilderManager.getHamButtonBuilder());
         }
 
