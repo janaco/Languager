@@ -3,6 +3,7 @@ package com.stiletto.tr.widget;
 import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 /**
  * Created by yana on 20.01.17.

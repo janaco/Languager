@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.stiletto.tr.R;
 
@@ -27,7 +29,9 @@ import java.util.ArrayList;
  * Created by yana on 20.01.17.
  */
 
-public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClickListener {
+public class ListMenuButton
+        extends FrameLayout
+        implements InnerOnBoomButtonClickListener {
 
     // Basic
     private Context context;
@@ -38,15 +42,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private boolean isBackPressListened = true;
     private Runnable layoutJobsRunnable;
 
-    // Shadow
-//    private boolean shadowEffect;
-//    private int shadowOffsetX;
-//    private int shadowOffsetY;
-//    private int shadowRadius;
-//    private int shadowColor;
-//    private BMBShadow shadow;
-
-
     // Button
     private int buttonRadius;
     private boolean backgroundEffect;
@@ -56,23 +51,16 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     private int unableColor;
     private FrameLayout button;
 
-    private int buttonWidth = 300;
-    private int buttonHeight = 60;
     private int cornerRadius = 15;
 
     // Piece
     private ArrayList<InnerItemView> itemViews;
     private ArrayList<Point> piecePositions;
-    private int dotRadius;
     private int hamWidth;
     private int hamHeight;
     private int pieceHorizontalMargin;
     private int pieceVerticalMargin;
     private int pieceInclinedMargin;
-    private int shareLineLength;
-    private int shareLine1Color;
-    private int shareLine2Color;
-    private int shareLineWidth;
 
     // Animation
     private int animatingViewNumber = 0;
@@ -153,7 +141,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
         LayoutInflater.from(context).inflate(R.layout.bmb, this, true);
         initAttrs(context, attrs);
-        initShadow();
         initButton();
     }
 
@@ -168,13 +155,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             inFragment = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_inFragment, R.bool.default_bmb_inFragment);
             isBackPressListened = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_backPressListened, R.bool.default_bmb_backPressListened);
 
-            // Shadow
-//            shadowEffect = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_shadowEffect, R.bool.default_bmb_shadow_effect);
-//            shadowRadius = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_shadowRadius, R.dimen.default_bmb_shadow_radius);
-//            shadowOffsetX = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_shadowOffsetX, R.dimen.default_bmb_shadow_offset_x);
-//            shadowOffsetY = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_shadowOffsetY, R.dimen.default_bmb_shadow_offset_y);
-//            shadowColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_shadowColor, R.color.default_bmb_shadow_color);
-
             // Button
             buttonRadius = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_buttonRadius, R.dimen.default_bmb_button_radius);
             backgroundEffect = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_backgroundEffect, R.bool.default_bmb_background_effect);
@@ -187,17 +167,11 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             if (unableColor == Color.TRANSPARENT) unableColor = Util.getLighterColor(normalColor);
 
             // Piece
-            dotRadius = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_dotRadius, R.dimen.default_bmb_dotRadius);
             hamWidth = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_hamWidth, R.dimen.default_bmb_hamWidth);
             hamHeight = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_hamHeight, R.dimen.default_bmb_hamHeight);
             pieceHorizontalMargin = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_pieceHorizontalMargin, R.dimen.default_bmb_pieceHorizontalMargin);
             pieceVerticalMargin = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_pieceVerticalMargin, R.dimen.default_bmb_pieceVerticalMargin);
             pieceVerticalMargin = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_pieceInclinedMargin, R.dimen.default_bmb_pieceInclinedMargin);
-            shareLineLength = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_sharedLineLength, R.dimen.default_bmb_sharedLineLength);
-            shareLine1Color = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_shareLine1Color, R.color.default_bmb_shareLine1Color);
-            shareLine2Color = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_shareLine2Color, R.color.default_bmb_shareLine2Color);
-            shareLineWidth = Util.getDimenSize(typedArray, R.styleable.BoomMenuButton_bmb_shareLineWidth, R.dimen.default_bmb_shareLineWidth);
-//            piecePlaceEnum = PiecePlaceEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_piecePlaceEnum, R.integer.default_bmb_pieceEnum));
 
             // Animation
             dimColor = Util.getColor(typedArray, R.styleable.BoomMenuButton_bmb_dimColor, R.color.default_bmb_dimColor);
@@ -207,16 +181,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             hideDelay = Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_hideDelay, R.integer.default_bmb_hideDelay);
             cancelable = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_cancelable, R.bool.default_bmb_cancelable);
             autoHide = Util.getBoolean(typedArray, R.styleable.BoomMenuButton_bmb_autoHide, R.bool.default_bmb_autoHide);
-//            orderEnum = OrderEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_orderEnum, R.integer.default_bmb_orderEnum));
             frames = Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_frames, R.integer.default_bmb_frames);
-//            boomEnum = BoomEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_boomEnum, R.integer.default_bmb_boomEnum));
             boomEnum = BoomEnum.HORIZONTAL_THROW_2;
-//            showMoveEaseEnum = EaseEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_showMoveEaseEnum, R.integer.default_bmb_showMoveEaseEnum));
-//            showScaleEaseEnum = EaseEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_showScaleEaseEnum, R.integer.default_bmb_showScaleEaseEnum));
-//            showRotateEaseEnum = EaseEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_showRotateEaseEnum, R.integer.default_bmb_showRotateEaseEnum));
-//            hideMoveEaseEnum = EaseEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_hideMoveEaseEnum, R.integer.default_bmb_hideMoveEaseEnum));
-//            hideScaleEaseEnum = EaseEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_hideScaleEaseEnum, R.integer.default_bmb_hideScaleEaseEnum));
-//            hideRotateEaseEnum = EaseEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_hideRotateEaseEnum, R.integer.default_bmb_hideRotateEaseEnum));
             showMoveEaseEnum = EaseEnum.EaseOutBack;
             showScaleEaseEnum = EaseEnum.EaseOutBack;
             showRotateEaseEnum = EaseEnum.EaseOutBack;
@@ -227,8 +193,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             rotateDegree = Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_rotateDegree, R.integer.default_bmb_rotateDegree);
 
             // Boom buttons
-//                    getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_buttonPlaceEnum, R.integer.default_bmb_buttonPlaceEnum));
-//            buttonPlaceAlignmentEnum = ButtonPlaceAlignmentEnum.getEnum(Util.getInt(typedArray, R.styleable.BoomMenuButton_bmb_buttonPlaceAlignmentEnum, R.integer.default_bmb_buttonPlaceAlignmentEnum));
             buttonPlaceAlignmentEnum = ButtonPlaceAlignmentEnum.Center;
 
             buttonHorizontalMargin = Util.getDimenOffset(typedArray, R.styleable.BoomMenuButton_bmb_buttonHorizontalMargin, R.dimen.default_bmb_buttonHorizontalMargin);
@@ -249,20 +213,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         }
     }
 
-    private void initShadow() {
-//        if (shadow == null) shadow = (BMBShadow) findViewById(R.id.shadow);
-//        boolean hasShadow = shadowEffect && backgroundEffect;
-//        shadow.setShadowEffect(hasShadow);
-//        if (hasShadow) {
-//            shadow.setShadowOffsetX(shadowOffsetX);
-//            shadow.setShadowOffsetY(shadowOffsetY);
-//            shadow.setShadowColor(shadowColor);
-//            shadow.setShadowRadius(shadowRadius);
-//            shadow.setShadowCornerRadius(shadowRadius + buttonRadius);
-//        } else {
-//            shadow.clearShadow();
-//        }
-    }
 
     private void initButton() {
         if (button == null) button = (FrameLayout) findViewById(R.id.button);
@@ -279,8 +229,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
 
     private void setButtonSize() {
         LayoutParams params = (LayoutParams) button.getLayoutParams();
-        params.width = buttonRadius * 2;
-        params.height = buttonRadius * 2;
+        params.width = hamWidth;
+        params.height = hamHeight;
         button.setLayoutParams(params);
     }
 
@@ -295,8 +245,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
             } else {
                 StateListDrawable stateListDrawable = Util.getRectangleStateListBitmapDrawable(
                         button,
-                        buttonWidth,
-                        buttonHeight,
+                        hamWidth,
+                        hamHeight,
                         cornerRadius,
                         normalColor,
                         highlightedColor,
@@ -511,8 +461,8 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
     }
 
     private void startHideAnimations(boolean immediately) {
-        
-        for (int i = 0; i < itemViews.size(); i++){
+
+        for (int i = 0; i < itemViews.size(); i++) {
             boomButtons.get(i).bringToFront();
         }
         for (int index = 0; index < itemViews.size(); index++) {
@@ -1123,20 +1073,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         toLayout();
     }
 
-    public int getDotRadius() {
-        return dotRadius;
-    }
-
-    /**
-     * Set the radius of dots in BMB.
-     *
-     * @param dotRadius radius of dot
-     */
-    public void setDotRadius(int dotRadius) {
-        this.dotRadius = dotRadius;
-        toLayout();
-    }
-
     public int getHamWidth() {
         return hamWidth;
     }
@@ -1207,60 +1143,6 @@ public class ListMenuButton extends FrameLayout implements InnerOnBoomButtonClic
         toLayout();
     }
 
-    public int getShareLineLength() {
-        return shareLineLength;
-    }
-
-    /**
-     * Set the length of share-lines in BMB, only works when piece-setupLayoutParams-enum is Share.
-     *
-     * @param shareLineLength length of share-lines, in pixel
-     */
-    public void setShareLineLength(int shareLineLength) {
-        this.shareLineLength = shareLineLength;
-    }
-
-    public int getShareLine1Color() {
-        return shareLine1Color;
-    }
-
-    /**
-     * Set the color of share-line 1(the above), only works when piece-setupLayoutParams-enum is Share.
-     *
-     * @param shareLine1Color color of share-line 1
-     */
-    public void setShareLine1Color(int shareLine1Color) {
-        this.shareLine1Color = shareLine1Color;
-    }
-
-    public int getShareLine2Color() {
-        return shareLine2Color;
-    }
-
-    /**
-     * Set the color of share-line 2(the below), only works when piece-setupLayoutParams-enum is Share.
-     *
-     * @param shareLine2Color color of share-line 2
-     */
-    public void setShareLine2Color(int shareLine2Color) {
-        this.shareLine2Color = shareLine2Color;
-    }
-
-    public int getShareLineWidth() {
-        return shareLineWidth;
-    }
-
-    /**
-     * Set the width of share-lines in BMB, only works when piece-setupLayoutParams-enum is Share.
-     *
-     * @param shareLineWidth width of share-lines, in pixel
-     */
-    public void setShareLineWidth(int shareLineWidth) {
-        this.shareLineWidth = shareLineWidth;
-    }
-
-
-//    /**
 //     * Set the piece-setupLayoutParams-enum, notice that @requestLayout() will be called.
 //     *
 //     * @param piecePlaceEnum piece-setupLayoutParams-enum

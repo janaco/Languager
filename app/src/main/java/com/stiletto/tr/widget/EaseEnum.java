@@ -47,7 +47,6 @@ public  enum EaseEnum {
     EaseInOutBounce(29),
 
     Linear(30);
-//    Unknown(-1);
 
     private final int value;
 
@@ -59,8 +58,4 @@ public  enum EaseEnum {
         return value;
     }
 
-//    public static EaseEnum getEnum(int value) {
-//        if (value < 0 || value >= values().length) return Unknown;
-//        return values()[value];
-//    }
 }

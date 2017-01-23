@@ -16,21 +16,11 @@ public  enum ButtonPlaceAlignmentEnum {
     BL(7),
     BR(8);
 
-//    Unknown(-1);
 
     private final int value;
 
     ButtonPlaceAlignmentEnum(int value) {
         this.value = value;
     }
-
-    public int getValue() {
-        return value;
-    }
-
-//    public static ButtonPlaceAlignmentEnum getEnum(int value) {
-//        if (value < 0 || value >= values().length) return Unknown;
-//        return values()[value];
-//    }
 
 }
