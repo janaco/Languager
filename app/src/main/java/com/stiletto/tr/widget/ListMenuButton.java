@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
@@ -49,7 +50,9 @@ public class ListMenuButton
     private int normalColor;
     private int highlightedColor;
     private int unableColor;
-    private FrameLayout button;
+    private RelativeLayout button;
+    private FrameLayout buttonIcon;
+    private TextView buttonText;
 
     private int cornerRadius = 15;
 
@@ -215,7 +218,10 @@ public class ListMenuButton
 
 
     private void initButton() {
-        if (button == null) button = (FrameLayout) findViewById(R.id.button);
+        if (button == null) button = (RelativeLayout) findViewById(R.id.button);
+        buttonText = (TextView) findViewById(R.id.text);
+        buttonIcon = (FrameLayout) findViewById(R.id.icon);
+
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,8 +235,10 @@ public class ListMenuButton
 
     private void setButtonSize() {
         LayoutParams params = (LayoutParams) button.getLayoutParams();
-        params.width = hamWidth;
-        params.height = hamHeight;
+//        params.width = hamWidth;
+//        params.height = hamHeight;
+        params.width = 900;
+        params.height = 500;
         button.setLayoutParams(params);
     }
 
@@ -293,7 +301,7 @@ public class ListMenuButton
     }
 
     private void removePieces() {
-        button.removeAllViews();
+        buttonIcon.removeAllViews();
         if (itemViews != null) itemViews.clear();
     }
 
@@ -312,7 +320,7 @@ public class ListMenuButton
         // Reverse to keep the former itemViews are above than the latter(z-axis)
         // So the early-animating itemViews are above than the later ones
         for (int i = itemViews.size() - 1; i >= 0; i--) {
-            button.addView(itemViews.get(i));
+            buttonIcon.addView(itemViews.get(i));
         }
     }
 
@@ -329,7 +337,7 @@ public class ListMenuButton
 
         piecePositions = PiecePlaceManager.getHamPositions(
                 pieceNumber,
-                new Point(button.getWidth(), button.getHeight()),
+                new Point(buttonIcon.getWidth(), buttonIcon.getHeight()),
                 hamWidth,
                 hamHeight,
                 pieceVerticalMargin);
@@ -667,7 +675,7 @@ public class ListMenuButton
         for (int i = 0; i < itemViews.size(); i++) {
             Point pieceCenterInRootView = new Point();
             int[] buttonLocation = new int[2];
-            button.getLocationOnScreen(buttonLocation);
+            buttonIcon.getLocationOnScreen(buttonLocation);
             pieceCenterInRootView.x = buttonLocation[0] + piecePositions.get(i).x
                     - rootViewLocation[0] + itemViews.get(i).getLayoutParams().width / 2;
             pieceCenterInRootView.y = buttonLocation[1] + piecePositions.get(i).y
@@ -901,80 +909,6 @@ public class ListMenuButton
     public void setBackPressListened(boolean backPressListened) {
         isBackPressListened = backPressListened;
     }
-
-//    public boolean isShadowEffect() {
-//        return shadowEffect;
-//    }
-//
-//    /**
-//     * Whether BMB should have a shadow-effect.
-//     * Notice that when you set @backgroundEffect to false, this value will set to false too.
-//     *
-//     * @param shadowEffect shadow-effect
-//     */
-//    public void setShadowEffect(boolean shadowEffect) {
-//        this.shadowEffect = shadowEffect;
-//        initShadow();
-//    }
-//
-//    public int getShadowOffsetX() {
-//        return shadowOffsetX;
-//    }
-//
-//    /**
-//     * Set the BMB's shadow offset in the x-axis.
-//     *
-//     * @param shadowOffsetX x-axis shadow offset
-//     */
-//    public void setShadowOffsetX(int shadowOffsetX) {
-//        this.shadowOffsetX = shadowOffsetX;
-//        initShadow();
-//    }
-//
-//    public int getShadowOffsetY() {
-//        return shadowOffsetY;
-//    }
-//
-//    /**
-//     * Set the BMB's shadow offset in the y-axis.
-//     *
-//     * @param shadowOffsetY y-axis shadow offset
-//     */
-//    public void setShadowOffsetY(int shadowOffsetY) {
-//        this.shadowOffsetY = shadowOffsetY;
-//        initShadow();
-//    }
-//
-//    public int getShadowRadius() {
-//        return shadowRadius;
-//    }
-//
-//    /**
-//     * Set the shadow-radius of BMB, please notice that the "radius" here means the extra
-//     * radius of BMB.
-//     * For example, if the radius of BMB is 30dp and the shadow-radius is 5dp, then the
-//     * radius of shadow-circle behind the BMB if 35dp.
-//     *
-//     * @param shadowRadius extra shadow radius
-//     */
-//    public void setShadowRadius(int shadowRadius) {
-//        this.shadowRadius = shadowRadius;
-//        initShadow();
-//    }
-//
-//    public int getShadowColor() {
-//        return shadowColor;
-//    }
-//
-//    /**
-//     * Set the color of shadow.
-//     *
-//     * @param shadowColor color of shadow
-//     */
-//    public void setShadowColor(int shadowColor) {
-//        this.shadowColor = shadowColor;
-//        initShadow();
-//    }
 
     public int getButtonRadius() {
         return buttonRadius;
