@@ -18,6 +18,7 @@ public class NavigationManager {
         }
         activity.getSupportFragmentManager()
                 .beginTransaction()
+                .addToBackStack(nextFragment.getName())
                 .replace(R.id.container, nextFragment, nextFragment.getName())
                 .commit();
     }
@@ -40,6 +41,8 @@ public class NavigationManager {
         if (fragment == null) {
             return;
         }
+        activity.getSupportFragmentManager().popBackStack();
+
         activity.getSupportFragmentManager()
                 .beginTransaction().remove(fragment)
                 .commit();

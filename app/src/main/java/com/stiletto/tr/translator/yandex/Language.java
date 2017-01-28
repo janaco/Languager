@@ -40,15 +40,16 @@ public enum Language {
     TURKISH("tr"),
     UKRAINIAN("uk");
 
-    private final String language;
+    private final String code;
 
-     Language(final String language) {
-        this.language = language;
+     Language(final String code) {
+        this.code = code;
     }
 
     @Override
     public String toString() {
-        return language;
+        return code;
     }
+
 
 }

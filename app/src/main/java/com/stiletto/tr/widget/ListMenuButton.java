@@ -951,10 +951,10 @@ public class ListMenuButton
     }
 
     /**
-     * Whether the BMB should have a ripple-effect.
-     * The ripple effect is disable below LOLLIPOP.
+     * Whether the BMB should have a btn_background-effect.
+     * The btn_background effect is disable below LOLLIPOP.
      *
-     * @param rippleEffect ripple effect
+     * @param rippleEffect btn_background effect
      */
     public void setRippleEffect(boolean rippleEffect) {
         this.rippleEffect = rippleEffect;
