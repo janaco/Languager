@@ -1,6 +1,7 @@
 package com.stiletto.tr.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.readers.EPUBReader;
@@ -27,6 +28,9 @@ public class Book implements Comparable<Book> {
         this.fileType = name.contains(".") ? FileType.getType(name.substring(name.lastIndexOf(".")).toLowerCase()) : FileType.UNKNOWN;
         this.size = size;
 
+        setMetaData();
+        Log.d("epublib", name + " cover: " + cover);
+
     }
 
 
@@ -35,11 +39,12 @@ public class Book implements Comparable<Book> {
         switch (fileType) {
 
             case EPUB:
+                Log.d("epublib", "setMetaData: " + name);
                 cover = EPUBReader.getCover(path);
                 break;
 
             case PDF:
-                cover = TextUtils.textAsBitmap(PDFReader.getPage(path, name, 5));
+//                cover = TextUtils.textAsBitmap(PDFReader.getPage(path, name, 5));
                 break;
 
         }

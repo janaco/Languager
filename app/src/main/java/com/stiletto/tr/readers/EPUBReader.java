@@ -6,20 +6,16 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import nl.siegmann.epublib.domain.Book;
-import nl.siegmann.epublib.domain.MediaType;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubReader;
-import nl.siegmann.epublib.service.MediatypeService;
 
 /**
  * Created by yana on 25.12.16.
@@ -29,18 +25,15 @@ public class EPUBReader {
 
     public static Bitmap getCover(String filePath) {
 
-
         try {
             InputStream inputStream = new FileInputStream(filePath);
             Book book = (new EpubReader()).readEpub(inputStream);
 
+            Resource resource = book.getCoverImage();
 
-            if (book.getCoverImage() != null){
-                return BitmapFactory.decodeStream(book.getCoverImage().getInputStream());
-            }else if (book.getCoverPage() != null){
-                return BitmapFactory.decodeStream(book.getCoverPage().getInputStream());
+            if (resource != null) {
+               return BitmapFactory.decodeStream(resource.getInputStream());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,6 +46,7 @@ public class EPUBReader {
         try {
             InputStream inputStream = new FileInputStream(file);
             Book book = (new EpubReader()).readEpub(inputStream);
+
 
             String text = readContent(book.getTableOfContents().getTocReferences(), 0);
             Spanned spanned;

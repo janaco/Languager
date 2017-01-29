@@ -1,6 +1,7 @@
 package com.stiletto.tr.adapter;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,6 @@ public class BooksAdapter extends BaseAdapter {
     public BooksAdapter(Context context, List<Book> bookList) {
         this.bookList = bookList;
         Collections.sort(this.bookList);
-        Log.d("BOOKS_", "" + this.bookList);
         lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -73,11 +73,14 @@ public class BooksAdapter extends BaseAdapter {
 
     private void bindView(View view, ViewHolder holder, final int position) {
         final Book book = getItem(position);
-        holder.itemName.setText(book.getName().length() > 30 ? book.getName().substring(0, 30).concat("...") : book.getName() );
+        holder.itemName.setText(book.getName().length() > 30 ? book.getName().substring(0, 30).concat("...") : book.getName());
         holder.itemExtension.setText(book.getFileType().name().toUpperCase());
 
-        if (book.hasCover()){
+        if (book.hasCover()) {
             holder.itemCover.setImageBitmap(book.getCover());
+        }else {
+            holder.itemCover.setImageBitmap(BitmapFactory.decodeResource(
+                    holder.itemCover.getContext().getResources(), R.drawable.book));
         }
 
 

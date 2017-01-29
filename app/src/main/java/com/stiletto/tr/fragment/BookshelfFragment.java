@@ -64,6 +64,7 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
 
             @Override
             protected Void doInBackground(Void... voids) {
+
                 List<Book> bookList = FileSeeker.getBooks();
                 adapter = new BooksAdapter(getContext(), bookList);
                 adapter.setOnItemClickListener(BookshelfFragment.this);
