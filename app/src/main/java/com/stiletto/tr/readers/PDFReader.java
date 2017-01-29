@@ -17,6 +17,12 @@ public class PDFReader {
 
         try {
             PdfReader reader = new PdfReader(filePath);
+
+            int pagesCount = reader.getNumberOfPages();
+
+            if (pageNumber > pagesCount){
+                pageNumber = pagesCount > 1 ? pagesCount - 1 : pagesCount;
+            }
             return PdfTextExtractor.getTextFromPage(reader, pageNumber);
         } catch (IOException e) {
             e.printStackTrace();

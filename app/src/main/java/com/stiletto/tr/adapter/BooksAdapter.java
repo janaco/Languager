@@ -1,8 +1,7 @@
 package com.stiletto.tr.adapter;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,9 +77,9 @@ public class BooksAdapter extends BaseAdapter {
 
         if (book.hasCover()) {
             holder.itemCover.setImageBitmap(book.getCover());
-        }else {
-            holder.itemCover.setImageBitmap(BitmapFactory.decodeResource(
-                    holder.itemCover.getContext().getResources(), R.drawable.book));
+        } else {
+            holder.itemCover.setImageDrawable(ContextCompat.getDrawable(
+                    holder.itemCover.getContext(), R.drawable.book));
         }
 
 

@@ -51,7 +51,7 @@ public class Book implements Comparable<Book> {
                 break;
 
             case PDF:
-//                cover = TextUtils.textAsBitmap(PDFReader.getPage(path, name, 5));
+                cover = TextUtils.textAsBitmap(PDFReader.getPage(path, name, 52));
                 break;
 
         }
