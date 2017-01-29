@@ -45,12 +45,17 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
     private View popView;
     private PopupFragment popupFragment;
 
+    private Language primaryLanguage;
+    private Language translationLangusage;
 
-    public static PageFragment create(int pageNumber, CharSequence content) {
+
+    public static PageFragment create(int pageNumber, CharSequence content, Language primaryLang, Language translationLang) {
         PageFragment fragment = new PageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
         args.putCharSequence(ARG_CONTENT, content);
+        args.putString("primary_lang", primaryLang.toString());
+        args.putString("trans_lang", translationLang.toString());
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +66,8 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
         super.onCreate(savedInstanceState);
         pageNumber = getArguments().getInt(ARG_PAGE);
         content = getArguments().getCharSequence(ARG_CONTENT);
+        primaryLanguage = Language.getLanguage(getArguments().getString("primary_lang"));
+        translationLangusage = Language.getLanguage(getArguments().getString("trans_lang"));
     }
 
     @Nullable
@@ -138,7 +145,7 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
 
     private void translate(final CharSequence word) {
-        Translator.translate(word, Language.ENGLISH, Language.UKRAINIAN, new Callback<Translation>() {
+        Translator.translate(word, primaryLanguage, translationLangusage, new Callback<Translation>() {
             @Override
             public void onResponse(Call<Translation> call, Response<Translation> response) {
 
@@ -164,7 +171,7 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
     private void lookup(final CharSequence word) {
 
-        Translator.getDictionary(word, Language.ENGLISH, Language.UKRAINIAN, new Callback<Dictionary>() {
+        Translator.getDictionary(word, primaryLanguage, translationLangusage, new Callback<Dictionary>() {
             @Override
             public void onResponse(Call<Dictionary> call, Response<Dictionary> response) {
 

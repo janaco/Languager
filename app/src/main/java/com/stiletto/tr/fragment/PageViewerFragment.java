@@ -131,7 +131,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
             protected Void doInBackground(Void... voids) {
 
                 pagination = new Pagination(getBookContent(), itemBookPage);
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination));
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, languagePrimary, languageTranslation));
                 return null;
             }
 
@@ -166,12 +166,12 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
             protected Void doInBackground(Void... voids) {
 
                 pagination = new Pagination(PDFReader.parseAsText(file.getPath(), 1, 10), itemBookPage);
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination));
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, languagePrimary, languageTranslation));
 
                 handler.sendEmptyMessage(1);
 
                 pagination = new Pagination(PDFReader.parseAsText(file.getPath()), itemBookPage);
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination));
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, languagePrimary, languageTranslation));
 
                 return null;
             }
