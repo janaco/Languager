@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
-import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +19,11 @@ import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.PagerAdapter;
-import com.stiletto.tr.model.Book;
-import com.stiletto.tr.pagination.PageSplitter;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.readers.TxtReader;
+import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.widget.ClickableTextView;
 
@@ -65,12 +63,17 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     private Pagination pagination;
     private String path;
 
-    public static PageViewerFragment create(Book book) {
+    private Language languagePrimary;
+    private Language languageTranslation;
+
+    public static PageViewerFragment create(String pathToBook, Language from, Language to) {
 
         PageViewerFragment fragment = new PageViewerFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putString("path", book.getPath());
+        arguments.putString("path", pathToBook);
+        arguments.putString("lang_from", from.toString());
+        arguments.putString("lang_to", to.toString());
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -79,12 +82,15 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         path = getArguments().getString("path");
+        languagePrimary = Language.getLanguage(getArguments().getString("lang_from"));
+        languageTranslation = Language.getLanguage(getArguments().getString("lang_to"));
 
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_viewer, container, false);
         ButterKnife.bind(this, view);
@@ -125,7 +131,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
             protected Void doInBackground(Void... voids) {
 
                 pagination = new Pagination(getBookContent(), itemBookPage);
-                pagerAdapter = new PagerAdapter(getChildFragmentManager(), pagination);
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination));
                 return null;
             }
 
@@ -159,13 +165,13 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
             @Override
             protected Void doInBackground(Void... voids) {
 
-                pagination = new Pagination(PDFReader.parseAsText(file.getPath(), 1, 10),itemBookPage);
-                pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
+                pagination = new Pagination(PDFReader.parseAsText(file.getPath(), 1, 10), itemBookPage);
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination));
 
                 handler.sendEmptyMessage(1);
 
                 pagination = new Pagination(PDFReader.parseAsText(file.getPath()), itemBookPage);
-                pagerAdapter = new PagerAdapter(getFragmentManager(), pagination);
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination));
 
                 return null;
             }
@@ -303,5 +309,10 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
         if (currentPage < viewPager.getAdapter().getCount()) {
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
         }
+    }
+
+    private void setAdapter(PagerAdapter adapter) {
+        this.pagerAdapter = adapter;
+
     }
 }

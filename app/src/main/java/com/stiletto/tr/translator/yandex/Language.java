@@ -38,7 +38,10 @@ public enum Language {
     SPANISH("es"),
     SWEDISH("sv"),
     TURKISH("tr"),
-    UKRAINIAN("uk");
+    UKRAINIAN("uk"),
+
+    UNKNOWN("");
+
 
     private final String code;
 
@@ -49,6 +52,117 @@ public enum Language {
     @Override
     public String toString() {
         return code;
+    }
+
+    public static Language getLanguage(String code){
+
+        switch (code){
+
+            case "sq":
+                return ALBANIAN;
+
+            case "hy":
+                return ARMENIAN;
+
+            case "az":
+                return AZERBAIJANI;
+
+            case "be":
+                return BELARUSIAN;
+
+            case "bg":
+                return BULGARIAN;
+
+            case "ca":
+                return CATALAN;
+
+            case "hr":
+                return CROATIAN;
+
+            case "cs":
+                return CZECH;
+
+            case "da":
+                return DANISH;
+
+            case "nl":
+                return DUTCH;
+
+            case "en":
+                return ENGLISH;
+
+            case "et":
+                return ESTONIAN;
+
+            case "fi":
+                return FINNISH;
+
+            case "fr":
+                return FRENCH;
+
+            case "de":
+                return GERMAN;
+
+            case "ka":
+                return GEORGIAN;
+
+            case "el":
+                return GREEK;
+
+            case "hu":
+                return HUNGARIAN;
+
+            case "it":
+                return ITALIAN;
+
+            case "lv":
+                return LATVIAN;
+
+            case "lt":
+                return LITHUANIAN;
+
+            case "mk":
+                return MACEDONIAN;
+
+            case "no":
+                return NORWEGIAN;
+
+            case "pl":
+                return POLISH;
+
+            case "pt":
+                return PORTUGUESE;
+
+            case "ro":
+                return ROMANIAN;
+
+            case "ru":
+                return RUSSIAN;
+
+            case "sr":
+                return SERBIAN;
+
+            case "sk":
+                return SLOVAK;
+
+            case "sl":
+                return SLOVENIAN;
+
+            case "es":
+                return SPANISH;
+
+            case "sv":
+                return SWEDISH;
+
+            case "tr":
+                return TURKISH;
+
+            case "uk":
+                return UKRAINIAN;
+
+            default:
+                return UNKNOWN;
+        }
     }
 
 

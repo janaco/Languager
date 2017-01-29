@@ -90,7 +90,7 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
 
     private void openBook(Book book) {
 
-        NavigationManager.addFragment(getActivity(), PageViewerFragment.create(book));
+        NavigationManager.addFragment(getActivity(), TranslationSetupFragment.create(book));
 
     }
 
