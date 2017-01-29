@@ -1,7 +1,5 @@
 package com.stiletto.tr.translator.yandex;
 
-import android.util.Log;
-
 import java.util.Locale;
 
 /**

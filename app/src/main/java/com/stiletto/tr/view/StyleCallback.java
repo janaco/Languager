@@ -50,6 +50,8 @@ public class StyleCallback implements ActionMode.Callback {
         int indexStart = view.getSelectionStart();
         int indexEnd = view.getSelectionEnd();
 
+        CharSequence selectedText =  view.getText().subSequence(indexStart, indexEnd);
+
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(view.getText());
         ForegroundColorSpan foregroundColorSpan;
 
@@ -64,9 +66,7 @@ public class StyleCallback implements ActionMode.Callback {
                 stringBuilder.setSpan(foregroundColorSpan, indexStart, indexEnd,  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 view.setText(stringBuilder);
 
-                CharSequence text = view.getText().subSequence(indexStart, indexEnd);
-
-                callback.onTranslateOptionSelected(text);
+                callback.onTranslateOptionSelected(selectedText);
                 return true;
 
             case R.id.item_highlight:

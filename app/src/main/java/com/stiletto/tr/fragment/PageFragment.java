@@ -1,13 +1,23 @@
 package com.stiletto.tr.fragment;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
@@ -21,6 +31,8 @@ import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
 import com.stiletto.tr.widget.ClickableTextView;
+
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -108,7 +120,9 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
     private void onTranslate(CharSequence text){
         showPopup();
-        setPopupTitle(text);
+        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
+        textOrigin.setTextColor(Color.WHITE);
+        textOrigin.setText(text);
         translate(text);
         if (text.toString().split(" ").length < 3) {
             lookup(text);
@@ -128,10 +142,6 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
     }
 
-    private void setPopupTitle(CharSequence title) {
-        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
-        textOrigin.setText(title);
-    }
 
     private void setUpDictionary(Dictionary dictionary) {
         RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
@@ -156,8 +166,28 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
                         showPopup();
                     }
 
-                    setPopupTitle(word + " - " + res);
+                    if (res != null && ! res.isEmpty()) {
 
+
+                        popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
+
+                        TextView textView = (TextView) popView.findViewById(R.id.item_translation);
+
+                        String primary = word + "\n";
+                        primary = primary.toUpperCase(Locale.getDefault());
+
+                        SpannableString text = new SpannableString(primary + res);
+                        text.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        text.setSpan(new RelativeSizeSpan(0.85f), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
+                                primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        textView.setText(text);
+
+                    }
                 }
             }
 
