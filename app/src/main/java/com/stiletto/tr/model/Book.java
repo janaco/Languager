@@ -1,13 +1,17 @@
 package com.stiletto.tr.model;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
+import com.stiletto.tr.readers.TxtReader;
 import com.stiletto.tr.utils.PDFBookParser;
 import com.stiletto.tr.utils.TextUtils;
+
+import java.io.File;
 
 /**
  * Created by yana on 03.01.17.
@@ -39,8 +43,11 @@ public class Book implements Comparable<Book> {
         switch (fileType) {
 
             case EPUB:
-                Log.d("epublib", "setMetaData: " + name);
                 cover = EPUBReader.getCover(path);
+                break;
+
+            case TXT:
+                cover = TextUtils.textAsBitmap( TxtReader.getFirstPage(new File(path)));
                 break;
 
             case PDF:

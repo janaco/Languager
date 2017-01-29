@@ -30,4 +30,29 @@ public class TxtReader {
 
         return text.toString();
     }
+
+
+
+
+    public static String getFirstPage(File file) {
+
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            int count = 0;
+
+            while (count < 100 && (line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+                count++;
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return text.toString();
+    }
 }

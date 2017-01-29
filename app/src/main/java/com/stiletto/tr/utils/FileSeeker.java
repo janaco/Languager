@@ -1,5 +1,6 @@
 package com.stiletto.tr.utils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.stiletto.tr.emums.FileType;
@@ -30,9 +31,9 @@ public class FileSeeker {
             File file = new File(storageInfo.getPath());
 
             if (file.isDirectory()) {
-                textFilesSet.addAll(listDir(file));
+                textFilesSet.addAll(listDir( file));
             } else if (isTextFile(file) && file.length() > MIN_LENGTH) {
-                textFilesSet.add(new Book(file.getPath(), file.getName(), file.length()));
+                textFilesSet.add(new Book( file.getPath(), file.getName(), file.length()));
             }
 
         }
@@ -49,9 +50,9 @@ public class FileSeeker {
         for (File file : directory.listFiles()) {
 
             if (file.isDirectory()) {
-                textFilesSet.addAll(listDir(file));
+                textFilesSet.addAll(listDir( file));
             } else if (isTextFile(file) && file.length() > MIN_LENGTH) {
-                textFilesSet.add(new Book(file.getPath(), file.getName(), file.length()));
+                textFilesSet.add(new Book( file.getPath(), file.getName(), file.length()));
             }
         }
 
