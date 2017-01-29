@@ -1,5 +1,9 @@
 package com.stiletto.tr.translator.yandex;
 
+import android.util.Log;
+
+import java.util.Locale;
+
 /**
  * Created by yana on 05.01.17.
  */
@@ -38,14 +42,12 @@ public enum Language {
     SPANISH("es"),
     SWEDISH("sv"),
     TURKISH("tr"),
-    UKRAINIAN("uk"),
-
-    UNKNOWN("");
+    UKRAINIAN("uk");
 
 
     private final String code;
 
-     Language(final String code) {
+    Language(final String code) {
         this.code = code;
     }
 
@@ -54,9 +56,9 @@ public enum Language {
         return code;
     }
 
-    public static Language getLanguage(String code){
+    public static Language getLanguage(String code) {
 
-        switch (code){
+        switch (code.toLowerCase()) {
 
             case "sq":
                 return ALBANIAN;
@@ -161,9 +163,24 @@ public enum Language {
                 return UKRAINIAN;
 
             default:
-                return UNKNOWN;
+                return null;
         }
     }
 
 
+    public static Language getLanguageForCountry(String countryCode) {
+
+        countryCode = countryCode.toLowerCase();
+
+        for (Locale locale : Locale.getAvailableLocales()) {
+            String country = locale.getCountry();
+
+            if (country.toLowerCase().equalsIgnoreCase(countryCode)) {
+                String langCode = locale.getLanguage();
+                return getLanguage(langCode);
+            }
+        }
+        return null;
+
+    }
 }

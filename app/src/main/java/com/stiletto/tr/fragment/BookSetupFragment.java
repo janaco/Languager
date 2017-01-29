@@ -1,8 +1,11 @@
 package com.stiletto.tr.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +29,7 @@ import butterknife.OnClick;
  * Created by yana on 20.01.17.
  */
 
-public class TranslationSetupFragment extends Fragment {
+public class BookSetupFragment extends Fragment {
 
     @Bind(R.id.btn_translate_from)
     TextView viewTranslateFrom;
@@ -36,9 +39,9 @@ public class TranslationSetupFragment extends Fragment {
     private Language languagePrimary;
     private Language languageTranslation;
 
-    public static TranslationSetupFragment create(Book book) {
+    public static BookSetupFragment create(Book book) {
 
-        TranslationSetupFragment fragment = new TranslationSetupFragment();
+        BookSetupFragment fragment = new BookSetupFragment();
 
         Bundle arguments = new Bundle();
         arguments.putString("path", book.getPath());
@@ -59,20 +62,25 @@ public class TranslationSetupFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String defaultLanguage = new Locale(Language.ENGLISH.toString()).getDisplayLanguage();
-        String deviceLanguage = Locale.getDefault().getDisplayLanguage();
-
-        viewTranslateFrom.setText(defaultLanguage);
-        viewTranslateTo.setText(deviceLanguage);
-
-
         languagePrimary = Language.ENGLISH;
         try {
-            languageTranslation = Language.getLanguage(Locale.getDefault().getLanguage());
+            String countryCode = ((TelephonyManager) getContext()
+                    .getSystemService(Context.TELEPHONY_SERVICE)).getSimCountryIso();
+
+            if (countryCode != null) {
+                languageTranslation = Language.getLanguageForCountry(countryCode);
+            }
+
+            if (languageTranslation == null) {
+                languageTranslation = Language.getLanguage(Locale.getDefault().getLanguage());
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
             languageTranslation = Language.ENGLISH;
         }
+
+        viewTranslateFrom.setText(new Locale(languagePrimary.toString()).getDisplayLanguage());
+        viewTranslateTo.setText(new Locale(languageTranslation.toString()).getDisplayLanguage());
 
 
     }

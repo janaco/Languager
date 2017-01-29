@@ -15,7 +15,6 @@ import com.stiletto.tr.adapter.BooksAdapter;
 import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
-import com.stiletto.tr.test.TestFragment;
 import com.stiletto.tr.utils.FileSeeker;
 import com.stiletto.tr.view.Fragment;
 
@@ -90,13 +89,13 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
 
     private void openBook(Book book) {
 
-        NavigationManager.addFragment(getActivity(), TranslationSetupFragment.create(book));
+        NavigationManager.addFragment(getActivity(), BookSetupFragment.create(book));
 
     }
 
     @OnClick(R.id.button_load)
     void addNewBook(){
-        NavigationManager.addFragment(getActivity(), new TranslationSetupFragment());
+        NavigationManager.addFragment(getActivity(), new BookSetupFragment());
     }
 
 }
