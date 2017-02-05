@@ -31,6 +31,8 @@ import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
 import com.stiletto.tr.widget.ClickableTextView;
+import com.stiletto.tr.widget.JCTextView;
+import com.uncopt.android.widget.text.justify.JustifiedTextView;
 
 import java.util.Locale;
 
@@ -44,10 +46,10 @@ import retrofit2.Response;
  * Created by yana on 01.01.17.
  */
 
-public class PageFragment extends Fragment implements ClickableTextView.OnWordClickListener, ActionModeCallback {
+public class PageFragment extends Fragment implements JCTextView.OnWordClickListener, ActionModeCallback {
 
     @Bind(R.id.item_content)
-    ClickableTextView textView;
+    JCTextView textView;
 
     public static final String ARG_PAGE = "page";
     public static final String ARG_CONTENT = "content";
@@ -92,9 +94,9 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setCustomSelectionActionModeCallback(new StyleCallback(textView, this));
-        textView.setZoomEnabled(false);
 
         textView.setOnWordClickListener(this);
+
         return view;
     }
 

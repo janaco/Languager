@@ -2,7 +2,6 @@ package com.stiletto.tr.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
@@ -15,34 +14,25 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.text.ClickableTextUtils;
 import com.stiletto.tr.text.Word;
-import com.uncopt.android.widget.text.justify.JustifiedTextView;
 
 import java.util.List;
 
 /**
- * Created by yana on 25.12.16.
+ * Created by yana on 05.02.17.
  */
 
-public class ClickableTextView extends JustifiedTextView {
-
-    private static final float STEP = 150;
-
-    private float ratio = 1.0f;
-    private int baseDistance;
-    private float baseRatio;
-    private boolean zoomEnabled = true;
+public class JCTextView extends TextView {
 
     private CharSequence charSequence;
     private BufferType bufferType;
 
-    private OnWordClickListener onWordClickListener;
+    private JCTextView.OnWordClickListener onWordClickListener;
     private SpannableString spannableString;
 
     private ForegroundColorSpan foregroundColorSpan;
@@ -51,22 +41,20 @@ public class ClickableTextView extends JustifiedTextView {
     private int highlightColor;
     private String highlightText;
 
-    private boolean wordsClickable = true;
-
-    public ClickableTextView(Context context) {
+    public JCTextView(Context context) {
         this(context, null);
         highlightColor = ContextCompat.getColor(context, R.color.colorPrimary);
 
     }
 
-    public ClickableTextView(Context context, AttributeSet attrs) {
+    public JCTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ClickableTextView);
         highlightColor = typedArray.getColor(R.styleable.ClickableTextView_highlightColor,
                 ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
-    public ClickableTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public JCTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ClickableTextView);
         highlightColor = typedArray.getColor(R.styleable.ClickableTextView_highlightColor,
@@ -84,17 +72,16 @@ public class ClickableTextView extends JustifiedTextView {
     public void setText(CharSequence text, BufferType type) {
         this.charSequence = text;
         bufferType = type;
-//        setHighlightColor(highlightColor);
-//        setMovementMethod(LinkMovementMethod.getInstance());
+        setHighlightColor(highlightColor);
+        setMovementMethod(LinkMovementMethod.getInstance());
         setText();
     }
 
     private void setText() {
         spannableString = new SpannableString(charSequence);
-//        setHighLightSpan(spannableString);
-//        if (wordsClickable) {
-//            splitText();
-//        }
+        setHighLightSpan(spannableString);
+        splitText();
+
         super.setText(spannableString, bufferType);
     }
 
@@ -104,8 +91,6 @@ public class ClickableTextView extends JustifiedTextView {
             spannableString.setSpan(getClickableSpan(), wordInfo.getStart(), wordInfo.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
-
-
 
 
     private void setHighLightSpan(SpannableString spannableString) {
@@ -134,13 +119,13 @@ public class ClickableTextView extends JustifiedTextView {
         }
         spannableString.setSpan(foregroundColorSpan, indexStart, indexEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(characterStyle, indexStart, indexEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ClickableTextView.super.setText(spannableString, bufferType);
+        JCTextView.super.setText(spannableString, bufferType);
     }
 
     public void dismissSelected() {
         spannableString.removeSpan(foregroundColorSpan);
         spannableString.removeSpan(characterStyle);
-        ClickableTextView.super.setText(spannableString, bufferType);
+        JCTextView.super.setText(spannableString, bufferType);
     }
 
     private ClickableSpan getClickableSpan() {
@@ -160,7 +145,7 @@ public class ClickableTextView extends JustifiedTextView {
                     if (onWordClickListener != null) {
                         onWordClickListener.onClick(word);
                     }
-                }catch (StringIndexOutOfBoundsException e){
+                } catch (StringIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
             }
@@ -172,7 +157,7 @@ public class ClickableTextView extends JustifiedTextView {
     }
 
 
-    public void setOnWordClickListener(ClickableTextView.OnWordClickListener listener) {
+    public void setOnWordClickListener(JCTextView.OnWordClickListener listener) {
         this.onWordClickListener = listener;
     }
 
@@ -182,69 +167,6 @@ public class ClickableTextView extends JustifiedTextView {
 
     public void setHighLightColor(int color) {
         highlightColor = color;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (zoomEnabled && event.getPointerCount() == 2) {
-
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    setPaintFlags(getPaintFlags() | (Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG));
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    setPaintFlags(getPaintFlags() & ~(Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG));
-                    break;
-            }
-
-            int action = event.getAction();
-            int distance = getDistance(event);
-            int pureAction = action & MotionEvent.ACTION_MASK;
-            if (pureAction == MotionEvent.ACTION_POINTER_DOWN) {
-                baseDistance = distance;
-                baseRatio = ratio;
-            } else {
-                float delta = (distance - baseDistance) / STEP;
-                float multi = (float) Math.pow(2, delta);
-                ratio = Math.min(1024.0f, Math.max(0.1f, baseRatio * multi));
-                setTextSize(ratio + 13);
-            }
-            return true;
-        }
-        return super.onTouchEvent(event);
-    }
-
-
-    /**
-     * Returns the distance between two pointers on the screen.
-     */
-    private int getDistance(MotionEvent event) {
-        int dx = (int) (event.getX(0) - event.getX(1));
-        int dy = (int) (event.getY(0) - event.getY(1));
-        return (int) (Math.sqrt(dx * dx + dy * dy));
-    }
-
-    /**
-     * Sets the enabled state of the zoom feature.
-     */
-    public void setZoomEnabled(boolean enabled) {
-        this.zoomEnabled = enabled;
-    }
-
-    /**
-     * Returns the enabled state of the zoom feature.
-     */
-    public boolean isZoomEnabled() {
-        return zoomEnabled;
-    }
-
-    public boolean isWordsClickable() {
-        return wordsClickable;
-    }
-
-    public void setWordsClickable(boolean wordsClickable) {
-        this.wordsClickable = wordsClickable;
     }
 
     public interface OnWordClickListener {

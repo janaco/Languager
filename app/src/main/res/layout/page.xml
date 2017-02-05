@@ -5,7 +5,7 @@
     tools:context=".fragment.PageFragment"
     android:background="#FFFFFF">
 
-    <com.stiletto.tr.widget.ClickableTextView
+    <com.stiletto.tr.widget.JCTextView
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
