@@ -17,7 +17,6 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
@@ -27,12 +26,11 @@ import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translation;
 import com.stiletto.tr.translator.yandex.Translator;
 import com.stiletto.tr.translator.yandex.model.Dictionary;
+import com.stiletto.tr.utils.TextAligmentUtils;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
-import com.stiletto.tr.widget.ClickableTextView;
 import com.stiletto.tr.widget.JCTextView;
-import com.uncopt.android.widget.text.justify.JustifiedTextView;
 
 import java.util.Locale;
 
@@ -103,6 +101,27 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         textView.setText(content.toString());
+
+//        final Typeface typeface = textView.getTypeface();
+//        final float textSize = textView.getTextSize();
+//        final float textScaleX = textView.getTextScaleX();
+//        final boolean fakeBold = textView.getPaint().isFakeBoldText();
+//
+//        final int measuredWidth = textView.getMeasuredWidth();
+//        final int width = View.MeasureSpec.getSize(measuredWidth);
+//        if (width > 0) {
+//
+//            final int MAX_SPANS = 512;
+//
+//            int[] spanStarts = new int[MAX_SPANS];
+//            int[] spanEnds = new int[MAX_SPANS];
+//            TextAligmentUtils.ScaleSpan[] spans = new TextAligmentUtils.ScaleSpan[MAX_SPANS];
+//
+//
+//            // Setup ScaleXSpans on whitespaces to justify the text.
+//            TextAligmentUtils.setupScaleSpans(textView, spanStarts, spanEnds, spans);
+//        }
+
     }
 
     /**
@@ -116,11 +135,11 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     @Override
     public void onClick(final String word) {
 
-      onTranslate(word);
+        onTranslate(word);
 
     }
 
-    private void onTranslate(CharSequence text){
+    private void onTranslate(CharSequence text) {
         showPopup();
         TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
         textOrigin.setTextColor(Color.WHITE);
@@ -132,7 +151,7 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     }
 
     public void showPopup() {
-        if ( !popupFragment.isShowing()) {
+        if (!popupFragment.isShowing()) {
             popView = popupFragment.showPopup();
         }
         popView.findViewById(R.id.item_close).setOnClickListener(new View.OnClickListener() {
@@ -168,7 +187,7 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
                         showPopup();
                     }
 
-                    if (res != null && ! res.isEmpty()) {
+                    if (res != null && !res.isEmpty()) {
 
 
                         popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);

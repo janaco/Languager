@@ -22,7 +22,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
                     "...Then by using PageSplitter.getPages() method you can get original text splitted to pages and put each of them into TextView:" +
                     "pageView.setAdapter(new TextPagerAdapter(getSupportFragmentManager(), pageSplitter.getPages()));" +
                     "I think here he meant pagesView. (my real concern is written below, mentioning it just in case i missed something else.)" +
-                    "This is the real problem I am facing - In the PageFragment class, I am getting this error -;";
+                    "This is the real problem I am facing - In the PageFragment class, I am getting this error";
 
 
     public PagerAdapter(FragmentManager fragmentManager, Pagination pagination,

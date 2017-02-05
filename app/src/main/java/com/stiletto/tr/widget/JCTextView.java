@@ -3,7 +3,10 @@ package com.stiletto.tr.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -14,12 +17,14 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.text.ClickableTextUtils;
 import com.stiletto.tr.text.Word;
+import com.stiletto.tr.utils.TextAligmentUtils;
 
 import java.util.List;
 
@@ -27,7 +32,9 @@ import java.util.List;
  * Created by yana on 05.02.17.
  */
 
-public class JCTextView extends TextView {
+public class JCTextView extends TextView
+//        implements TextAligmentUtils.Justified
+{
 
     private CharSequence charSequence;
     private BufferType bufferType;
@@ -40,6 +47,22 @@ public class JCTextView extends TextView {
 
     private int highlightColor;
     private String highlightText;
+
+
+    //Justify
+    private static final int MAX_SPANS = 512;
+
+    private boolean measuring = false;
+
+    private Typeface typeface = null;
+    private float textSize = 0f;
+    private float textScaleX = 0f;
+    private boolean fakeBold = false;
+    private int width = 0;
+
+    private int[] spanStarts = new int[MAX_SPANS];
+    private int[] spanEnds = new int[MAX_SPANS];
+    private TextAligmentUtils.ScaleSpan[] spans = new TextAligmentUtils.ScaleSpan[MAX_SPANS];
 
     public JCTextView(Context context) {
         this(context, null);
@@ -61,11 +84,6 @@ public class JCTextView extends TextView {
                 ContextCompat.getColor(context, R.color.colorPrimary));
         highlightText = typedArray.getString(R.styleable.ClickableTextView_highlightText);
         typedArray.recycle();
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
     }
 
     @Override
@@ -168,6 +186,32 @@ public class JCTextView extends TextView {
     public void setHighLightColor(int color) {
         highlightColor = color;
     }
+
+//    @NotNull
+//    @Override
+//    public TextView getTextView() {
+//        return this;
+//    }
+//
+//    @Override
+//    public float getMaxProportion() {
+//        return TextAligmentUtils.DEFAULT_MAX_PROPORTION;
+//    }
+
+
+    @Override
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Log.d("TEXT_VIEW", "onMeasure: measuring=" + measuring);
+
+        if (!measuring) {
+            this.measuring = true;
+
+                    TextAligmentUtils.setupScaleSpans((Spannable) getText(), this);
+        }
+    }
+
+
 
     public interface OnWordClickListener {
         void onClick(String word);
