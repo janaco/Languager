@@ -102,25 +102,19 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         setDecorViewState();
 
-        pagerAdapter = new PagerAdapter(getFragmentManager(), null, null, null);
-        viewPager.setAdapter(pagerAdapter);
+        itemBookPage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    itemBookPage.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    itemBookPage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
 
-        progressBar.setVisibility(View.GONE);
-        itemAlert.setVisibility(View.GONE);
-
-//        itemBookPage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-//            @Override
-//            public void onGlobalLayout() {
-//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-//                    itemBookPage.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                } else {
-//                    itemBookPage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                }
-//
-//                setUpPages();
-//            }
-//        });
+                setUpPages();
+            }
+        });
     }
 
 

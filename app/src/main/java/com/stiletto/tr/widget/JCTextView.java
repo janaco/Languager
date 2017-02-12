@@ -2,10 +2,9 @@ package com.stiletto.tr.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -26,15 +25,16 @@ import com.stiletto.tr.text.ClickableTextUtils;
 import com.stiletto.tr.text.Word;
 import com.stiletto.tr.utils.TextAligmentUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by yana on 05.02.17.
  */
 
-public class JCTextView extends TextView
-//        implements TextAligmentUtils.Justified
-{
+public class JCTextView extends TextView {
+
+    public static final String TAG = "JCTextView";
 
     private CharSequence charSequence;
     private BufferType bufferType;
@@ -50,19 +50,7 @@ public class JCTextView extends TextView
 
 
     //Justify
-    private static final int MAX_SPANS = 512;
-
     private boolean measuring = false;
-
-    private Typeface typeface = null;
-    private float textSize = 0f;
-    private float textScaleX = 0f;
-    private boolean fakeBold = false;
-    private int width = 0;
-
-    private int[] spanStarts = new int[MAX_SPANS];
-    private int[] spanEnds = new int[MAX_SPANS];
-    private TextAligmentUtils.ScaleSpan[] spans = new TextAligmentUtils.ScaleSpan[MAX_SPANS];
 
     public JCTextView(Context context) {
         this(context, null);
@@ -88,6 +76,7 @@ public class JCTextView extends TextView
 
     @Override
     public void setText(CharSequence text, BufferType type) {
+        Log.d(TAG, "setText method");
         this.charSequence = text;
         bufferType = type;
         setHighlightColor(highlightColor);
@@ -187,22 +176,10 @@ public class JCTextView extends TextView
         highlightColor = color;
     }
 
-//    @NotNull
-//    @Override
-//    public TextView getTextView() {
-//        return this;
-//    }
-//
-//    @Override
-//    public float getMaxProportion() {
-//        return TextAligmentUtils.DEFAULT_MAX_PROPORTION;
-//    }
-
-
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        Log.d("TEXT_VIEW", "onMeasure: measuring=" + measuring);
+        Log.d(TAG, "onMeasure");
 
         if (!measuring) {
             this.measuring = true;
@@ -210,6 +187,8 @@ public class JCTextView extends TextView
                     TextAligmentUtils.setupScaleSpans((Spannable) getText(), this);
         }
     }
+
+
 
 
 

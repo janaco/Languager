@@ -26,7 +26,7 @@ import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translation;
 import com.stiletto.tr.translator.yandex.Translator;
 import com.stiletto.tr.translator.yandex.model.Dictionary;
-import com.stiletto.tr.utils.TextAligmentUtils;
+
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
@@ -49,6 +49,7 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     @Bind(R.id.item_content)
     JCTextView textView;
 
+
     public static final String ARG_PAGE = "page";
     public static final String ARG_CONTENT = "content";
     private int pageNumber;
@@ -69,6 +70,7 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         args.putString("primary_lang", primaryLang.toString());
         args.putString("trans_lang", translationLang.toString());
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -76,6 +78,7 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         pageNumber = getArguments().getInt(ARG_PAGE);
         content = getArguments().getCharSequence(ARG_CONTENT);
         primaryLanguage = Language.getLanguage(getArguments().getString("primary_lang"));
@@ -101,27 +104,6 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         textView.setText(content.toString());
-
-//        final Typeface typeface = textView.getTypeface();
-//        final float textSize = textView.getTextSize();
-//        final float textScaleX = textView.getTextScaleX();
-//        final boolean fakeBold = textView.getPaint().isFakeBoldText();
-//
-//        final int measuredWidth = textView.getMeasuredWidth();
-//        final int width = View.MeasureSpec.getSize(measuredWidth);
-//        if (width > 0) {
-//
-//            final int MAX_SPANS = 512;
-//
-//            int[] spanStarts = new int[MAX_SPANS];
-//            int[] spanEnds = new int[MAX_SPANS];
-//            TextAligmentUtils.ScaleSpan[] spans = new TextAligmentUtils.ScaleSpan[MAX_SPANS];
-//
-//
-//            // Setup ScaleXSpans on whitespaces to justify the text.
-//            TextAligmentUtils.setupScaleSpans(textView, spanStarts, spanEnds, spans);
-//        }
-
     }
 
     /**
