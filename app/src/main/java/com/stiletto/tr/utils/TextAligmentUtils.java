@@ -190,14 +190,18 @@ public class TextAligmentUtils {
             final int lineEnd = line == lineCount - 1 ? length : layout.getLineEnd(line);
 
             Log.d("TEXT_VIEW", "lineStart: " + lineStart + "\nlineEnd: " + lineEnd
-            + "\ncount: " + lineCount + "\nline: " + line);
+                    + "\ncount: " + lineCount + "\nline: " + line);
             // Don't justify empty lines
             if (lineEnd == lineStart) {
                 continue;
             }
 
             // Don't justify the last line or lines ending with a newline.
-            if ( line >= lineCount -1 || spannable.charAt(lineEnd - 1) == '\n') {
+            if ((line >= lineCount - 1
+                    && (spannable.charAt(lineEnd - 1) == '.'
+                    || spannable.charAt(lineEnd - 1) == '?'
+                    || spannable.charAt(lineEnd - 1) == '!'))
+                    || spannable.charAt(lineEnd - 1) == '\n') {
                 continue;
             }
 

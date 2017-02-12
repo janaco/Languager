@@ -58,6 +58,7 @@ public class Pagination {
                 '}';
     }
 
+    public static final String TAG = "PAGINATION";
     private void layout() {
         final StaticLayout layout =
                 new StaticLayout(text, textPaint, width, Layout.Alignment.ALIGN_NORMAL,
@@ -67,19 +68,19 @@ public class Pagination {
         final CharSequence text = layout.getText();
         int startOffset = 0;
         int height = this.height;
-        Log.d("PAGINATION_", "\nthis.height: " +this.height);
 
         for (int i = 0; i < lineCount; i++) {
             if (height < layout.getLineBottom(i)) {
                 // When the layout height has been exceeded
-                Log.d("PAGINATION_", "\n ");
-                Log.d("PAGINATION_", "addPage\nstartOffset: " +startOffset + ", lineStart: " + layout.getLineStart(i));
-                CharSequence t = text.subSequence(startOffset, layout.getLineStart(i));
+                int to = layout.getLineEnd(i);
+                CharSequence t = text.subSequence(startOffset, to);
+                Log.d(TAG, "from: " + startOffset
+                + "\nto: " + to
+                + "\nline: " + i
+                + "\nheight: " + height);
                 addPage(t);
-                Log.d("PAGINATION_", "text\nlength: " +t.length() );
-                startOffset = layout.getLineStart(i);
+                startOffset = to;
                 height = layout.getLineTop(i) + this.height;
-                Log.d("PAGINATION_", "\nlineTop: " +layout.getLineTop(i)  + ", height: " + height);
             }
 
             if (i == lineCount - 1) {
