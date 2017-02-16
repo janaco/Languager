@@ -28,6 +28,8 @@ import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.widget.ClickableTextView;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 import java.io.File;
 
 import butterknife.Bind;
@@ -57,6 +59,8 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     ImageView itemToNextPage;
     @Bind(R.id.layout_page_control)
     RelativeLayout layoutPageControll;
+    @Bind(R.id.seekbar)
+    DiscreteSeekBar seekBar;
 
     private boolean isFullScreen = false;
 
@@ -100,6 +104,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
         View view = inflater.inflate(R.layout.fragment_viewer, container, false);
         ButterKnife.bind(this, view);
         viewPager.addOnPageChangeListener(this);
+        seekBar.setMin(1);
         return view;
     }
 
@@ -147,6 +152,8 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
                 layoutPageControll.setVisibility(View.VISIBLE);
                 viewPager.setAdapter(pagerAdapter);
                 viewPager.setCurrentItem(bookmark);
+                seekBar.setMax(pagination.getPagesCount());
+                seekBar.setProgress(bookmark);
             }
         }.execute();
 
@@ -292,6 +299,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
         }
 
         itemPageNumber.setText(String.valueOf(position + 1));
+        seekBar.setProgress(position + 1);
     }
 
     @Override
