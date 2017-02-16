@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.stiletto.tr.Preferences;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.PagerAdapter;
 import com.stiletto.tr.pagination.Pagination;
@@ -62,16 +63,17 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     private PagerAdapter pagerAdapter;
     private Pagination pagination;
     private String path;
+    private String bookName;
+
+    private int bookmark = 0;
 
     private Language languagePrimary;
     private Language languageTranslation;
 
-    public static PageViewerFragment create(String pathToBook, Language from, Language to) {
+    public static PageViewerFragment create(Bundle arguments, Language from, Language to) {
 
         PageViewerFragment fragment = new PageViewerFragment();
 
-        Bundle arguments = new Bundle();
-        arguments.putString("path", pathToBook);
         arguments.putString("lang_from", from.toString());
         arguments.putString("lang_to", to.toString());
         fragment.setArguments(arguments);
@@ -82,8 +84,11 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         path = getArguments().getString("path");
+        bookName= getArguments().getString("name");
         languagePrimary = Language.getLanguage(getArguments().getString("lang_from"));
         languageTranslation = Language.getLanguage(getArguments().getString("lang_to"));
+
+        bookmark = Preferences.getBookmark(getContext(), bookName);
 
     }
 
@@ -141,6 +146,7 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
                 itemAlert.setVisibility(View.GONE);
                 layoutPageControll.setVisibility(View.VISIBLE);
                 viewPager.setAdapter(pagerAdapter);
+                viewPager.setCurrentItem(bookmark);
             }
         }.execute();
 
@@ -313,6 +319,13 @@ public class PageViewerFragment extends Fragment implements ViewPager.OnPageChan
 
     private void setAdapter(PagerAdapter adapter) {
         this.pagerAdapter = adapter;
+
+    }
+
+    @Override
+    public void onDestroy() {
+        Preferences.setBookmark(getContext(), bookName, viewPager.getCurrentItem());
+        super.onDestroy();
 
     }
 }

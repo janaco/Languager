@@ -45,6 +45,7 @@ public class BookSetupFragment extends Fragment {
 
         Bundle arguments = new Bundle();
         arguments.putString("path", book.getPath());
+        arguments.putString("name", book.getName());
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -115,7 +116,7 @@ public class BookSetupFragment extends Fragment {
 
         NavigationManager.removeFragment(activity, this);
         NavigationManager.addFragment(activity, PageViewerFragment.create(
-                getArguments().getString("path"), languagePrimary, languageTranslation));
+                getArguments(), languagePrimary, languageTranslation));
     }
 
 
