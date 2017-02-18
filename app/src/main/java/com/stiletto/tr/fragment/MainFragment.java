@@ -79,10 +79,10 @@ public class MainFragment extends Fragment {
 
                 String content = PDFBookParser.getBookContent(PDFBookParser.ZA_FARENHEITOM);
 
-                Pagination pagination = new Pagination(content, itemPage);
-
-                itemPage.setVisibility(View.GONE);
-                setupPagesAdapter(pagination);
+//                Pagination pagination = new Pagination(content, itemPage);
+//
+//                itemPage.setVisibility(View.GONE);
+//                setupPagesAdapter(pagination);
 
             }
         });

@@ -1,11 +1,11 @@
 package com.stiletto.tr.pagination;
 
-import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
-import android.widget.TextView;
+
+import com.stiletto.tr.utils.ReaderPrefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import java.util.List;
 
 public class Pagination {
 
-    private final boolean includePadding;
     private final int width;
     private final int height;
     private final float lineSpacingMultiplier;
@@ -25,21 +24,21 @@ public class Pagination {
     private final TextPaint textPaint;
     private final List<CharSequence> pages;
 
-    public Pagination(CharSequence text, @NonNull TextView view) {
-        this.text = text;
-        this.width = view.getWidth();
-        this.height = view.getHeight();
-        this.textPaint = view.getPaint();
+    private int padding;
+    private int lineHeight;
+    private int maxLinesOnPage;
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            this.lineSpacingMultiplier = view.getLineSpacingMultiplier() + 0.14f;
-            this.lineSpacingExtra = view.getLineSpacingExtra();
-            this.includePadding = view.getIncludeFontPadding();
-        } else {
-            this.lineSpacingMultiplier = 1.14f;
-            this.lineSpacingExtra = 0f;
-            this.includePadding = true;
-        }
+    public Pagination(CharSequence text, ReaderPrefs prefs) {
+        this.text = text;
+        this.width = prefs.getPageWidth() - prefs.getPaddingHorizontal() * 2;
+        this.height = prefs.getPageHeight() - prefs.getPaddingVertical() * 3;
+        this.textPaint = prefs.getTextPaint();
+        this.lineSpacingMultiplier = prefs.getLineSpacingMultiplier();
+        this.lineSpacingExtra = prefs.getLineSpacingExtra();
+
+        padding = prefs.getPaddingVertical();
+        lineHeight = prefs.getLineHeight();
+        maxLinesOnPage = height / lineHeight;
 
         this.pages = new ArrayList<>();
 
@@ -50,7 +49,6 @@ public class Pagination {
     @Override
     public String toString() {
         return "Pagination{" + "\n" +
-                "includePadding=" + includePadding + "\n" +
                 ", width=" + width + "\n" +
                 ", height=" + height + "\n" +
                 ", lineSpacingMultiplier=" + lineSpacingMultiplier + "\n" +
@@ -58,30 +56,30 @@ public class Pagination {
                 '}';
     }
 
-    public static final String TAG = "PAGINATION";
     private void layout() {
         final StaticLayout layout =
                 new StaticLayout(text, textPaint, width, Layout.Alignment.ALIGN_NORMAL,
-                        lineSpacingMultiplier, lineSpacingExtra, includePadding);
+                        lineSpacingMultiplier, lineSpacingExtra, false);
 
         final int lineCount = layout.getLineCount();
         final CharSequence text = layout.getText();
         int startOffset = 0;
         int height = this.height;
 
-        for (int i = 0; i < lineCount; i++) {
+        Log.d("PAGINATION_", "lineCount: " + lineCount + "\nstartOffset: " + startOffset + "\nheight: " + height);
+        for (int i = 0; i < lineCount; ++i) {
             if (height < layout.getLineBottom(i)) {
                 // When the layout height has been exceeded
                 int to = layout.getLineEnd(i);
+                Log.d("PAGINATION_", "line: " + i + "\nfrom: " + startOffset + "\nto(lineEnd): " + to);
                 CharSequence t = text.subSequence(startOffset, to);
-                Log.d(TAG, "from: " + startOffset
-                + "\nto: " + to
-                + "\nline: " + i
-                + "\nheight: " + height);
                 addPage(t);
                 startOffset = to;
                 height = layout.getLineTop(i) + this.height;
             }
+
+            Log.d("PAGINATION_", "height: " + height + "\nlineBottom: " + layout.getLineBottom(i)
+                    + "\nlineTop: " + layout.getLineTop(i) + "\n ");
 
             if (i == lineCount - 1) {
                 // Put the rest of the text into the last page
@@ -89,6 +87,31 @@ public class Pagination {
                 return;
             }
         }
+
+//        final int lineCount = layout.getLineCount();
+//        final CharSequence text = layout.getText();
+//        int startOffset = 0;
+//        int height = this.height;
+//
+//        for (int i = 0; i < lineCount; i++) {
+//            if (height < lineCount * lineHeight - this.height ) {
+//                // When the layout height has been exceeded
+//                int to = startOffset + this.height;
+//
+//                Log.d("PAGINATION", "from: " + startOffset + "\nto: " + to + "\nlineCount: " + lineCount + "\nlinesOnPage: " + maxLinesOnPage
+//                        + "\nlineHeight: " + lineHeight + "\npageHeight: " + this.height);
+//                CharSequence t = text.subSequence(startOffset, to);
+//                addPage(t);
+//                startOffset = to;
+//                height = to;
+//            }
+//
+//            if (i == lineCount - 1) {
+//                // Put the rest of the text into the last page
+//                addPage(text.subSequence(startOffset, lineCount * this.height));
+//                return;
+//            }
+//        }
     }
 
     private void addPage(CharSequence text) {

@@ -2,25 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.PageFragment"
-    android:background="#FFFFFF">
+    android:background="@color/white"
+    tools:context=".fragment.PageFragment">
 
     <com.stiletto.tr.widget.JCTextView
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:gravity="center_vertical"
-        android:typeface="serif"
-        android:layout_centerInParent="true"
-        android:textIsSelectable="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="30dp"
-        android:textSize="16sp" />
+        android:textIsSelectable="true"/>
 
+    <!--android:layout_marginLeft="25dp"-->
+    <!--android:layout_marginStart="25dp"-->
+    <!--android:layout_marginEnd="25dp"-->
+    <!--android:layout_marginRight="25dp"-->
+    <!--android:layout_marginTop="25dp"-->
+    <!--android:layout_marginBottom="30dp"-->
 
 </RelativeLayout>

@@ -183,7 +183,6 @@ public class JCTextView extends TextView {
 
         if (!measuring) {
             this.measuring = true;
-
                     TextAligmentUtils.setupScaleSpans((Spannable) getText(), this);
         }
     }

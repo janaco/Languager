@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -27,6 +28,7 @@ import com.stiletto.tr.translator.yandex.Translation;
 import com.stiletto.tr.translator.yandex.Translator;
 import com.stiletto.tr.translator.yandex.model.Dictionary;
 
+import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
@@ -93,10 +95,26 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
 
         popupFragment = new PopupFragment(getActivity(), view, R.layout.pop_view);
 
+        ReaderPrefs prefs = ReaderPrefs.getPreferences(getContext());
+        textView.setPadding(prefs.getPaddingHorizontal(), prefs.getPaddingVertical(),
+                prefs.getPaddingHorizontal(), 0);
+//        textView.setWidth(prefs.getPageWidth());
+//        textView.setHeight(prefs.getPageHeight());
+
+        TextPaint paint = prefs.getTextPaint();
+
+        textView.setTextSize(prefs.getTextSize());
+
+        textView.setTextColor(paint.getColor());
+        textView.setTypeface(paint.getTypeface());
+
+        textView.setLineSpacing(prefs.getLineSpacingExtra(), prefs.getLineSpacingMultiplier());
+
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setCustomSelectionActionModeCallback(new StyleCallback(textView, this));
 
         textView.setOnWordClickListener(this);
+        textView.setTextIsSelectable(false);
 
         return view;
     }
