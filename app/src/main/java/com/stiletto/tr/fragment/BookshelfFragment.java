@@ -17,6 +17,7 @@ import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.utils.FileSeeker;
 import com.stiletto.tr.view.Fragment;
+import com.stiletto.tr.view.bottom_sheet.SlideBottomPanel;
 
 import java.util.List;
 
@@ -96,7 +97,7 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
 
     @OnClick(R.id.button_load)
     void addNewBook(){
-        NavigationManager.addFragment(getActivity(), new BookSetupFragment());
+     //TODO
     }
 
 }

@@ -1,43 +1,219 @@
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:id="@+id/layout_page_control"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="3dp"
-    android:orientation="horizontal"
-    android:layout_alignParentBottom="true"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="370dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/item_prev"
-        android:layout_width="wrap_content"
-        android:layout_toLeftOf="@+id/item_position"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:src="@drawable/arrow_left"/>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <TextView
-        android:id="@+id/item_position"
-        android:textSize="@dimen/text_18"
-        android:text="121"
-        android:textColor="@color/colorSecondaryText"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
+        android:id="@+id/item_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimaryDark"
         android:gravity="center"
-        android:typeface="serif"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_height="match_parent" />
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:text="Header"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_14"
+        android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/item_next"
-        android:layout_toRightOf="@+id/item_position"
-        android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_height="wrap_content"
-        android:src="@drawable/arrow_right"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
-</RelativeLayout>
+            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingEnd="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingStart="15dp"
+                app:dsb_indicatorColor="@color/colorPrimary"
+                app:dsb_indicatorElevation="3dp"
+                app:dsb_progressColor="@color/colorPrimaryDark"
+                app:dsb_rippleColor="@color/colorPrimaryDark"
+                app:dsb_scrubberHeight="5dp"
+                app:dsb_trackColor="@color/colorLightPrimary"
+                app:dsb_trackHeight="2dp" />
+
+            <TextView
+                android:id="@+id/item_pages"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_vertical|end"
+                android:paddingEnd="30dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="30dp"
+                android:paddingStart="15dp"
+                android:text="458/1245"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_10"
+                android:textStyle="italic" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorLightPrimary"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:text="Translate:"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/text_16" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_weight="0.29"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:gravity="center_vertical|right|end"
+                            android:text="From:"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_10"
+                            android:textStyle="italic" />
+
+                        <Button
+                            android:id="@+id/item_language_from"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@color/colorPrimary"
+                            android:text="English"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.42">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/arrow_right" />
+                    </RelativeLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_weight="0.29"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:gravity="center_vertical|right|end"
+                            android:text="To:"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_10"
+                            android:textStyle="italic" />
+
+                        <Button
+                            android:id="@+id/item_language_to"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@color/colorPrimary"
+                            android:text="Ukrainian"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@color/colorLightPrimary"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:text="My dictionary:"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/text_16" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/alert_dictionary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:text="No items in dictionary."
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_10"
+                        android:textStyle="italic" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/dictionary_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:item_layout="@layout/item_my_dictionary"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    </LinearLayout>
+</LinearLayout>

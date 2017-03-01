@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
+import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translation;
 import com.stiletto.tr.translator.yandex.Translator;
@@ -51,6 +52,8 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     @Bind(R.id.item_content)
     JCTextView textView;
 
+    private TranslationCallback translationCallback;
+
 
     public static final String ARG_PAGE = "page";
     public static final String ARG_CONTENT = "content";
@@ -64,7 +67,8 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     private Language translationLangusage;
 
 
-    public static PageFragment create(int pageNumber, CharSequence content, Language primaryLang, Language translationLang) {
+    public static PageFragment create(int pageNumber, CharSequence content, Language primaryLang,
+                                      Language translationLang, TranslationCallback translationCallback) {
         PageFragment fragment = new PageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
@@ -72,6 +76,8 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         args.putString("primary_lang", primaryLang.toString());
         args.putString("trans_lang", translationLang.toString());
         fragment.setArguments(args);
+
+        fragment.setTranslationCallback(translationCallback);
 
         return fragment;
     }
@@ -208,6 +214,8 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
 
                         textView.setText(text);
 
+                        translationCallback.newTranslation(word, response.body());
+
                     }
                 }
             }
@@ -250,5 +258,8 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         onTranslate(text);
     }
 
+    public void setTranslationCallback(TranslationCallback translationCallback) {
+        this.translationCallback = translationCallback;
+    }
 }
 

@@ -36,7 +36,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.uncopt:android.justified:1.0'
-
+    compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile 'com.nineoldandroids:library:2.4.0+'
     compile 'com.squareup.okhttp3:okhttp:3.0.0' //okhttp client
     compile 'com.squareup.retrofit2:retrofit:2.1.0' //retrofit client
     compile 'com.squareup.retrofit2:converter-gson:2.1.0' //retrofit gson conventer

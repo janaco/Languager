@@ -758,9 +758,9 @@ public class HamButton extends BoomButton {
         }
 
         /**
-         * Whether the boom-button should have a btn_background effect.
+         * Whether the boom-button should have a btn_background_1 effect.
          *
-         * @param rippleEffect the btn_background effect
+         * @param rippleEffect the btn_background_1 effect
          * @return the builder
          */
         public HamButton.Builder rippleEffect(boolean rippleEffect) {

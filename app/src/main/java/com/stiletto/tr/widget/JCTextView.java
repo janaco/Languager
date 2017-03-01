@@ -2,9 +2,9 @@ package com.stiletto.tr.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -25,7 +25,6 @@ import com.stiletto.tr.text.ClickableTextUtils;
 import com.stiletto.tr.text.Word;
 import com.stiletto.tr.utils.TextAligmentUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +46,8 @@ public class JCTextView extends TextView {
 
     private int highlightColor;
     private String highlightText;
+
+    private CharSequence content;
 
 
     //Justify
@@ -82,6 +83,8 @@ public class JCTextView extends TextView {
         setHighlightColor(highlightColor);
         setMovementMethod(LinkMovementMethod.getInstance());
         setText();
+
+        content = getText();
     }
 
     private void setText() {
@@ -176,6 +179,13 @@ public class JCTextView extends TextView {
         highlightColor = color;
     }
 
+
+    private Typeface mTypeface = null;
+    private float mTextSize = 0f;
+    private float mTextScaleX = 0f;
+    private boolean mFakeBold = false;
+    private int mWidth = 0;
+
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -183,15 +193,22 @@ public class JCTextView extends TextView {
 
         if (!measuring) {
             this.measuring = true;
-                    TextAligmentUtils.setupScaleSpans((Spannable) getText(), this);
+            TextAligmentUtils.setupScaleSpans((Spannable) content, this);
+        }
+
+    }
+        @Override
+        protected void onTextChanged ( final CharSequence text,
+        final int start, final int lengthBefore, final int lengthAfter){
+            super.onTextChanged(text, start, lengthBefore, lengthAfter);
+            final Layout layout = getLayout();
+            if (layout != null) {
+                TextAligmentUtils.setupScaleSpans((Spannable) content, this);
+            }
+        }
+
+
+        public interface OnWordClickListener {
+            void onClick(String word);
         }
     }
-
-
-
-
-
-    public interface OnWordClickListener {
-        void onClick(String word);
-    }
-}

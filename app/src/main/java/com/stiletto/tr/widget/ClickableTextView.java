@@ -84,17 +84,17 @@ public class ClickableTextView extends JustifiedTextView {
     public void setText(CharSequence text, BufferType type) {
         this.charSequence = text;
         bufferType = type;
-//        setHighlightColor(highlightColor);
-//        setMovementMethod(LinkMovementMethod.getInstance());
+        setHighlightColor(highlightColor);
+        setMovementMethod(LinkMovementMethod.getInstance());
         setText();
     }
 
     private void setText() {
         spannableString = new SpannableString(charSequence);
-//        setHighLightSpan(spannableString);
-//        if (wordsClickable) {
-//            splitText();
-//        }
+        setHighLightSpan(spannableString);
+        if (wordsClickable) {
+            splitText();
+        }
         super.setText(spannableString, bufferType);
     }
 

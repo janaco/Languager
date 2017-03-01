@@ -1,5 +1,6 @@
 package com.stiletto.tr.adapter;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.stiletto.tr.translator.yandex.Language;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by yana on 28.01.17.
@@ -21,6 +23,8 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdap
 
     private List<Language> list;
     private OnListItemClickListener<Language>  onItemClickListener;
+
+    private int[] colors = {R.drawable.btn_background_1, R.drawable.btn_background_2, R.drawable.btn_background_3};
 
     public LanguagesListAdapter(List<Language> languages) {
         this.list = languages;
@@ -39,6 +43,12 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdap
 
         String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
         holder.textView.setText(displayLanguage);
+
+        int drawableRes = new Random().nextInt(colors.length);
+        drawableRes = drawableRes >= colors.length ? colors.length - 1 : drawableRes;
+
+        holder.textView.setBackground(ContextCompat.getDrawable(
+                holder.textView.getContext(), colors[drawableRes]));
 
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override

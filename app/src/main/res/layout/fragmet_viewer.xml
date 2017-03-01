@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.MainActivity">
+
+    <com.stiletto.tr.view.bottom_sheet.SlideBottomPanel
+        android:id="@+id/sbv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:sbp_background_layout="@layout/layout_pager"
+        app:sbp_hide_panel_title="true"
+        app:sbp_panel_height="370dp"
+        app:sbp_title_height_no_display="15dp">
+
+        <include layout="@layout/layout_page_control" />
+
+        <TextView
+            android:id="@+id/pages"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="italic"
+            android:gravity="center_vertical|start"
+            android:paddingStart="15dp"
+            android:paddingLeft="15dp"
+            android:paddingEnd="15dp"
+            android:paddingRight="15dp"
+            android:textSize="@dimen/text_10"
+            android:background="@color/white"
+            />
+
+
+    </com.stiletto.tr.view.bottom_sheet.SlideBottomPanel>
+</LinearLayout>

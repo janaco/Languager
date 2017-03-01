@@ -44,7 +44,7 @@
             android:layout_height="60dp"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/btn_background"
+            android:background="@drawable/btn_background_1"
             android:gravity="center"
             android:text="English"
             android:textAllCaps="true"
@@ -68,7 +68,7 @@
             android:layout_height="60dp"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/btn_background"
+            android:background="@drawable/btn_background_1"
             android:gravity="center"
             android:text="Ukrainian"
             android:textAllCaps="true"
@@ -76,33 +76,37 @@
             android:textSize="@dimen/text_18"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/btn_read"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|end"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:background="@color/colorLightPrimary"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="25dp"
+                android:paddingStart="25dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/book_open"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Start reading"
+                android:layout_weight="0.2"
+                android:text="Read book"
                 android:textAllCaps="true"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_18" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_18"
+                android:textStyle="bold" />
 
-            <ImageView
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/arrow_right" />
-
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>

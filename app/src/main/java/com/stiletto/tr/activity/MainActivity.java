@@ -9,6 +9,7 @@ import com.stiletto.tr.fragment.BookshelfFragment;
 import com.stiletto.tr.fragment.PageViewerFragment;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.translator.yandex.Language;
+import com.stiletto.tr.utils.ReaderPrefs;
 
 /**
  * Created by yana on 30.12.16.
@@ -22,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-//        NavigationManager.replaceFragment(this, new BookshelfFragment());
-        NavigationManager.replaceFragment(this, PageViewerFragment.create(new Bundle(),
-                Language.UKRAINIAN, Language.ENGLISH));
+        ReaderPrefs.getPreferences(this);
+
+        NavigationManager.replaceFragment(this, new BookshelfFragment());
     }
 
     @Override

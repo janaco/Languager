@@ -88,7 +88,7 @@ public class BookSetupFragment extends Fragment {
 
     @OnClick(R.id.btn_translate_from)
     void chooseBookPrimaryLanguage() {
-        showDialog(new OnLanguageSelectedListener() {
+        ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
                 languagePrimary = language;
@@ -100,7 +100,7 @@ public class BookSetupFragment extends Fragment {
 
     @OnClick(R.id.btn_translate_to)
     void chooseBookTranslationLanguage() {
-        showDialog(new OnLanguageSelectedListener() {
+        ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
                 languageTranslation = language;
@@ -120,9 +120,4 @@ public class BookSetupFragment extends Fragment {
     }
 
 
-    private void showDialog(OnLanguageSelectedListener onLanguageSelectedListener) {
-        ChooseLanguageDialog dialog = new ChooseLanguageDialog();
-        dialog.setOnLanguageSelectedListener(onLanguageSelectedListener);
-        dialog.show(getActivity().getSupportFragmentManager(), "ChooseLanguageDialog");
-    }
 }

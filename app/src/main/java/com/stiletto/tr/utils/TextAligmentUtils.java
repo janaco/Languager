@@ -168,6 +168,13 @@ public class TextAligmentUtils {
             return;
         }
 
+        final ScaleSpan[] scaleSpans = spannable.getSpans(0, spannable.length(), ScaleSpan.class);
+        if (scaleSpans != null) {
+            for (final ScaleSpan span : scaleSpans) {
+                spannable.removeSpan(span);
+            }
+        }
+
         // We use the layout to get line widths before justification
         final Layout layout = textView.getLayout();
 

@@ -23,6 +23,8 @@ public class Translation {
     @SerializedName("text")
     String[] text;
 
+    CharSequence origin;
+
     public String getLangunage() {
         return langunage;
     }
@@ -38,5 +40,13 @@ public class Translation {
       }
 
         return Arrays.asList(text).toString().replace("[", "").replace("]", "");
+    }
+
+    public CharSequence getOrigin(){
+        return origin;
+    }
+
+    public void setOrigin(CharSequence origin) {
+        this.origin = origin;
     }
 }

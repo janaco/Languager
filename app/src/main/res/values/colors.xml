@@ -12,13 +12,18 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
 
-    <color name="amber_primary">#FFDD66</color>
-    <color name="amber_dark">#FCB826</color>
-    <color name="amber_light">#FFECB3</color>
+    <color name="amber_primary">#795548</color>
+    <color name="amber_dark">#5D4037</color>
+    <color name="amber_light">#D7CCC8</color>
     <color name="grey_primary">#212121</color>
     <color name="grey_accent">#9E9E9E</color>
     <color name="grey_secondary">#757575</color>
     <color name="grey_divider">#BDBDBD</color>
+
+    <color name="brown_1">#4E2415</color>
+    <color name="brown_2">#63392A</color>
+    <color name="brown_3">#A47A6A</color>
+    <color name="brown_4">#CCA698</color>
 
 
     <!--<color name="grey_50">#FAFAFA</color>-->
