@@ -2,6 +2,7 @@ package com.stiletto.tr.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +24,20 @@ import java.util.List;
 public class BooksAdapter extends BaseAdapter {
 
     private List<Book> bookList;
-    private LayoutInflater lInflater;
     private OnListItemClickListener<Book> onItemClickListener;
+    private boolean showNextLoadingProgress = true;
 
-    public BooksAdapter(Context context, List<Book> bookList) {
+    public BooksAdapter( List<Book> bookList) {
         this.bookList = bookList;
-        Collections.sort(this.bookList);
-        lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.showNextLoadingProgress = bookList.size() == 0;
     }
 
     public void setOnItemClickListener(OnListItemClickListener<Book> onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setShowNextLoadingProgress(boolean showNextLoadingProgress) {
+        this.showNextLoadingProgress = showNextLoadingProgress;
     }
 
     @Override
@@ -48,30 +52,37 @@ public class BooksAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int index, View convertView, ViewGroup parent) {
-
         View view;
 
         ViewHolder holder;
-        if (convertView == null) {
-            view = lInflater.inflate(R.layout.item_book, parent, false);
-            holder = new ViewHolder();
-            holder.itemName = (TextView) view.findViewById(R.id.item_name);
-            holder.itemCover = (ImageView) view.findViewById(R.id.item_cover);
-            holder.itemExtension = (TextView) view.findViewById(R.id.item_extension);
 
+        if (showNextLoadingProgress && index == getCount() - 1) {
+            return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_loading, parent, false);
+        }
+
+        if (convertView == null || convertView.getTag() == null) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
+            holder = ViewHolder.bind(view);
             view.setTag(holder);
         } else {
             view = convertView;
             holder = (ViewHolder) view.getTag();
+            if (holder == null) {
+                holder = ViewHolder.bind(view);
+                view.setTag(holder);
+            }
         }
 
         bindView(view, holder, index);
         return view;
-
     }
 
     private void bindView(View view, ViewHolder holder, final int position) {
+
         final Book book = getItem(position);
+
+        Log.d("BOOK_ADAPTER", position + ", " + book);
+
         holder.itemName.setText(book.getName().length() > 30 ? book.getName().substring(0, 30).concat("...") : book.getName());
         holder.itemExtension.setText(book.getFileType().name().toUpperCase());
 
@@ -92,20 +103,40 @@ public class BooksAdapter extends BaseAdapter {
 
     }
 
+    public void addBook(Book book) {
+
+        if (!bookList.contains(book)) {
+            bookList.add(book);
+            notifyDataSetChanged();
+        }
+    }
+
 
     @Override
     public int getCount() {
         try {
-            return bookList.size();
+            return showNextLoadingProgress ? bookList.size() + 1 : bookList.size();
         } catch (NullPointerException e) {
-            return 0;
+            return showNextLoadingProgress ? 1 : 0;
         }
     }
 
-    class ViewHolder {
+
+    static class ViewHolder {
+
         TextView itemName;
         TextView itemExtension;
 
         ImageView itemCover;
+
+        private static ViewHolder bind(View view) {
+
+            ViewHolder holder = new ViewHolder();
+            holder.itemName = (TextView) view.findViewById(R.id.item_name);
+            holder.itemCover = (ImageView) view.findViewById(R.id.item_cover);
+            holder.itemExtension = (TextView) view.findViewById(R.id.item_extension);
+
+            return holder;
+        }
     }
 }

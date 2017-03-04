@@ -192,23 +192,28 @@ public class JCTextView extends TextView {
         Log.d(TAG, "onMeasure");
 
         if (!measuring) {
-            this.measuring = true;
-            TextAligmentUtils.setupScaleSpans((Spannable) content, this);
-        }
-
-    }
-        @Override
-        protected void onTextChanged ( final CharSequence text,
-        final int start, final int lengthBefore, final int lengthAfter){
-            super.onTextChanged(text, start, lengthBefore, lengthAfter);
-            final Layout layout = getLayout();
-            if (layout != null) {
+            try {
                 TextAligmentUtils.setupScaleSpans((Spannable) content, this);
+                this.measuring = true;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
             }
         }
 
+    }
 
-        public interface OnWordClickListener {
-            void onClick(String word);
+    @Override
+    protected void onTextChanged(final CharSequence text,
+                                 final int start, final int lengthBefore, final int lengthAfter) {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        final Layout layout = getLayout();
+        if (layout != null) {
+            TextAligmentUtils.setupScaleSpans((Spannable) content, this);
         }
     }
+
+
+    public interface OnWordClickListener {
+        void onClick(String word);
+    }
+}

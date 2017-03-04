@@ -1,23 +1,25 @@
 package com.stiletto.tr.model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.readers.TxtReader;
-import com.stiletto.tr.utils.PDFBookParser;
+import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.utils.TextUtils;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Created by yana on 03.01.17.
  */
 
-public class Book implements Comparable<Book> {
+public class Book implements Comparable<Book>, Parcelable {
 
     private String path;
     private String name;
@@ -26,6 +28,11 @@ public class Book implements Comparable<Book> {
     private long size;
     private boolean hasCover = false;
 
+    private Language originLanguage;
+    private Language translationLanguage;
+
+    private int bookmark;
+
     public Book(String path, String name, long size) {
         this.path = path;
         this.name = name.contains(".") ? name.substring(0, name.lastIndexOf(".")) : name;
@@ -33,10 +40,49 @@ public class Book implements Comparable<Book> {
         this.size = size;
 
         setMetaData();
-        Log.d("epublib", name + " cover: " + cover);
 
     }
 
+    public Book(File file) {
+        this(file.getPath(), file.getName(), file.length());
+    }
+
+
+    protected Book(Parcel in) {
+        path = in.readString();
+        name = in.readString();
+        cover = in.readParcelable(Bitmap.class.getClassLoader());
+        size = in.readLong();
+        hasCover = in.readByte() != 0;
+        bookmark = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(path);
+        dest.writeString(name);
+        dest.writeParcelable(cover, flags);
+        dest.writeLong(size);
+        dest.writeByte((byte) (hasCover ? 1 : 0));
+        dest.writeInt(bookmark);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 
     private void setMetaData() {
 
@@ -47,7 +93,7 @@ public class Book implements Comparable<Book> {
                 break;
 
             case TXT:
-                cover = TextUtils.textAsBitmap( TxtReader.getFirstPage(new File(path)));
+                cover = TextUtils.textAsBitmap(TxtReader.getFirstPage(new File(path)));
                 break;
 
             case PDF:
@@ -97,8 +143,56 @@ public class Book implements Comparable<Book> {
         return name;
     }
 
+    public int getBookmark() {
+        return bookmark;
+    }
+
+    public void setBookmark(int bookmark) {
+        this.bookmark = bookmark;
+    }
+
+    public Language getTranslationLanguage() {
+        return translationLanguage;
+    }
+
+    public boolean hasOriginLanguage(){
+        return originLanguage != null;
+    }
+
+    public boolean hasTranslationLanguage(){
+        return translationLanguage != null;
+    }
+
+    public void setTranslationLanguage(Language translationLanguage) {
+        this.translationLanguage = translationLanguage;
+    }
+
+    public Language getOriginLanguage() {
+        return originLanguage;
+    }
+
+    public void setOriginLanguage(Language originLanguage) {
+        this.originLanguage = originLanguage;
+    }
+
     @Override
     public int compareTo(Book book) {
         return name.compareTo(book.getName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        Book book = (Book) o;
+        return getPath().equalsIgnoreCase(book.getPath());
+    }
+
+    @Override
+    public int hashCode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return Objects.hash(getPath());
+        }
+        return 45 * path.length() + name.length();
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
+import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
@@ -39,15 +39,23 @@ public class BookSetupFragment extends Fragment {
     private Language languagePrimary;
     private Language languageTranslation;
 
+    private Book book;
+
     public static BookSetupFragment create(Book book) {
 
         BookSetupFragment fragment = new BookSetupFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putString("path", book.getPath());
-        arguments.putString("name", book.getName());
+        arguments.putParcelable("book", book);
+
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        book = getArguments().getParcelable("book");
     }
 
     @Nullable
@@ -112,11 +120,15 @@ public class BookSetupFragment extends Fragment {
 
     @OnClick(R.id.btn_read)
     void read() {
+        book.setOriginLanguage(languagePrimary);
+        book.setTranslationLanguage(languageTranslation);
+
+        BooksTable.setLanguages(getContext(), new Language[]{languagePrimary, languageTranslation}, book.getPath());
+        
         FragmentActivity activity = getActivity();
 
         NavigationManager.removeFragment(activity, this);
-        NavigationManager.addFragment(activity, PageViewerFragment.create(
-                getArguments(), languagePrimary, languageTranslation));
+        NavigationManager.addFragment(activity, PageViewerFragment.create(book));
     }
 
 

@@ -16,13 +16,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.stiletto.tr.Preferences;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.MyDictionaryAdapter;
 import com.stiletto.tr.adapter.PagerAdapter;
+import com.stiletto.tr.app.Preferences;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.core.TranslationCallback;
+import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
+import com.stiletto.tr.model.Book;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
@@ -36,7 +38,6 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -72,7 +73,8 @@ public class PageViewerFragment extends Fragment
     TextView itemDictionaryAlert;
     @Bind(R.id.dictionary_list)
     RecyclerView dictionaryList;
-    @Bind(R.id.pages)TextView pageNumber;
+    @Bind(R.id.pages)
+    TextView pageNumber;
 
 
     private MyDictionaryAdapter myDictionaryAdapter;
@@ -82,34 +84,27 @@ public class PageViewerFragment extends Fragment
 
     private PagerAdapter pagerAdapter;
     private Pagination pagination;
-    private String path;
-    private String bookName;
 
-    private int bookmark = 0;
+    private Book book;
 
-    private Language languagePrimary;
-    private Language languageTranslation;
-
-    public static PageViewerFragment create(Bundle arguments, Language from, Language to) {
+    public static PageViewerFragment create(Book book) {
 
         PageViewerFragment fragment = new PageViewerFragment();
 
-        arguments.putString("lang_from", from.toString());
-        arguments.putString("lang_to", to.toString());
+        Bundle arguments = new Bundle();
+        arguments.putParcelable("book", book);
+        arguments.putString("lang_from", book.getOriginLanguage().toString());
+        arguments.putString("lang_to", book.getTranslationLanguage().toString());
         fragment.setArguments(arguments);
         return fragment;
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        path = getArguments().getString("path");
-        bookName = getArguments().getString("name");
-        languagePrimary = Language.getLanguage(getArguments().getString("lang_from"));
-        languageTranslation = Language.getLanguage(getArguments().getString("lang_to"));
 
-        bookmark = Preferences.getBookmark(getContext(), bookName);
-
+        book = getArguments().getParcelable("book");
     }
 
     @Nullable
@@ -120,11 +115,12 @@ public class PageViewerFragment extends Fragment
         View view = inflater.inflate(R.layout.fragmet_viewer, container, false);
         ButterKnife.bind(this, view);
 
-        itemLanguageFrom.setText(new Locale(languagePrimary.toString()).getDisplayLanguage());
-        itemLanguageTo.setText(new Locale(languageTranslation.toString()).getDisplayLanguage());
+        itemLanguageFrom.setText(new Locale(book.getOriginLanguage().toString()).getDisplayLanguage());
+        itemLanguageTo.setText(new Locale(book.getTranslationLanguage().toString()).getDisplayLanguage());
 
         viewPager.addOnPageChangeListener(this);
 
+        int bookmark = book.getBookmark();
         seekBar.setMin(1);
         seekBar.setProgress(bookmark);
         seekBar.setMax(bookmark + 50);
@@ -135,6 +131,7 @@ public class PageViewerFragment extends Fragment
         pageNumber.setText(textProgress);
 
 
+        String bookName = book.getName();
         String header = bookName.length() > 25 ? bookName.substring(0, 22).concat("...") : bookName;
         itemHeader.setText(header);
 
@@ -156,6 +153,7 @@ public class PageViewerFragment extends Fragment
 
     private void setUpPages() {
 
+        String path = book.getPath();
         if (path.endsWith(".pdf")) {
             parsePdf(new File(path));
             return;
@@ -168,13 +166,13 @@ public class PageViewerFragment extends Fragment
 
                 pagination = new Pagination(getBookContent(),
                         ReaderPrefs.getPreferences(getContext()));
-                Log.d("PAGINATION_", "pagination:" + pagination);
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, languagePrimary, languageTranslation));
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                int bookmark = book.getBookmark();
                 progressBar.setVisibility(View.GONE);
                 itemAlert.setVisibility(View.GONE);
                 viewPager.setAdapter(pagerAdapter);
@@ -212,13 +210,13 @@ public class PageViewerFragment extends Fragment
 
                 pagination = new Pagination(PDFReader.parseAsText(file.getPath(), 1, 10),
                         ReaderPrefs.getPreferences(getContext()));
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, languagePrimary, languageTranslation));
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination,book));
 
                 handler.sendEmptyMessage(1);
 
                 pagination = new Pagination(PDFReader.parseAsText(file.getPath()),
                         ReaderPrefs.getPreferences(getContext()));
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, languagePrimary, languageTranslation));
+                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
 
                 return null;
             }
@@ -240,7 +238,7 @@ public class PageViewerFragment extends Fragment
 
     private CharSequence getBookContent() {
 
-        File file = new File(path);
+        File file = new File(book.getPath());
 
         String extension = file.getName().substring(file.getName().indexOf(".")).toLowerCase();
 
@@ -325,6 +323,10 @@ public class PageViewerFragment extends Fragment
         itemPages.setText(textProgress);
         pageNumber.setText(textProgress);
 
+        int bookmark = viewPager.getCurrentItem();
+        book.setBookmark(bookmark);
+        BooksTable.setBookmark(getContext(), bookmark, book.getPath());
+
     }
 
     @Override
@@ -341,7 +343,7 @@ public class PageViewerFragment extends Fragment
 
     @Override
     public void onDestroy() {
-        Preferences.setBookmark(getContext(), bookName, viewPager.getCurrentItem());
+        BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), book.getPath());
         super.onDestroy();
 
     }
@@ -355,6 +357,9 @@ public class PageViewerFragment extends Fragment
             String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
             itemPages.setText(textProgress);
             pageNumber.setText(textProgress);
+
+            book.setBookmark(viewPager.getCurrentItem());
+            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), book.getPath());
 
         }
     }
@@ -373,9 +378,10 @@ public class PageViewerFragment extends Fragment
         ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
-                languagePrimary = language;
                 String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
                 itemLanguageFrom.setText(displayLanguage);
+                book.setOriginLanguage(language);
+                BooksTable.setOriginLanguage(getContext(), language, book.getPath());
             }
         });
     }
@@ -385,9 +391,10 @@ public class PageViewerFragment extends Fragment
         ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
-                languageTranslation = language;
                 String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
                 itemLanguageTo.setText(displayLanguage);
+                book.setTranslationLanguage(language);
+                BooksTable.setTranslationLanguage(getContext(), language, book.getPath());
             }
         });
     }

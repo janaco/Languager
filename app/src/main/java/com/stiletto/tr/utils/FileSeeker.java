@@ -1,16 +1,19 @@
 package com.stiletto.tr.utils;
 
-import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
+import com.stiletto.tr.app.Constants;
+import com.stiletto.tr.core.FileSeekerCallback;
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,48 +22,96 @@ import java.util.List;
 
 public class FileSeeker {
 
-    private static long MIN_LENGTH = 15000;
+    public static void getBooks(final FileSeekerCallback callback) {
 
-    public static List<Book> getBooks() {
-        List<Book> textFilesSet = new ArrayList<>();
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                super.handleMessage(message);
 
-        List<StorageInfo> storageList = StorageUtils.getStorageList();
+                Book book = message.getData().getParcelable("book");
+                callback.onBookFound(book);
+            }
+        };
 
-        for (StorageInfo storageInfo : storageList) {
+        new AsyncTask<Void, Void, List<Book>>() {
+            @Override
+            protected List<Book> doInBackground(Void... voids) {
+                List<StorageInfo> storageList = StorageUtils.getStorageList();
+                List<Book> books = new ArrayList<>();
 
-            File file = new File(storageInfo.getPath());
+                for (StorageInfo storageInfo : storageList) {
 
-            if (file.isDirectory()) {
-                textFilesSet.addAll(listDir( file));
-            } else if (isTextFile(file) && file.length() > MIN_LENGTH) {
-                textFilesSet.add(new Book( file.getPath(), file.getName(), file.length()));
+                    File storage = new File(storageInfo.getPath());
+
+                    File[] files = storage.listFiles(getBooksFilter());
+
+                    if (files == null) {
+                        break;
+                    }
+
+                    for (File file : files) {
+
+                        if (file.isDirectory()) {
+                            books.addAll(listDir(file, handler));
+                        } else {
+                            books.add(notifyBookFound(file, handler));
+                        }
+                    }
+
+                }
+
+                return books;
             }
 
-        }
+            @Override
+            protected void onPostExecute(List<Book> books) {
+                callback.afterBookSearchResults(books);
+            }
+        }.execute();
 
-        return textFilesSet;
+
     }
 
 
-    private static List<Book> listDir(File directory) {
+    private static List<Book> listDir(File directory, Handler handler) {
 
-        List<Book> textFilesSet = new ArrayList<>();
+        List<Book> books = new ArrayList<>();
 
-
-        for (File file : directory.listFiles()) {
-
+        for (File file : directory.listFiles(getBooksFilter())) {
             if (file.isDirectory()) {
-                textFilesSet.addAll(listDir( file));
-            } else if (isTextFile(file) && file.length() > MIN_LENGTH) {
-                textFilesSet.add(new Book( file.getPath(), file.getName(), file.length()));
+                books.addAll(listDir(file, handler));
+            } else {
+                books.add(notifyBookFound(file, handler));
             }
         }
 
-        return textFilesSet;
+        return books;
     }
 
+    private static Book notifyBookFound(File file, Handler handler) {
 
-    private static boolean isTextFile(File file) {
+        Book book = new Book(file.getPath(), file.getName(), file.length());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("book", book);
+        Message message = new Message();
+        message.setData(bundle);
+        handler.sendMessage(message);
+
+        return book;
+    }
+
+    private static FileFilter getBooksFilter() {
+
+        return new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return isBooksFolder(file) || isBook(file);
+            }
+        };
+    }
+
+    private static boolean isBook(File file) {
 
         boolean isTextFile = false;
         String fileName = file.getName().toLowerCase();
@@ -75,5 +126,14 @@ public class FileSeeker {
         }
 
         return isTextFile;
+    }
+
+    private static boolean isBooksFolder(File file) {
+
+        String path = file.getPath().toLowerCase();
+
+        return file.isDirectory()
+                && (path.contains("book") || path.contains("download")
+                || path.contains("doc") || path.contains("data"));
     }
 }

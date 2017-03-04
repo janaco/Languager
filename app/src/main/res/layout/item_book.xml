@@ -5,9 +5,9 @@
     android:layout_weight="0.5">
 
     <RelativeLayout
-        android:id="@+id/gridView_item"
+        android:id="@+id/layout_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:background="@color/white"
         android:orientation="horizontal"
         android:weightSum="1">
