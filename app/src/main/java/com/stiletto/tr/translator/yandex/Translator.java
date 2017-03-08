@@ -24,14 +24,16 @@ import retrofit2.http.QueryMap;
 
 public class Translator {
 
-    public static void translate(CharSequence textToTranslate, Language languageFrom, Language languageTo, Callback<Translation> callback) {
+    public static void translate(CharSequence textToTranslate, Language languageFrom, Language languageTo, Callback<SimpleTranslation> callback) {
 
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_TRANSLATOR_KEY);
         map.put("lang", languageFrom.toString() + "-" + languageTo.toString());
         map.put("text", textToTranslate.toString());
-        Call<Translation> call = getService(Api.TRANSLATOR_URL).translate(map);
+        Call<SimpleTranslation> call = getService(Api.TRANSLATOR_URL).translate(map);
         call.enqueue(callback);
+
+        Log.d("TRANSLATOR_", "translate: " + textToTranslate + "\n" + call.request().url().toString());
     }
 
     public static void getDictionary(CharSequence textToTranslate, Language languageFrom,
@@ -41,9 +43,9 @@ public class Translator {
         map.put("lang", languageFrom.toString() + "-" + languageTo.toString());
         map.put("text", textToTranslate.toString());
         Call<Dictionary> call = getService(Api.DICTIONARY_URL).lookup(map);
-        Log.d("DICTIONARY_", "call: " + call.request().url().toString() );
 
         call.enqueue(callback);
+        Log.d("TRANSLATOR_", "dictionary: " + textToTranslate + "\n" + call.request().url().toString());
     }
 
     private static OkHttpClient getClient() {
@@ -81,7 +83,7 @@ public class Translator {
         String DICTIONARY_URL = "https://dictionary.yandex.net/api/v1/dicservice.json/";
 
         @POST("translate?")
-        Call<Translation> translate(@QueryMap Map<String, String> params);
+        Call<SimpleTranslation> translate(@QueryMap Map<String, String> params);
 
         @GET("lookup?")
         Call<Dictionary> lookup(@QueryMap Map<String, String> params);

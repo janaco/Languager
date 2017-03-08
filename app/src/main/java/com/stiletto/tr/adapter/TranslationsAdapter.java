@@ -10,7 +10,6 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.translator.yandex.model.Translation;
+import com.stiletto.tr.translator.yandex.model.DictionaryTranslation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,9 +28,9 @@ import java.util.List;
 
 public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapter.ViewHolder> {
 
-    private List<Translation> list;
+    private List<DictionaryTranslation> list;
 
-    public TranslationsAdapter(Translation[] translations) {
+    public TranslationsAdapter(DictionaryTranslation[] translations) {
         this.list = Arrays.asList(translations);
     }
 
@@ -46,7 +45,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
         holder.layoutUsages.setVisibility(View.GONE);
 
-        Translation translation = list.get(position);
+        DictionaryTranslation translation = list.get(position);
 
         String translated = translation.getTranslatedText();
         String type = " (" + translation.getTranslatedWordType() + ")";

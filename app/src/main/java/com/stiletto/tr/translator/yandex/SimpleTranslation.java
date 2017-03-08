@@ -16,7 +16,7 @@ import java.util.Arrays;
  * Created by yana on 05.01.17.
  */
 
-public class Translation {
+public class SimpleTranslation {
 
     @SerializedName("lang")
     String langunage;

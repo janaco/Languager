@@ -16,27 +16,31 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.MyDictionaryAdapter;
 import com.stiletto.tr.adapter.PagerAdapter;
-import com.stiletto.tr.app.Preferences;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.db.tables.BooksTable;
+import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
 import com.stiletto.tr.model.Book;
+import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.readers.TxtReader;
 import com.stiletto.tr.translator.yandex.Language;
-import com.stiletto.tr.translator.yandex.Translation;
+import com.stiletto.tr.translator.yandex.SimpleTranslation;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -136,7 +140,7 @@ public class PageViewerFragment extends Fragment
         itemHeader.setText(header);
 
         dictionaryList.setLayoutManager(new LinearLayoutManager(getContext()));
-        myDictionaryAdapter = new MyDictionaryAdapter(new ArrayList<Translation>());
+        myDictionaryAdapter = new MyDictionaryAdapter(new ArrayList<SimpleTranslation>());
         dictionaryList.setAdapter(myDictionaryAdapter);
 
         return view;
@@ -196,10 +200,33 @@ public class PageViewerFragment extends Fragment
             @Override
             public void handleMessage(Message msg) {
 
-//                layoutPageControl.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-                itemAlert.setVisibility(View.GONE);
-                viewPager.setAdapter(pagerAdapter);
+                switch (msg.what) {
+
+                    case 1:
+                        int count = msg.getData().getInt("pages");
+                        seekBar.setMax(count);
+                        seekBar.setProgress(book.getBookmark());
+                        String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
+                        itemPages.setText(textProgress);
+                        pageNumber.setText(textProgress);
+
+                        int bookmark = viewPager.getCurrentItem();
+                        book.setBookmark(bookmark);
+                        BooksTable.setBookmark(getContext(), bookmark, book.getPath());
+
+                        break;
+
+                    case 2:
+
+                        progressBar.setVisibility(View.GONE);
+                        itemAlert.setVisibility(View.GONE);
+
+                        int currentItem = viewPager.getCurrentItem();
+                        viewPager.setAdapter(pagerAdapter);
+                        viewPager.setCurrentItem(currentItem);
+                        break;
+                }
+
             }
         };
 
@@ -208,28 +235,59 @@ public class PageViewerFragment extends Fragment
             @Override
             protected Void doInBackground(Void... voids) {
 
-                pagination = new Pagination(PDFReader.parseAsText(file.getPath(), 1, 10),
-                        ReaderPrefs.getPreferences(getContext()));
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination,book));
+                String filePath = book.getPath();
 
-                handler.sendEmptyMessage(1);
+                int step = 0;
+                int maxStep = 10;
 
-                pagination = new Pagination(PDFReader.parseAsText(file.getPath()),
-                        ReaderPrefs.getPreferences(getContext()));
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
+                StringBuilder stringBuilder = new StringBuilder();
+
+                try {
+                    PdfReader reader = new PdfReader(filePath);
+
+                    int pages = reader.getNumberOfPages();
+                    Message message = new Message();
+                    message.what = 1;
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("pages", pages);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+
+                    int bookmark = 1;
+                    if (book.getBookmark() > 0 && book.getBookmark() > maxStep / 2) {
+                        bookmark = book.getBookmark() - maxStep / 2;
+                    }
+
+                    for (int page = bookmark; page <= pages; page++, step++) {
+                        stringBuilder.append(PdfTextExtractor.getTextFromPage(reader, page));
+
+                        if (step > maxStep) {
+                            step = 0;
+                            pagination = new Pagination(
+                                    stringBuilder.toString(), ReaderPrefs.getPreferences(getContext()));
+                            Log.d("PAGER_", "setAdapter: " + pagination.getPagesCount());
+                            setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
+                            handler.sendEmptyMessage(2);
+
+                        }
+
+                    }
+
+                    pagination = new Pagination(
+                            stringBuilder.toString(), ReaderPrefs.getPreferences(getContext()));
+                    Log.d("PAGER_", "setAdapter: " + pagination.getPagesCount());
+                    setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                progressBar.setVisibility(View.GONE);
-//                layoutPageControl.setVisibility(View.VISIBLE);
-                itemAlert.setVisibility(View.GONE);
-                int currentPage = viewPager.getCurrentItem();
                 viewPager.setAdapter(pagerAdapter);
-                viewPager.setCurrentItem(currentPage, false);
-
             }
         }.execute();
 
@@ -400,11 +458,17 @@ public class PageViewerFragment extends Fragment
     }
 
     @Override
-    public void newTranslation(CharSequence originText, Translation translation) {
+    public void newTranslation(CharSequence originText, SimpleTranslation translation) {
 
         translation.setOrigin(originText);
         myDictionaryAdapter.addTranslation(translation);
         itemDictionaryAlert.setVisibility(View.GONE);
+
+        DictionaryItem dictionaryItem = new DictionaryItem(originText.toString(), translation.getTranslationAsString());
+        dictionaryItem.setOriginLanguage(book.getOriginLanguage());
+        dictionaryItem.setTranslationLanguage(book.getTranslationLanguage());
+
+        DictionaryTable.insert(getContext(), dictionaryItem);
 
     }
 }

@@ -124,7 +124,7 @@ public class BookSetupFragment extends Fragment {
         book.setTranslationLanguage(languageTranslation);
 
         BooksTable.setLanguages(getContext(), new Language[]{languagePrimary, languageTranslation}, book.getPath());
-        
+
         FragmentActivity activity = getActivity();
 
         NavigationManager.removeFragment(activity, this);

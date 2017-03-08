@@ -1,26 +1,14 @@
 package com.stiletto.tr.adapter;
 
-import android.content.Context;
-import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.translator.yandex.Translation;
-import com.stiletto.tr.translator.yandex.model.DictionaryWord;
+import com.stiletto.tr.translator.yandex.SimpleTranslation;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,9 +17,9 @@ import java.util.List;
 
 public class MyDictionaryAdapter extends RecyclerView.Adapter<MyDictionaryAdapter.ViewHolder> {
 
-    private List<Translation> list;
+    private List<SimpleTranslation> list;
 
-    public MyDictionaryAdapter(List<Translation> list) {
+    public MyDictionaryAdapter(List<SimpleTranslation> list) {
         this.list = list;
     }
 
@@ -44,14 +32,14 @@ public class MyDictionaryAdapter extends RecyclerView.Adapter<MyDictionaryAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Translation translation = list.get(position);
+        SimpleTranslation translation = list.get(position);
 
         holder.itemOrigin.setText(translation.getOrigin());
         holder.itemTranslated.setText(translation.getTranslationAsString());
 
     }
 
-    public void addTranslation(Translation translation){
+    public void addTranslation(SimpleTranslation translation){
         list.add(translation);
         notifyDataSetChanged();
     }

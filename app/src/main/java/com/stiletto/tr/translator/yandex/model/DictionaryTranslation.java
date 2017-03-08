@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Created by yana on 08.01.17.
  */
 
-public class Translation {
+public class DictionaryTranslation {
 
     @SerializedName("text")
     private String translatedText;

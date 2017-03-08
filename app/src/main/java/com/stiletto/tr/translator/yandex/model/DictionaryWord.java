@@ -20,7 +20,7 @@ public class DictionaryWord {
     @SerializedName("fl") private String forms;
 
     @SerializedName("tr")
-    private Translation[] translations;
+    private DictionaryTranslation[] translations;
 
     public String getOriginText() {
         return originText;
@@ -30,7 +30,7 @@ public class DictionaryWord {
         return wordType;
     }
 
-    public Translation[] getTranslations() {
+    public DictionaryTranslation[] getTranslations() {
         return translations;
     }
 

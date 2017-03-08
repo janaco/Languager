@@ -25,7 +25,7 @@ import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
 import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.translator.yandex.Language;
-import com.stiletto.tr.translator.yandex.Translation;
+import com.stiletto.tr.translator.yandex.SimpleTranslation;
 import com.stiletto.tr.translator.yandex.Translator;
 import com.stiletto.tr.translator.yandex.model.Dictionary;
 
@@ -182,9 +182,9 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
 
 
     private void translate(final CharSequence word) {
-        Translator.translate(word, primaryLanguage, translationLangusage, new Callback<Translation>() {
+        Translator.translate(word, primaryLanguage, translationLangusage, new Callback<SimpleTranslation>() {
             @Override
-            public void onResponse(Call<Translation> call, Response<Translation> response) {
+            public void onResponse(Call<SimpleTranslation> call, Response<SimpleTranslation> response) {
 
                 if (response.isSuccessful()) {
                     String res = response.body().getTranslationAsString();
@@ -221,7 +221,7 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
             }
 
             @Override
-            public void onFailure(Call<Translation> call, Throwable t) {
+            public void onFailure(Call<SimpleTranslation> call, Throwable t) {
 
             }
         });

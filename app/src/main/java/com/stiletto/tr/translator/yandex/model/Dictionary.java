@@ -16,6 +16,9 @@ public class Dictionary {
         return dictionary;
     }
 
+    public boolean hasItems(){
+        return dictionary != null && dictionary.length>0;
+    }
     @Override
     public String toString() {
         return "Dictionary{" + "\n" +
