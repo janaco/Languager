@@ -1,6 +1,5 @@
 package com.stiletto.tr.widget.categorized_recycler_view;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -13,13 +12,13 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * Created by yana on 08.03.17.
  */
 
-public class CategoryAdapter extends BaseAdapter implements OnScrollListener, ListHeader, Filterable {
+public abstract class CategoryAdapter<T extends CategoryAdapter.ViewHolder>
+        extends BaseAdapter implements OnScrollListener,  Filterable {
 
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_SECTION = 1;
@@ -29,18 +28,9 @@ public class CategoryAdapter extends BaseAdapter implements OnScrollListener, Li
     private int nextCategoryPosition = 0;
 
     private ArrayList<Integer> positions;
-    private ArrayList<String> items;
-    private Filter filter;
 
-    public CategoryAdapter(Filter filter,  ArrayList<String> listItems, ArrayList<Integer> listSectionPos) {
-        this.items = listItems;
+    public CategoryAdapter(ArrayList<Integer> listSectionPos) {
         this.positions = listSectionPos;
-        this.filter = filter;
-    }
-
-    @Override
-    public int getCount() {
-        return items.size();
     }
 
     @Override
@@ -63,66 +53,61 @@ public class CategoryAdapter extends BaseAdapter implements OnScrollListener, Li
         return positions.contains(position) ? TYPE_SECTION : TYPE_ITEM;
     }
 
-    @Override
-    public Object getItem(int position) {
-        return items.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return items.get(position).hashCode();
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
 
         if (convertView == null) {
-            holder = new ViewHolder();
             int type = getItemViewType(position);
 
             switch (type) {
                 case TYPE_ITEM:
-                    convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_view, null);
+                    convertView = getBaseItemView(position, parent);
+                    holder = new ViewHolder(convertView);
+                    convertView.setTag(holder);
                     break;
                 case TYPE_SECTION:
-                    convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.section_row_view, null);
+                    convertView = getCategoryView(position, parent);
+                    holder = new ViewHolder(convertView);
+                    convertView.setTag(holder);
                     break;
             }
-            holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-            convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.textView.setText(items.get(position).toString());
+        bindView(position, holder, convertView);
         return convertView;
     }
 
-    @Override
-    public int getPinnedHeaderState(int position) {
-        // hide pinned header when items count is zero OR position is less than
-        // zero OR
-        // there is already a header in list view
-        if (getCount() == 0 || position < 0 || positions.indexOf(position) != -1) {
-            return PINNED_HEADER_GONE;
-        }
+    public abstract View getBaseItemView(int position, ViewGroup parent);
 
-        // the header should get pushed up if the top item shown
-        // is the last item in a section for a particular letter.
-        currentCategoryPosition = getCurrentSectionPosition(position);
-        nextCategoryPosition = getNextSectionPosition(currentCategoryPosition);
-        if (nextCategoryPosition != -1 && position == nextCategoryPosition - 1) {
-            return PINNED_HEADER_PUSHED_UP;
-        }
+    public abstract View getCategoryView(int position, ViewGroup parent);
 
-        return PINNED_HEADER_VISIBLE;
-    }
+    public abstract void bindView(int position, ViewHolder viewHolder, View convertView);
+//
+//    @Override
+//    public int getPinnedHeaderState(int position) {
+//        // hide pinned header when items count is zero OR position is less than
+//        // zero OR
+//        // there is already a header in list view
+//        if (getCount() == 0 || position < 0 || positions.indexOf(position) != -1) {
+//            return PINNED_HEADER_GONE;
+//        }
+//
+//        // the header should get pushed up if the top item shown
+//        // is the last item in a section for a particular letter.
+//        currentCategoryPosition = getCurrentSectionPosition(position);
+//        nextCategoryPosition = getNextSectionPosition(currentCategoryPosition);
+//        if (nextCategoryPosition != -1 && position == nextCategoryPosition - 1) {
+//            return PINNED_HEADER_PUSHED_UP;
+//        }
+//
+//        return PINNED_HEADER_VISIBLE;
+//    }
 
-    public int getCurrentSectionPosition(int position) {
-        String listChar = items.get(position).toString().substring(0, 1).toUpperCase(Locale.getDefault());
-        return items.indexOf(listChar);
-    }
+    public abstract int getCurrentSectionPosition(int position);
 
     public int getNextSectionPosition(int currentSectionPosition) {
         int index = positions.indexOf(currentSectionPosition);
@@ -132,18 +117,20 @@ public class CategoryAdapter extends BaseAdapter implements OnScrollListener, Li
         return positions.get(index);
     }
 
-    @Override
-    public void configurePinnedHeader(View v, int position) {
-        // set text in pinned header
-        TextView header = (TextView) v;
-        currentCategoryPosition = getCurrentSectionPosition(position);
-        header.setText(items.get(currentCategoryPosition));
-    }
+//    @Override
+//    public void configurePinnedHeader(View v, int position) {
+//        // set text in pinned header
+//        TextView header = (TextView) v;
+//        currentCategoryPosition = getCurrentSectionPosition(position);
+//        header.setText(getHeader(currentCategoryPosition));
+//    }
+
+    public abstract String getHeader(int position);
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (view instanceof CategorizedListView) {
-            ((CategorizedListView) view).configureHeaderView(firstVisibleItem);
+//            ((CategorizedListView) view).configureHeaderView(firstVisibleItem);
         }
     }
 
@@ -154,10 +141,17 @@ public class CategoryAdapter extends BaseAdapter implements OnScrollListener, Li
 
     @Override
     public Filter getFilter() {
-        return filter;
+        return null;
     }
 
     public static class ViewHolder {
-        public TextView textView;
+        public TextView itemOrigin;
+        public TextView itemTranslation;
+
+        public ViewHolder(View itemView) {
+
+            itemOrigin = (TextView) itemView.findViewById(R.id.item_text);
+            itemTranslation = (TextView) itemView.findViewById(R.id.item_translation);
+        }
     }
 }

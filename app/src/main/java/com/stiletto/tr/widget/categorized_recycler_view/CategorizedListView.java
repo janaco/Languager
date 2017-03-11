@@ -14,16 +14,18 @@ import com.stiletto.tr.R;
 /**
  * Created by yana on 08.03.17.
  */
-public class CategorizedListView extends ListView implements CategoryFilter {
+public class CategorizedListView extends ListView  {
 
     // interface object that configure pinned header view position in list view
-    ListHeader listHeader;
+//    ListHeader listHeader;
 
     // view objects
-    View headerView, indexBarView, previewTextView;
+//    View headerView;
+    View indexBarView;
+    View previewTextView;
 
     // flags that decide view visibility
-    boolean headerVisibility =false;
+//    boolean headerVisibility =false;
     boolean previewVisibility =false;
     // initially show index bar view with it's content
     boolean indexBarVisibility =true;
@@ -32,8 +34,9 @@ public class CategorizedListView extends ListView implements CategoryFilter {
     Context context;
 
     // view height and width
-    int headerViewWidth,
-            headerViewHeight,
+    int
+//            headerViewWidth,
+//            headerViewHeight,
             indexBarViewWidth,
             indexBarViewHeight,
             indexBarViewMargin,
@@ -64,20 +67,20 @@ public class CategorizedListView extends ListView implements CategoryFilter {
 
     @Override
     public void setAdapter(ListAdapter adapter) {
-        this.listHeader = (CategoryAdapter)adapter;
+//        this.listHeader = (CategoryAdapter)adapter;
         super.setAdapter(adapter);
     }
 
 
-    public void setPinnedHeaderView(View headerView) {
-        this.headerView = headerView;
-        // Disable vertical fading when the pinned header is present
-        // TODO change ListView to allow separate measures for top and bottom fading edge;
-        // in this particular case we would like to disable the top, but not the bottom edge.
-        if (this.headerView != null) {
-            setFadingEdgeLength(0);
-        }
-    }
+//    public void setPinnedHeaderView(View headerView) {
+//        this.headerView = headerView;
+//        // Disable vertical fading when the pinned header is present
+//        // TODO change ListView to allow separate measures for top and bottom fading edge;
+//        // in this particular case we would like to disable the top, but not the bottom edge.
+//        if (this.headerView != null) {
+//            setFadingEdgeLength(0);
+//        }
+//    }
 
 
     public void setIndexBarView(View indexBarView) {
@@ -95,11 +98,11 @@ public class CategorizedListView extends ListView implements CategoryFilter {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        if (headerView != null) {
-            measureChild(headerView, widthMeasureSpec, heightMeasureSpec);
-            headerViewWidth = headerView.getMeasuredWidth();
-            headerViewHeight = headerView.getMeasuredHeight();
-        }
+//        if (headerView != null) {
+//            measureChild(headerView, widthMeasureSpec, heightMeasureSpec);
+//            headerViewWidth = headerView.getMeasuredWidth();
+//            headerViewHeight = headerView.getMeasuredHeight();
+//        }
 
         if (indexBarView != null && indexBarVisibility) {
             measureChild(indexBarView, widthMeasureSpec, heightMeasureSpec);
@@ -119,10 +122,10 @@ public class CategorizedListView extends ListView implements CategoryFilter {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        if (headerView != null) {
-            headerView.layout(0, 0, headerViewWidth, headerViewHeight);
-            configureHeaderView(getFirstVisiblePosition());
-        }
+//        if (headerView != null) {
+//            headerView.layout(0, 0, headerViewWidth, headerViewHeight);
+////            configureHeaderView(getFirstVisiblePosition());
+//        }
 
         if (indexBarView != null && indexBarVisibility) {
             indexBarView.layout(getMeasuredWidth()- indexBarViewMargin - indexBarViewWidth, indexBarViewMargin
@@ -156,54 +159,54 @@ public class CategorizedListView extends ListView implements CategoryFilter {
     }
 
 
-    public void configureHeaderView(int position) {
-        if (headerView == null) {
-            return;
-        }
-
-        int state = listHeader.getPinnedHeaderState(position);
-
-        switch (state) {
-
-            case ListHeader.PINNED_HEADER_GONE:
-                headerVisibility = false;
-                break;
-            case ListHeader.PINNED_HEADER_VISIBLE:
-                if (headerView.getTop() != 0) {
-                    headerView.layout(0, 0, headerViewWidth, headerViewHeight);
-                }
-                listHeader.configurePinnedHeader(headerView, position);
-                headerVisibility = true;
-                break;
-            case ListHeader.PINNED_HEADER_PUSHED_UP:
-                View firstView = getChildAt(0);
-                int bottom = firstView.getBottom();
-                // int itemHeight = firstView.getHeight();
-                int headerHeight = headerView.getHeight();
-                int y;
-                if (bottom < headerHeight) {
-                    y = (bottom - headerHeight);
-                }
-                else {
-                    y = 0;
-                }
-
-                if (headerView.getTop() != y) {
-                    headerView.layout(0, y, headerViewWidth, headerViewHeight + y);
-                }
-                listHeader.configurePinnedHeader(headerView, position);
-                headerVisibility = true;
-                break;
-        }
-    }
+//    public void configureHeaderView(int position) {
+//        if (headerView == null) {
+//            return;
+//        }
+//
+//        int state = listHeader.getPinnedHeaderState(position);
+//
+//        switch (state) {
+//
+//            case ListHeader.PINNED_HEADER_GONE:
+//                headerVisibility = false;
+//                break;
+//            case ListHeader.PINNED_HEADER_VISIBLE:
+//                if (headerView.getTop() != 0) {
+//                    headerView.layout(0, 0, headerViewWidth, headerViewHeight);
+//                }
+//                listHeader.configurePinnedHeader(headerView, position);
+//                headerVisibility = true;
+//                break;
+//            case ListHeader.PINNED_HEADER_PUSHED_UP:
+//                View firstView = getChildAt(0);
+//                int bottom = firstView.getBottom();
+//                // int itemHeight = firstView.getHeight();
+//                int headerHeight = headerView.getHeight();
+//                int y;
+//                if (bottom < headerHeight) {
+//                    y = (bottom - headerHeight);
+//                }
+//                else {
+//                    y = 0;
+//                }
+//
+//                if (headerView.getTop() != y) {
+//                    headerView.layout(0, y, headerViewWidth, headerViewHeight + y);
+//                }
+//                listHeader.configurePinnedHeader(headerView, position);
+//                headerVisibility = true;
+//                break;
+//        }
+//    }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);// draw list view elements (zIndex == 1)
 
-        if (headerView != null && headerVisibility) {
-            drawChild(canvas, headerView, getDrawingTime()); // draw pinned header view (zIndex == 2)
-        }
+//        if (headerView != null && headerVisibility) {
+//            drawChild(canvas, headerView, getDrawingTime()); // draw pinned header view (zIndex == 2)
+//        }
         if (indexBarView != null && indexBarVisibility) {
             drawChild(canvas, indexBarView, getDrawingTime()); // draw index bar view (zIndex == 3)
         }
@@ -226,13 +229,13 @@ public class CategorizedListView extends ListView implements CategoryFilter {
     }
 
 
-    @Override
-    public void filterList(float indexBarY, int position,String previewText) {
-        this.indexBarY =indexBarY;
-
-        if(previewTextView instanceof TextView)
-            ((TextView) previewTextView).setText(previewText);
-
-        setSelection(position);
-    }
+//    @Override
+//    public void filterList(float indexBarY, int position,String previewText) {
+//        this.indexBarY =indexBarY;
+//
+//        if(previewTextView instanceof TextView)
+//            ((TextView) previewTextView).setText(previewText);
+//
+//        setSelection(position);
+//    }
 }

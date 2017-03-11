@@ -3,13 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/colorLightPrimary"
     android:orientation="vertical">
 
-    <com.stiletto.tr.widget.categorized_recycler_view.CategorizedListView
-        android:id="@+id/recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollingCache="false"
-        tools:listitem="@layout/item_general_dictionary" />
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <com.stiletto.tr.widget.list.CategoriredList
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_general_dictionary" />
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/category_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:layout_weight="0.88"-->
+            <!--tools:listitem="@layout/item_category" />-->
+
+    </LinearLayout>
+
 </LinearLayout>

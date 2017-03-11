@@ -3,6 +3,8 @@ package com.stiletto.tr.model;
 import com.stiletto.tr.translator.PartOfSpeech;
 import com.stiletto.tr.translator.yandex.Language;
 
+import java.util.Objects;
+
 /**
  * Created by yana on 08.03.17.
  */
@@ -75,5 +77,19 @@ public class DictionaryItem {
 
     public void setTranslationLanguage(Language translationLanguage) {
         this.translationLanguage = translationLanguage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DictionaryItem)) return false;
+        DictionaryItem item = (DictionaryItem) o;
+        return Objects.equals(getOrigin(), item.getOrigin()) &&
+                Objects.equals(getTranslation(), item.getTranslation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOrigin(), getTranslation());
     }
 }

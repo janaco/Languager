@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.stiletto.tr.widget.categorized_recycler_view.CategoryBarView
+<com.stiletto.tr.widget.list.IndexBarView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="fill_parent"
     android:layout_width="@dimen/index_bar_view_width"

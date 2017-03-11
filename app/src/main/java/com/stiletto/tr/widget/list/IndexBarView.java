@@ -1,4 +1,4 @@
-package com.stiletto.tr.widget.categorized_recycler_view;
+package com.stiletto.tr.widget.list;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,94 +13,59 @@ import com.stiletto.tr.R;
 import java.util.ArrayList;
 
 /**
- * Created by yana on 08.03.17.
+ * Created by yana on 09.03.17.
  */
 
-public class CategoryBarView extends View {
+public class IndexBarView extends View {
 
-    // index bar margin
-    float indexbarMargin;
-
-    // user touched Y axis coordinate value
+    float indexBarMargin;
     float sideIndexY;
 
-    // flag used in touch events manipulations
     boolean isIndexing = false;
 
-    // holds current section position selected by user
     int currentSectionPosition = -1;
 
-    // array list to store section positions
-//    public ArrayList<Integer> listSections;
-
-    // array list to store listView data
     ArrayList<String> listItems;
-
     Paint indexPaint;
 
-    Context context;
-
-    // interface object used as bridge between list view and index bar view for
-    // filtering list view content on touch event
-    CategorizedListView categoryFilter;
+    CategoriredList listView;
 
 
-    public CategoryBarView(Context context) {
+    public IndexBarView(Context context) {
         super(context);
-        this.context = context;
     }
 
 
-    public CategoryBarView(Context context, AttributeSet attrs) {
+    public IndexBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
     }
 
 
-    public CategoryBarView(Context context, AttributeSet attrs, int defStyle) {
+    public IndexBarView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.context = context;
     }
 
 
-    public void setData(CategorizedListView listView, ArrayList<String> listItems) {
+    public void setData(CategoriredList listView, ArrayList<String> listItems) {
         this.listItems = listItems;
+        this.listView = listView;
 
-        // list view implements categoryFilter interface
-        categoryFilter = listView;
-
-        // set index bar margin from resources
-        indexbarMargin = context.getResources().getDimension(R.dimen.index_bar_view_margin);
+        indexBarMargin = getResources().getDimension(R.dimen.index_bar_view_margin);
 
         // index bar item color and text size
         indexPaint = new Paint();
-        indexPaint.setColor(ContextCompat.getColor(context, R.color.black));
+        indexPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
         indexPaint.setAntiAlias(true);
-        indexPaint.setTextSize(context.getResources().getDimension(R.dimen.index_bar_view_text_size));
+        indexPaint.setTextSize(getResources().getDimension(R.dimen.index_bar_view_text_size));
     }
 
 
-    // draw view content on canvas using paint
     @Override
     protected void onDraw(Canvas canvas) {
-//        if (listSections != null && listSections.size() > 1) {
-//            float sectionHeight = (getMeasuredHeight() - 2 * indexbarMargin)/ listSections.size();
-//            float paddingTop = (sectionHeight - (indexPaint.descent() - indexPaint.ascent())) / 2;
-//
-//            for (int i = 0; i < listSections.size(); i++) {
-//                float paddingLeft = (getMeasuredWidth() - indexPaint.measureText(getSectionText(listSections.get(i)))) / 2;
-//
-//                canvas.drawText(getSectionText(listSections.get(i)),
-//                        paddingLeft,
-//                        indexbarMargin + (sectionHeight * i) + paddingTop + indexPaint.descent(),
-//                        indexPaint);
-//            }
-//        }
-//        super.onDraw(canvas);
 
         if (listItems != null && listItems.size() > 1) {
             int itemCount = listItems.size();
-            float sectionHeight = (getMeasuredHeight() - 2 * indexbarMargin)/ itemCount;
+            float sectionHeight = (getMeasuredHeight() - 2 * indexBarMargin)/ itemCount;
             float paddingTop = (sectionHeight - (indexPaint.descent() - indexPaint.ascent())) / 2;
 
             for (int i = 0; i < itemCount; i++) {
@@ -108,7 +73,7 @@ public class CategoryBarView extends View {
 
                 canvas.drawText(listItems.get(i),
                         paddingLeft,
-                        indexbarMargin + (sectionHeight * i) + paddingTop + indexPaint.descent(),
+                        indexBarMargin + (sectionHeight * i) + paddingTop + indexPaint.descent(),
                         indexPaint);
             }
         }
@@ -119,8 +84,6 @@ public class CategoryBarView extends View {
 
 
     boolean contains(float x, float y) {
-        // Determine if the point is in index bar region, which includes the
-        // right margin of the bar
         return (x >= getLeft() && y >= getTop() && y <= getTop() + getMeasuredHeight());
     }
 
@@ -129,13 +92,13 @@ public class CategoryBarView extends View {
         this.sideIndexY = sideIndexY;
 
         // filter list items and get touched section position with in index bar
-        currentSectionPosition = (int) (((this.sideIndexY) - getTop() - indexbarMargin) /
-                ((getMeasuredHeight() - (2 * indexbarMargin)) / listItems.size()));
+        currentSectionPosition = (int) (((this.sideIndexY) - getTop() - indexBarMargin) /
+                ((getMeasuredHeight() - (2 * indexBarMargin)) / listItems.size()));
 
         if (currentSectionPosition >= 0 && currentSectionPosition < listItems.size()) {
             int position = currentSectionPosition;
             String previewText = listItems.get(position);
-//            categoryFilter.filterList(this.sideIndexY, position, previewText);
+            listView.filterList(this.sideIndexY, position, previewText);
         }
     }
 
