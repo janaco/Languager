@@ -17,9 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.translator.yandex.model.DictionaryWord;
+import com.stiletto.tr.model.DictionaryItem;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,11 +27,11 @@ import java.util.List;
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.ViewHolder> {
 
-    private List<DictionaryWord> list;
+    private List<DictionaryItem> list;
     private Context context;
 
-    public DictionaryAdapter(Context context, DictionaryWord[] words) {
-        this.list = Arrays.asList(words);
+    public DictionaryAdapter(Context context, List<DictionaryItem> list) {
+        this.list = list;
         this.context = context;
     }
 
@@ -45,7 +44,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        DictionaryWord word = list.get(position);
+        DictionaryItem item = list.get(position);
 
         if (position == 0){
             holder.itemLine.setVisibility(View.GONE);
@@ -53,9 +52,9 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
             holder.itemLine.setVisibility(View.VISIBLE);
         }
 
-        String originText = word.getOriginText();
-        String type = word.hasWordType() ? " (" + word.getWordType() + ")" : "";
-        String transcryption = word.hasTranscryption() ? " [" + word.getTranscryption() + "]" : "";
+        String originText = item.getOriginText();
+        String type = item.isKnownPartOfSpeech() ? " (" + item.getPartOfSpeech() + ")" : "";
+        String transcryption = item.hasTranscription() ? " [" + item.getTranscription() + "]" : "";
 
         SpannableString text = new SpannableString(originText + transcryption + type);
         text.setSpan(new UnderlineSpan(), 0, originText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -73,7 +72,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
         holder.itemKey.setText(text);
 
 
-        TranslationsAdapter translationsAdapter = new TranslationsAdapter(word.getTranslations());
+        TranslationsAdapter translationsAdapter = new TranslationsAdapter(item.getTranslations());
         holder.recyclerView.setAdapter(translationsAdapter);
 
     }

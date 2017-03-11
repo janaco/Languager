@@ -75,6 +75,11 @@ public class CategoriredList extends RecyclerView
         indexBarView.setData(this, items);
     }
 
+    public void setIndexBarVisibility(int visibility){
+        indexBarView.setVisibility(visibility);
+        setIndexBarVisibility(visibility==VISIBLE);
+    }
+
     private void setPreviewView() {
         this.previewTextView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.preview_view, this, false);
     }

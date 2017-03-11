@@ -20,7 +20,7 @@ public class NavigationManager {
                 .beginTransaction()
                 .addToBackStack(nextFragment.getName())
                 .replace(R.id.container, nextFragment, nextFragment.getName())
-                .commit();
+                .commitAllowingStateLoss();
     }
 
 

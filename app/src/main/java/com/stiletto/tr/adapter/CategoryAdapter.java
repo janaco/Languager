@@ -26,7 +26,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         HashSet<String> set = new HashSet<>();
         for (DictionaryItem item : list) {
-            String word = item.getOrigin().substring(0, 1).toUpperCase();
+            String word = item.getOriginText().substring(0, 1).toUpperCase();
             set.add(word);
         }
 

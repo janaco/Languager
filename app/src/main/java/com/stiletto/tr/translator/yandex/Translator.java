@@ -2,15 +2,21 @@ package com.stiletto.tr.translator.yandex;
 
 import android.util.Log;
 
-import com.stiletto.tr.translator.yandex.model.Dictionary;
+import com.stiletto.tr.model.DictionaryItem;
+import com.stiletto.tr.translator.yandex.model.YandexDictionaryResponse;
+import com.stiletto.tr.translator.yandex.model.YandexTranslateResponse;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
@@ -24,27 +30,66 @@ import retrofit2.http.QueryMap;
 
 public class Translator {
 
-    public static void translate(CharSequence textToTranslate, Language languageFrom, Language languageTo, Callback<SimpleTranslation> callback) {
+    public static void translate(final CharSequence textToTranslate, final Language languageFrom, final Language languageTo, final TranslatorCallback callback) {
 
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_TRANSLATOR_KEY);
         map.put("lang", languageFrom.toString() + "-" + languageTo.toString());
         map.put("text", textToTranslate.toString());
-        Call<SimpleTranslation> call = getService(Api.TRANSLATOR_URL).translate(map);
-        call.enqueue(callback);
+        Call<YandexTranslateResponse> call = getService(Api.TRANSLATOR_URL).translate(map);
+        call.enqueue(new Callback<YandexTranslateResponse>() {
+            @Override
+            public void onResponse(Call<YandexTranslateResponse> call, Response<YandexTranslateResponse> response) {
+                if (response.isSuccessful()) {
+                    DictionaryItem dictionaryItem = response.body().getAsDictionaryItem(textToTranslate);
+                    dictionaryItem.setOriginLanguage(languageFrom);
+                    dictionaryItem.setTranslationLanguage(languageTo);
+
+                    DictionaryItem[] items = new DictionaryItem[]{dictionaryItem};
+                    callback.translationSuccess(Arrays.asList(items));
+                } else {
+                    callback.translationFailure(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<YandexTranslateResponse> call, Throwable t) {
+                callback.translationError(call, t);
+            }
+        });
 
         Log.d("TRANSLATOR_", "translate: " + textToTranslate + "\n" + call.request().url().toString());
     }
 
-    public static void getDictionary(CharSequence textToTranslate, Language languageFrom,
-                                     Language languageTo, Callback<Dictionary> callback) {
+    public static void getDictionary(final CharSequence textToTranslate, final Language languageFrom,
+                                     final Language languageTo, final TranslatorCallback callback) {
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_DICTIONARY_KEY);
         map.put("lang", languageFrom.toString() + "-" + languageTo.toString());
         map.put("text", textToTranslate.toString());
-        Call<Dictionary> call = getService(Api.DICTIONARY_URL).lookup(map);
+        final Call<YandexDictionaryResponse> call = getService(Api.DICTIONARY_URL).lookup(map);
 
-        call.enqueue(callback);
+        call.enqueue(new Callback<YandexDictionaryResponse>() {
+            @Override
+            public void onResponse(Call<YandexDictionaryResponse> call, Response<YandexDictionaryResponse> response) {
+                if (response.isSuccessful()) {
+                    List<DictionaryItem> list = new ArrayList<>();
+                    for (DictionaryItem item : response.body().getItems()) {
+                        item.setOriginLanguage(languageFrom);
+                        item.setTranslationLanguage(languageTo);
+                        list.add(item);
+                    }
+                    callback.translationSuccess(list);
+                } else {
+                    callback.translationFailure(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<YandexDictionaryResponse> call, Throwable t) {
+                callback.translationError(call, t);
+            }
+        });
         Log.d("TRANSLATOR_", "dictionary: " + textToTranslate + "\n" + call.request().url().toString());
     }
 
@@ -83,10 +128,10 @@ public class Translator {
         String DICTIONARY_URL = "https://dictionary.yandex.net/api/v1/dicservice.json/";
 
         @POST("translate?")
-        Call<SimpleTranslation> translate(@QueryMap Map<String, String> params);
+        Call<YandexTranslateResponse> translate(@QueryMap Map<String, String> params);
 
         @GET("lookup?")
-        Call<Dictionary> lookup(@QueryMap Map<String, String> params);
+        Call<YandexDictionaryResponse> lookup(@QueryMap Map<String, String> params);
 
 
     }

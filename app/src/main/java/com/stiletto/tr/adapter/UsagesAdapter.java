@@ -6,14 +6,13 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.translator.yandex.model.Example;
+import com.stiletto.tr.model.UsageSample;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +23,9 @@ import java.util.List;
 
 public class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder> {
 
-    private List<Example> list;
+    private List<UsageSample> list;
 
-    public UsagesAdapter(Example [] examples) {
+    public UsagesAdapter(UsageSample [] examples) {
         this.list = Arrays.asList(examples);
     }
 
@@ -39,9 +38,9 @@ public class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Example example = list.get(position);
+        UsageSample example = list.get(position);
 
-        String origin = example.getExampleText();
+        String origin = example.getText();
         String translations = "(" + example.getTranslations() + ")";
 
         SpannableString text = new SpannableString(origin + " " + translations);

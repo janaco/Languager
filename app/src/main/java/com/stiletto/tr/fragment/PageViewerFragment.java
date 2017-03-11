@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.stiletto.tr.R;
-import com.stiletto.tr.adapter.MyDictionaryAdapter;
+import com.stiletto.tr.adapter.BookDictionaryAdapter;
 import com.stiletto.tr.adapter.PagerAdapter;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.core.TranslationCallback;
@@ -33,7 +33,7 @@ import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.readers.TxtReader;
 import com.stiletto.tr.translator.yandex.Language;
-import com.stiletto.tr.translator.yandex.SimpleTranslation;
+import com.stiletto.tr.translator.yandex.model.YandexTranslateResponse;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 
@@ -81,7 +81,7 @@ public class PageViewerFragment extends Fragment
     TextView pageNumber;
 
 
-    private MyDictionaryAdapter myDictionaryAdapter;
+    private BookDictionaryAdapter myDictionaryAdapter;
 
 
     private boolean isFullScreen = false;
@@ -140,7 +140,7 @@ public class PageViewerFragment extends Fragment
         itemHeader.setText(header);
 
         dictionaryList.setLayoutManager(new LinearLayoutManager(getContext()));
-        myDictionaryAdapter = new MyDictionaryAdapter(new ArrayList<SimpleTranslation>());
+        myDictionaryAdapter = new BookDictionaryAdapter();
         dictionaryList.setAdapter(myDictionaryAdapter);
 
         return view;
@@ -458,17 +458,12 @@ public class PageViewerFragment extends Fragment
     }
 
     @Override
-    public void newTranslation(CharSequence originText, SimpleTranslation translation) {
+    public void newTranslation(CharSequence originText, DictionaryItem item) {
 
-        translation.setOrigin(originText);
-        myDictionaryAdapter.addTranslation(translation);
+        myDictionaryAdapter.addTranslation(item);
         itemDictionaryAlert.setVisibility(View.GONE);
 
-        DictionaryItem dictionaryItem = new DictionaryItem(originText.toString(), translation.getTranslationAsString());
-        dictionaryItem.setOriginLanguage(book.getOriginLanguage());
-        dictionaryItem.setTranslationLanguage(book.getTranslationLanguage());
-
-        DictionaryTable.insert(getContext(), dictionaryItem);
+        DictionaryTable.insert(getContext(), item);
 
     }
 }

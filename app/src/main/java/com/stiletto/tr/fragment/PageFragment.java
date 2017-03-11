@@ -24,17 +24,19 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
 import com.stiletto.tr.core.TranslationCallback;
+import com.stiletto.tr.model.DictionaryItem;
+import com.stiletto.tr.model.Translation;
 import com.stiletto.tr.translator.yandex.Language;
-import com.stiletto.tr.translator.yandex.SimpleTranslation;
 import com.stiletto.tr.translator.yandex.Translator;
-import com.stiletto.tr.translator.yandex.model.Dictionary;
-
+import com.stiletto.tr.translator.yandex.TranslatorCallback;
+import com.stiletto.tr.translator.yandex.model.YandexDictionaryResponse;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
 import com.stiletto.tr.widget.JCTextView;
 
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -170,85 +172,123 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     }
 
 
-    private void setUpDictionary(Dictionary dictionary) {
+    private void setUpDictionary(List<DictionaryItem> dictionary) {
         RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        DictionaryAdapter adapter = new DictionaryAdapter(getContext(), dictionary.getDictionary());
+        DictionaryAdapter adapter = new DictionaryAdapter(getContext(), dictionary);
         recyclerView.setAdapter(adapter);
     }
 
 
     private void translate(final CharSequence word) {
-        Translator.translate(word, primaryLanguage, translationLangusage, new Callback<SimpleTranslation>() {
+        Translator.translate(word, primaryLanguage, translationLangusage, new TranslatorCallback() {
             @Override
-            public void onResponse(Call<SimpleTranslation> call, Response<SimpleTranslation> response) {
+            public void translationSuccess(List<DictionaryItem> items) {
 
-                if (response.isSuccessful()) {
-                    String res = response.body().getTranslationAsString();
-
-                    if (popView == null) {
-                        showPopup();
-                    }
-
-                    if (res != null && !res.isEmpty()) {
-
-
-                        popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
-
-                        TextView textView = (TextView) popView.findViewById(R.id.item_translation);
-
-                        String primary = word + "\n";
-                        primary = primary.toUpperCase(Locale.getDefault());
-
-                        SpannableString text = new SpannableString(primary + res);
-                        text.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        text.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                        text.setSpan(new RelativeSizeSpan(0.85f), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        text.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
-                                primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                        textView.setText(text);
-
-                        translationCallback.newTranslation(word, response.body());
-
-                    }
+                if (popView == null) {
+                    showPopup();
                 }
+
+                DictionaryItem item = items.get(0);
+                String translations = item.getTranslationsAsString();
+
+
+                popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
+
+                TextView textView = (TextView) popView.findViewById(R.id.item_translation);
+
+                String primary = word + "\n";
+                primary = primary.toUpperCase(Locale.getDefault());
+
+                SpannableString text = new SpannableString(primary + translations);
+                text.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                text.setSpan(new RelativeSizeSpan(0.85f), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
+                        primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                textView.setText(text);
+
+                translationCallback.newTranslation(word, item);
+
             }
 
             @Override
-            public void onFailure(Call<SimpleTranslation> call, Throwable t) {
+            public void translationFailure(Call call, Response response) {
+
+            }
+
+            @Override
+            public void translationError(Call call, Throwable error) {
 
             }
         });
+
+
     }
 
 
     private void lookup(final CharSequence word) {
+        Translator.getDictionary(word, primaryLanguage, translationLangusage, new TranslatorCallback() {
+                    @Override
+                    public void translationSuccess(List<DictionaryItem> items) {
 
-        Translator.getDictionary(word, primaryLanguage, translationLangusage, new Callback<Dictionary>() {
-            @Override
-            public void onResponse(Call<Dictionary> call, Response<Dictionary> response) {
+                        if (popView == null) {
+                            showPopup();
+                        }
 
-                if (response.isSuccessful()) {
-                    String res = response.body().toString();
-                    if (popView == null) {
-                        showPopup();
+                        setUpDictionary(items);
+
+//                    List<DictionaryItem> list = new ArrayList<>();
+//                    if (dictionary != null && dictionary.getDictionary() != null) {
+//
+//                        for (DictionaryWord w : dictionary.getDictionary()) {
+//                            String origin = w.getOriginText();
+//                            if (w.getTranslations() != null) {
+//
+//                                for (DictionaryTranslation translation : w.getTranslations()) {
+//
+//                                    DictionaryItem item = new DictionaryItem(origin);
+//                                    item.addTranslation(translation.getTranslatedText());
+//                                    item.setTranscription(w.getTranscryption());
+//                                    item.setPartOfSpeech(PartOfSpeech.getPartOfSpeech(
+//                                            translation.getTranslatedWordType()));
+//                                    item.setOriginLanguage(primaryLanguage);
+//                                    item.setTranslationLanguage(translationLangusage);
+//                                    list.add(item);
+//
+//                                    if (translation.hasMeanings()) {
+//                                        item.setTranscription(null);
+//                                        for (Text text : translation.getMeanings()) {
+//                                            item.setOrigin(text.getText());
+//                                            list.add(item);
+//                                        }
+//                                    }
+//
+//                                }
+//                            }
+//                        }
+//                        DictionaryTable.insert(getContext(), list);
+//                    }
+
                     }
-                    setUpDictionary(response.body());
 
-                }
-            }
+                    @Override
+                    public void translationFailure(Call call, Response response) {
 
-            @Override
-            public void onFailure(Call<Dictionary> call, Throwable t) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void translationError(Call call, Throwable error) {
+
+                    }
+                });
+
     }
 
 

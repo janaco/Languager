@@ -1,9 +1,11 @@
 package com.stiletto.tr.model;
 
-import com.stiletto.tr.translator.PartOfSpeech;
+import com.google.gson.annotations.SerializedName;
+import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.translator.yandex.Language;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yana on 08.03.17.
@@ -11,56 +13,81 @@ import java.util.Objects;
 
 public class DictionaryItem {
 
-    private String origin;
-    private String translation;
+    @SerializedName("text")
+    private String originText;
+    @SerializedName("pos")
+    private String partOfSpeech;
+    @SerializedName("ts")
     private String transcription;
-    private PartOfSpeech partOfSpeech = PartOfSpeech.UNKNOWN;
+    @SerializedName("tr")
+    private List<Translation> translations;
+
     private Language originLanguage;
     private Language translationLanguage;
+    private String bookId;
+    private Status status;
 
-    public DictionaryItem(String origin, String translation) {
-        this.origin = origin;
-        this.translation = translation;
+    public DictionaryItem(String originText, List<Translation> translations) {
+        this.translations = translations;
+        this.originText = originText;
     }
 
-    public String getOrigin() {
-        return origin;
+    public DictionaryItem(String originText) {
+        this.originText = originText;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public String getOriginText() {
+        return originText;
     }
 
-    public String getTranslation() {
-        return translation;
+    public void setOriginText(String originText) {
+        this.originText = originText;
     }
 
-    public void setTranslation(String translation) {
-        this.translation = translation;
+    public String getPartOfSpeech() {
+        return partOfSpeech;
+    }
+
+    public void setPartOfSpeech(String partOfSpeech) {
+        this.partOfSpeech = partOfSpeech;
     }
 
     public String getTranscription() {
         return transcription;
     }
 
-    public boolean hasTranscription(){
-        return transcription != null && !transcription.isEmpty();
-    }
-
     public void setTranscription(String transcription) {
         this.transcription = transcription;
     }
 
-    public PartOfSpeech getPartOfSpeech() {
-        return partOfSpeech;
+    public List<Translation> getTranslations() {
+        return translations;
     }
 
-    public boolean hasPartOfSpeech(){
-        return partOfSpeech != null && partOfSpeech != PartOfSpeech.UNKNOWN;
+    public String getTranslationsAsString() {
+        StringBuilder builder = new StringBuilder();
+        int index = 0;
+
+        for (Translation translation : translations) {
+
+            builder.append(translation.getText());
+            if (index++ < translations.size() - 1) {
+                builder.append(", ");
+            }
+        }
+
+        return builder.toString();
     }
 
-    public void setPartOfSpeech(PartOfSpeech partOfSpeech) {
-        this.partOfSpeech = partOfSpeech;
+    public void setTranslations(List<Translation> translations) {
+        this.translations = translations;
+    }
+
+    public void addTranslation(Translation translation){
+        if (translations == null){
+            setTranslations(new ArrayList<Translation>());
+        }
+        translations.add(translation);
     }
 
     public Language getOriginLanguage() {
@@ -79,17 +106,27 @@ public class DictionaryItem {
         this.translationLanguage = translationLanguage;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DictionaryItem)) return false;
-        DictionaryItem item = (DictionaryItem) o;
-        return Objects.equals(getOrigin(), item.getOrigin()) &&
-                Objects.equals(getTranslation(), item.getTranslation());
+    public String getBookId() {
+        return bookId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getOrigin(), getTranslation());
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public boolean isKnownPartOfSpeech(){
+        return partOfSpeech != null && !partOfSpeech.isEmpty();
+    }
+
+    public boolean hasTranscription(){
+        return transcription != null && !transcription.isEmpty();
     }
 }

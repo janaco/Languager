@@ -4,14 +4,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kingfisherphuoc.quickactiondialog.AlignmentFlag;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.CategoryAdapter;
 import com.stiletto.tr.adapter.GeneralDictionaryAdapter;
+import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.db.tables.DictionaryTable;
+import com.stiletto.tr.dialog.DictionaryItemDialog;
 import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.widget.list.CategoriredList;
@@ -28,7 +32,7 @@ import butterknife.ButterKnife;
  * Created by yana on 08.03.17.
  */
 
-public class DictionaryFragment extends Fragment {
+public class DictionaryFragment extends Fragment implements GeneralDictionaryAdapter.OnItemClickListener {
 
     @Bind(R.id.recycler_view)
     CategoriredList recyclerView;
@@ -54,12 +58,13 @@ public class DictionaryFragment extends Fragment {
 
         List<DictionaryItem> dictionary = DictionaryTable.getDictionary(getContext());
         adapter = new GeneralDictionaryAdapter(dictionary);
+        adapter.setOnListItemClickListener(this);
         categoryAdapter = new CategoryAdapter(dictionary);
         recyclerView.setAdapter(adapter);
 
         HashSet<String> set = new HashSet<>();
         for (DictionaryItem item : dictionary) {
-            String word = item.getOrigin().substring(0, 1).toUpperCase();
+            String word = item.getOriginText().substring(0, 1).toUpperCase();
             set.add(word);
         }
 
@@ -67,10 +72,20 @@ public class DictionaryFragment extends Fragment {
         Collections.sort(items);
         recyclerView.setIndexBarItems(items);
 
+        if (adapter.getItemCount() <= 10){
+            recyclerView.setIndexBarVisibility(View.GONE);
+        }
+
 //        categoriesList.setAdapter(categoryAdapter);
     }
 
-
+    @Override
+    public void onItemClick(View view, DictionaryItem item, int position) {
+        DictionaryItemDialog dialog = new DictionaryItemDialog();
+        dialog.setAnchorView(view);
+        dialog.setAligmentFlags(AlignmentFlag.ALIGN_ANCHOR_VIEW_LEFT | AlignmentFlag.ALIGN_ANCHOR_VIEW_BOTTOM);
+        dialog.show(getActivity().getSupportFragmentManager(), "DictionaryItemDialog");
+    }
 
 
 //    private void setListAdaptor(List<DictionaryItem> list) {

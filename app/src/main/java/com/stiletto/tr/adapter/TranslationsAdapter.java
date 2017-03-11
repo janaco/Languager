@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.translator.yandex.model.DictionaryTranslation;
+import com.stiletto.tr.model.Translation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,10 +28,10 @@ import java.util.List;
 
 public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapter.ViewHolder> {
 
-    private List<DictionaryTranslation> list;
+    private List<Translation> list;
 
-    public TranslationsAdapter(DictionaryTranslation[] translations) {
-        this.list = Arrays.asList(translations);
+    public TranslationsAdapter(List<Translation> translations) {
+        this.list = translations;
     }
 
     @Override
@@ -45,12 +45,12 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
         holder.layoutUsages.setVisibility(View.GONE);
 
-        DictionaryTranslation translation = list.get(position);
+        Translation translation = list.get(position);
 
-        String translated = translation.getTranslatedText();
-        String type = " (" + translation.getTranslatedWordType() + ")";
-        String origin = translation.hasMeanings() ? " [" + translation.getOriginalMeanings() + "]" : "";
-        String synonyms = translation.hasSynonyms() ? ", " + translation.getTranslatedSynonyms() : "";
+        String translated = translation.getText();
+        String type = " (" + translation.getPartOfSpeech() + ")";
+        String origin = translation.hasMeanings() ? " [" + translation.getMeaningsAsString() + "]" : "";
+        String synonyms = translation.hasSynonyms() ? ", " + translation.getSynonymsAsString() : "";
 
         String textStr = translated + origin + type + synonyms;
 
@@ -77,11 +77,11 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
         holder.itemTranslation.setText(text);
 
 
-        if (translation.hasUsages()) {
+        if (translation.hasUsageExamples()) {
 
             holder.layoutUsages.setVisibility(View.VISIBLE);
 
-            UsagesAdapter adapter = new UsagesAdapter(translation.getUsageExamples());
+            UsagesAdapter adapter = new UsagesAdapter(translation.getUsageSamples());
             holder.recyclerView.setAdapter(adapter);
         }
 

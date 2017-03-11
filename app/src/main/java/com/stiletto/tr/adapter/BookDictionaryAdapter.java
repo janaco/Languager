@@ -7,20 +7,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.translator.yandex.SimpleTranslation;
+import com.stiletto.tr.model.DictionaryItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by yana on 26.02.17.
  */
 
-public class MyDictionaryAdapter extends RecyclerView.Adapter<MyDictionaryAdapter.ViewHolder> {
+public class BookDictionaryAdapter extends RecyclerView.Adapter<BookDictionaryAdapter.ViewHolder> {
 
-    private List<SimpleTranslation> list;
+    private List<DictionaryItem> list;
 
-    public MyDictionaryAdapter(List<SimpleTranslation> list) {
+    public BookDictionaryAdapter(List<DictionaryItem> list) {
         this.list = list;
+    }
+
+    public BookDictionaryAdapter() {
+        this.list = new ArrayList<>();
     }
 
     @Override
@@ -32,14 +37,14 @@ public class MyDictionaryAdapter extends RecyclerView.Adapter<MyDictionaryAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        SimpleTranslation translation = list.get(position);
+        DictionaryItem item = list.get(position);
 
-        holder.itemOrigin.setText(translation.getOrigin());
-        holder.itemTranslated.setText(translation.getTranslationAsString());
+        holder.itemOrigin.setText(item.getOriginText());
+        holder.itemTranslated.setText(item.getTranslationsAsString());
 
     }
 
-    public void addTranslation(SimpleTranslation translation){
+    public void addTranslation(DictionaryItem translation){
         list.add(translation);
         notifyDataSetChanged();
     }
