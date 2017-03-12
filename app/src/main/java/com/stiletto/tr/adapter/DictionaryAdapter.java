@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.model.DictionaryItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +36,11 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
         this.context = context;
     }
 
+    public DictionaryAdapter(Context context, DictionaryItem item) {
+        this.list = new ArrayList<>();
+        this.list.add(item);
+        this.context = context;
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(parent.getContext(),
@@ -52,22 +58,28 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
             holder.itemLine.setVisibility(View.VISIBLE);
         }
 
-        String originText = item.getOriginText();
-        String type = item.isKnownPartOfSpeech() ? " (" + item.getPartOfSpeech() + ")" : "";
-        String transcryption = item.hasTranscription() ? " [" + item.getTranscription() + "]" : "";
+        String origin = item.getOriginText();
+        String partOfSpeech = item.isKnownPartOfSpeech() ? " (" + item.getPartOfSpeech() + ")" : "";
+        String transcription = item.hasTranscription() ? "\t[" + item.getTranscription() + "]" : "";
 
-        SpannableString text = new SpannableString(originText + transcryption + type);
-        text.setSpan(new UnderlineSpan(), 0, originText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new StyleSpan(Typeface.BOLD), 0, originText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        int from = 0;
+        int to = origin.length();
+        SpannableString text = new SpannableString(origin + partOfSpeech + transcription);
+        text.setSpan(new UnderlineSpan(), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new StyleSpan(Typeface.BOLD), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        text.setSpan(new RelativeSizeSpan(0.85f), originText.length(), originText.length() + transcryption.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new StyleSpan(Typeface.MONOSPACE.getStyle()), originText.length(), originText.length() + transcryption.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        from = to;
+        to = from + partOfSpeech.length();
+        text.setSpan(new RelativeSizeSpan(0.5f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        from = to;
+        to = from + transcription.length();
+        text.setSpan(new RelativeSizeSpan(0.85f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new StyleSpan(Typeface.MONOSPACE.getStyle()), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorSecondaryText)),
-                originText.length(), originText.length() + transcryption.length(),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        text.setSpan(new RelativeSizeSpan(0.5f), text.length() - type.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new StyleSpan(Typeface.ITALIC), text.length() - type.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+                from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         holder.itemKey.setText(text);
 

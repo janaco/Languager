@@ -463,7 +463,5 @@ public class PageViewerFragment extends Fragment
         myDictionaryAdapter.addTranslation(item);
         itemDictionaryAlert.setVisibility(View.GONE);
 
-        DictionaryTable.insert(getContext(), item);
-
     }
 }

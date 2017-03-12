@@ -24,6 +24,7 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
 import com.stiletto.tr.core.TranslationCallback;
+import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.model.Translation;
 import com.stiletto.tr.translator.yandex.Language;
@@ -243,6 +244,10 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
                         }
 
                         setUpDictionary(items);
+                        DictionaryItem dictionaryItem = new DictionaryItem(word.toString());
+                        dictionaryItem.setOriginLanguage(primaryLanguage);
+                        dictionaryItem.setTranslationLanguage(translationLangusage);
+                        DictionaryTable.insert(getContext(), items, dictionaryItem);
 
 //                    List<DictionaryItem> list = new ArrayList<>();
 //                    if (dictionary != null && dictionary.getDictionary() != null) {

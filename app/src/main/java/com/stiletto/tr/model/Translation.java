@@ -1,12 +1,15 @@
 package com.stiletto.tr.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by yana on 11.03.17.
  */
 
-public class Translation extends Text {
+public class Translation extends Text implements Parcelable {
 
     @SerializedName("pos")
     private String partOfSpeech;
@@ -24,6 +27,44 @@ public class Translation extends Text {
     public Translation(String text) {
         super(text);
     }
+
+    protected Translation(Parcel in) {
+        super(in);
+        partOfSpeech = in.readString();
+        gender = in.readString();
+        number = in.readString();
+        synonyms = in.createTypedArray(Translation.CREATOR);
+        meanings = in.createTypedArray(Text.CREATOR);
+        usageSamples = in.createTypedArray(UsageSample.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(partOfSpeech);
+        dest.writeString(gender);
+        dest.writeString(number);
+        dest.writeTypedArray(synonyms, flags);
+        dest.writeTypedArray(meanings, flags);
+        dest.writeTypedArray(usageSamples, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Translation> CREATOR = new Creator<Translation>() {
+        @Override
+        public Translation createFromParcel(Parcel in) {
+            return new Translation(in);
+        }
+
+        @Override
+        public Translation[] newArray(int size) {
+            return new Translation[size];
+        }
+    };
 
     public String getPartOfSpeech() {
         return partOfSpeech;

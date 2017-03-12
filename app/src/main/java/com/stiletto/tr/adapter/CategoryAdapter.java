@@ -10,6 +10,7 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.model.DictionaryItem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
 
         items = new ArrayList<>(set);
+        Collections.sort(items);
+    }
+
+    public CategoryAdapter(Collection<String> list) {
+
+        items = new ArrayList<>(list);
         Collections.sort(items);
     }
 

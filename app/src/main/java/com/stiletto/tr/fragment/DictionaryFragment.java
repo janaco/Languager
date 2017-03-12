@@ -3,8 +3,6 @@ package com.stiletto.tr.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import com.kingfisherphuoc.quickactiondialog.AlignmentFlag;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.CategoryAdapter;
 import com.stiletto.tr.adapter.GeneralDictionaryAdapter;
-import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.dialog.DictionaryItemDialog;
 import com.stiletto.tr.model.DictionaryItem;
@@ -24,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,7 +38,6 @@ public class DictionaryFragment extends Fragment implements GeneralDictionaryAda
 //    CategoriredList categoriesList;
 
     private GeneralDictionaryAdapter adapter;
-    private CategoryAdapter categoryAdapter;
 
     @Nullable
     @Override
@@ -56,15 +53,14 @@ public class DictionaryFragment extends Fragment implements GeneralDictionaryAda
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<DictionaryItem> dictionary = DictionaryTable.getDictionary(getContext());
+        Map<String, ArrayList<DictionaryItem>> dictionary = DictionaryTable.getDictionary(getContext());
         adapter = new GeneralDictionaryAdapter(dictionary);
         adapter.setOnListItemClickListener(this);
-        categoryAdapter = new CategoryAdapter(dictionary);
         recyclerView.setAdapter(adapter);
 
         HashSet<String> set = new HashSet<>();
-        for (DictionaryItem item : dictionary) {
-            String word = item.getOriginText().substring(0, 1).toUpperCase();
+        for (String item : dictionary.keySet()) {
+            String word = item.substring(0, 1).toUpperCase();
             set.add(word);
         }
 
@@ -80,11 +76,8 @@ public class DictionaryFragment extends Fragment implements GeneralDictionaryAda
     }
 
     @Override
-    public void onItemClick(View view, DictionaryItem item, int position) {
-        DictionaryItemDialog dialog = new DictionaryItemDialog();
-        dialog.setAnchorView(view);
-        dialog.setAligmentFlags(AlignmentFlag.ALIGN_ANCHOR_VIEW_LEFT | AlignmentFlag.ALIGN_ANCHOR_VIEW_BOTTOM);
-        dialog.show(getActivity().getSupportFragmentManager(), "DictionaryItemDialog");
+    public void onItemClick(View view, ArrayList<DictionaryItem> item, int position) {
+        DictionaryItemDialog.show( getActivity(), item);
     }
 
 
