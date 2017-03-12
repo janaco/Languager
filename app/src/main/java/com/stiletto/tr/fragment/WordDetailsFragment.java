@@ -67,6 +67,7 @@ public class WordDetailsFragment extends Fragment {
         String languages = word.getOriginLanguage().toString() + "-" + word.getTranslationLanguage().toString();
         itemLanguages.setText(languages);
         itemTitle.setText(word.getText());
+        itemSubtitle.setVisibility(View.VISIBLE);
 
         adapter = new DictionaryAdapter(getContext(), word.getDictionaryItems());
         recyclerView.setAdapter(adapter);

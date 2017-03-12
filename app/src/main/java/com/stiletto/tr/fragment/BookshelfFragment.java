@@ -102,7 +102,7 @@ public class BookshelfFragment extends Fragment implements OnListItemClickListen
 
     @OnClick(R.id.button_load)
     void addNewBook() {
-        NavigationManager.addFragment(getActivity(), new DictionaryFragment());
+        NavigationManager.addFragment(getActivity(), new DictionariesFragment());
         //TODO
     }
 

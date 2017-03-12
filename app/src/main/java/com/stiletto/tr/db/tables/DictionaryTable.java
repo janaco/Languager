@@ -43,6 +43,10 @@ public class DictionaryTable extends ServiceOpenDB {
 //        new DictionaryTable(context).insert(item);
 //    }
 
+    public static void clean(Context context){
+        new DictionaryTable(context).clean();
+    }
+
     public static void insert(Context context, List<DictionaryItem> list, DictionaryItem item) {
 
         String json = new Gson().toJson(list);
@@ -62,7 +66,7 @@ public class DictionaryTable extends ServiceOpenDB {
         new DictionaryTable(context).remove(item);
     }
 
-    public static List<Word> getDictionary(Context context) {
+    public static Map<String, ArrayList<Word>> getDictionary(Context context) {
         return new DictionaryTable(context).getDictionary();
     }
 
@@ -88,8 +92,8 @@ public class DictionaryTable extends ServiceOpenDB {
 
     }
 
-    private List<Word> getDictionary() {
-        List<Word> list = new ArrayList<>();
+    private Map<String, ArrayList<Word>> getDictionary() {
+        Map<String, ArrayList<Word>> map = new HashMap<>();
 
         Cursor cursor = getReadableDatabase().rawQuery("SELECT original,  data, lang_from, lang_to FROM dictionary ORDER BY original", null);
 
@@ -99,7 +103,6 @@ public class DictionaryTable extends ServiceOpenDB {
                 String origin = cursor.getString(cursor.getColumnIndex("original"));
                 String langFromCode = cursor.getString(cursor.getColumnIndex("lang_from"));
                 String langToCode = cursor.getString(cursor.getColumnIndex("lang_to"));
-                String key = origin.toLowerCase();
 
                 ArrayList<DictionaryItem> items = new ArrayList<>();
                 Gson gson = new Gson();
@@ -114,17 +117,30 @@ public class DictionaryTable extends ServiceOpenDB {
                 Language translationLanguage = Language.getLanguage(langToCode);
                 Word word = new Word(origin, originLanguage, items, translationLanguage);
 
+                String key = originLanguage.name();
+                ArrayList<Word> list;
+
+                if (map.containsKey(key)){
+                    list = map.get(key);
+                }else {
+                    list = new ArrayList<>();
+                }
                 list.add(word);
+                map.put(key, list);
 
             } while (cursor.moveToNext());
         }
         cursor.close();
 
-        return list;
+        return map;
     }
 
     private void remove(DictionaryItem item) {
         getWritableDatabase().delete(getName(), "original LIKE('" + item.getOriginText() + "')", null);
+    }
+
+    private void clean(){
+        getWritableDatabase().delete(getName(), null, null);
     }
 
 }

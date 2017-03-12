@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.GeneralDictionaryAdapter;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by yana on 08.03.17.
@@ -35,6 +37,13 @@ public class DictionaryFragment extends Fragment
     CategoriredList recyclerView;
 
     private GeneralDictionaryAdapter adapter;
+    private List<Word> dictionary;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dictionary = getArguments().getParcelableArrayList("items");
+    }
 
     @Nullable
     @Override
@@ -42,7 +51,6 @@ public class DictionaryFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_dictionary, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
 
@@ -50,7 +58,6 @@ public class DictionaryFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<Word> dictionary = DictionaryTable.getDictionary(getContext());
         Collections.sort(dictionary);
         adapter = new GeneralDictionaryAdapter(dictionary);
         adapter.setOnListItemClickListener(this);
@@ -80,5 +87,15 @@ public class DictionaryFragment extends Fragment
     @Override
     public void onDictionaryItemRemoved(int position) {
         adapter.remove(position);
+    }
+
+    public static DictionaryFragment getInstance(ArrayList<Word> list){
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("items", list);
+
+        DictionaryFragment fragment = new DictionaryFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 }

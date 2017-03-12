@@ -1,6 +1,15 @@
 package com.stiletto.tr.adapter;
 
+import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,17 +61,24 @@ public class GeneralDictionaryAdapter
         final ArrayList<DictionaryItem> items = word.getDictionaryItems();
 
         final String origin = word.getText();
-        String translation = DictionaryItem.getTranslation(items);
+        String translation = " - " + DictionaryItem.getTranslation(items);
 
+        SpannableString text = new SpannableString(origin + translation);
 
-        holder.itemOrigin.setText(origin);
-        holder.itemTranslation.setText(translation);
+        text.setSpan(new UnderlineSpan(), 0, origin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new StyleSpan(Typeface.BOLD), 0, origin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        int from = origin.length();
+        int to = text.length();
+        text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.context, R.color.colorSecondaryText)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new RelativeSizeSpan(0.8f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        holder.itemText.setText(text);
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TOOLBAR_", "onItemClick: " + origin);
                 onListItemClickListener.onItemClick(origin, word, position);
             }
         });
@@ -80,19 +96,24 @@ public class GeneralDictionaryAdapter
         notifyDataSetChanged();
     }
 
+    public void cleanAll(){
+        list.clear();
+        notifyDataSetChanged();
+    }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView itemOrigin;
-        private TextView itemTranslation;
+        private TextView itemText;
 
         private View view;
+        private Context context;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            itemOrigin = (TextView) itemView.findViewById(R.id.item_text);
-            itemTranslation = (TextView) itemView.findViewById(R.id.item_translation);
+            this.context = view.getContext();
+            itemText = (TextView) itemView.findViewById(R.id.item_text);
         }
     }
 }
