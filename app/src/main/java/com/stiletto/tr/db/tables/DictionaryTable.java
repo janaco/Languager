@@ -11,6 +11,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.stiletto.tr.db.ServiceOpenDB;
 import com.stiletto.tr.model.DictionaryItem;
+import com.stiletto.tr.model.Word;
+import com.stiletto.tr.translator.yandex.Language;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +62,7 @@ public class DictionaryTable extends ServiceOpenDB {
         new DictionaryTable(context).remove(item);
     }
 
-    public static Map<String, ArrayList<DictionaryItem>> getDictionary(Context context) {
+    public static List<Word> getDictionary(Context context) {
         return new DictionaryTable(context).getDictionary();
     }
 
@@ -86,8 +88,8 @@ public class DictionaryTable extends ServiceOpenDB {
 
     }
 
-    private Map<String, ArrayList<DictionaryItem>> getDictionary() {
-        Map<String, ArrayList<DictionaryItem>> map = new HashMap<>();
+    private List<Word> getDictionary() {
+        List<Word> list = new ArrayList<>();
 
         Cursor cursor = getReadableDatabase().rawQuery("SELECT original,  data, lang_from, lang_to FROM dictionary ORDER BY original", null);
 
@@ -95,9 +97,9 @@ public class DictionaryTable extends ServiceOpenDB {
             do {
                 String data = cursor.getString(cursor.getColumnIndex("data"));
                 String origin = cursor.getString(cursor.getColumnIndex("original"));
+                String langFromCode = cursor.getString(cursor.getColumnIndex("lang_from"));
+                String langToCode = cursor.getString(cursor.getColumnIndex("lang_to"));
                 String key = origin.toLowerCase();
-
-                Log.d("DICTIONARY_READ", "" + data);
 
                 ArrayList<DictionaryItem> items = new ArrayList<>();
                 Gson gson = new Gson();
@@ -108,19 +110,17 @@ public class DictionaryTable extends ServiceOpenDB {
                     items.add(gson.fromJson(jsonArray.get(i), DictionaryItem.class));
                 }
 
-                if (map.containsKey(key)) {
-                    ArrayList<DictionaryItem> keyItems = map.get(key);
-                    keyItems.addAll(items);
-                    map.put(key, keyItems);
-                } else {
-                    map.put(key, items);
-                }
+                Language originLanguage = Language.getLanguage(langFromCode);
+                Language translationLanguage = Language.getLanguage(langToCode);
+                Word word = new Word(origin, originLanguage, items, translationLanguage);
+
+                list.add(word);
 
             } while (cursor.moveToNext());
         }
         cursor.close();
 
-        return map;
+        return list;
     }
 
     private void remove(DictionaryItem item) {

@@ -19,48 +19,48 @@ public abstract class Fragment extends android.support.v4.app.Fragment {
         return getClass().getName();
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            onCreateActionBar(actionBar);
-        }
-    }
-
-    public void showActionBar(ActionBar actionBar) {
-        actionBar.show();
-    }
-
-    public void hideActionBar(ActionBar actionBar) {
-            actionBar.hide();
-    }
-
-    protected void onCreateActionBar(ActionBar actionBar) {
-        hideActionBar(actionBar);
-        actionBar.setDisplayShowCustomEnabled(false);
-    }
-
-    public void showUpNavigation(ActionBar actionBar) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDefaultDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
-    }
-
-
-    public void showHomeNavigation(ActionBar actionBar) {
-        actionBar.setDisplayShowCustomEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDefaultDisplayHomeAsUpEnabled(false);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+//        if (actionBar != null) {
+//            onCreateActionBar(actionBar);
+//        }
+//    }
+//
+//    public void showActionBar(ActionBar actionBar) {
+//        actionBar.show();
+//    }
+//
+//    public void hideActionBar(ActionBar actionBar) {
+//            actionBar.hide();
+//    }
+//
+//    protected void onCreateActionBar(ActionBar actionBar) {
+//        hideActionBar(actionBar);
+//        actionBar.setDisplayShowCustomEnabled(false);
+//    }
+//
+//    public void showUpNavigation(ActionBar actionBar) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+//            actionBar.setHomeButtonEnabled(false);
+//            actionBar.setDisplayShowHomeEnabled(false);
+//    }
+//
+//
+//    public void showHomeNavigation(ActionBar actionBar) {
+//        actionBar.setDisplayShowCustomEnabled(false);
+//        actionBar.setDisplayHomeAsUpEnabled(false);
+//        actionBar.setDefaultDisplayHomeAsUpEnabled(false);
+//        actionBar.setHomeButtonEnabled(true);
+//        actionBar.setDisplayShowHomeEnabled(true);
+//
+//    }
+//
+//
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        menu.clear();
+//    }
 }

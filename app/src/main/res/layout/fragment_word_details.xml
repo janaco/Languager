@@ -1,9 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tool="http://schemas.android.com/tools"
     android:background="@color/colorLightPrimary"
     android:orientation="vertical">
+
+    <include layout="@layout/toolbar_word_details" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,13 +24,14 @@
                 android:orientation="vertical">
 
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/recycler_view"
-                    tool:listitem="@layout/item_dictionary"/>
+                    tool:listitem="@layout/item_dictionary" />
             </LinearLayout>
 
 
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

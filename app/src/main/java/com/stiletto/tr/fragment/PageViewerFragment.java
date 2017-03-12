@@ -112,12 +112,6 @@ public class PageViewerFragment extends Fragment
         book = getArguments().getParcelable("book");
     }
 
-    @Override
-    protected void onCreateActionBar(ActionBar actionBar) {
-        super.onCreateActionBar(actionBar);
-        hideActionBar(actionBar);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

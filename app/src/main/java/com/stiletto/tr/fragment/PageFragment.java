@@ -97,12 +97,6 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         translationLangusage = Language.getLanguage(getArguments().getString("trans_lang"));
     }
 
-    @Override
-    protected void onCreateActionBar(ActionBar actionBar) {
-        super.onCreateActionBar(actionBar);
-        hideActionBar(actionBar);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
