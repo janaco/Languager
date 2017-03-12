@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -94,6 +95,12 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         content = getArguments().getCharSequence(ARG_CONTENT);
         primaryLanguage = Language.getLanguage(getArguments().getString("primary_lang"));
         translationLangusage = Language.getLanguage(getArguments().getString("trans_lang"));
+    }
+
+    @Override
+    protected void onCreateActionBar(ActionBar actionBar) {
+        super.onCreateActionBar(actionBar);
+        hideActionBar(actionBar);
     }
 
     @Nullable

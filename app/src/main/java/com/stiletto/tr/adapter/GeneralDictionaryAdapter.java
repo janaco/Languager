@@ -1,29 +1,19 @@
 package com.stiletto.tr.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.model.DictionaryItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by yana on 08.03.17.
@@ -33,11 +23,11 @@ public class GeneralDictionaryAdapter
         extends RecyclerView.Adapter<GeneralDictionaryAdapter.ViewHolder> {
 
 
-    public interface OnItemClickListener{
-        void onItemClick(View view, ArrayList<DictionaryItem> items, int position);
+    public interface OnItemClickListener {
+        void onItemClick(String key, ArrayList<DictionaryItem> items, int position);
     }
 
-//    private List<DictionaryItem> list;
+    //    private List<DictionaryItem> list;
     private Map<Integer, Map.Entry<String, ArrayList<DictionaryItem>>> map;
     private OnItemClickListener onListItemClickListener;
 
@@ -47,7 +37,7 @@ public class GeneralDictionaryAdapter
 
         int index = 0;
 
-        for (Map.Entry<String, ArrayList<DictionaryItem>> entry: map.entrySet()){
+        for (Map.Entry<String, ArrayList<DictionaryItem>> entry : map.entrySet()) {
             this.map.put(index++, entry);
         }
 
@@ -69,13 +59,22 @@ public class GeneralDictionaryAdapter
         Map.Entry<String, ArrayList<DictionaryItem>> entry = map.get(position);
         final ArrayList<DictionaryItem> items = entry.getValue();
 
-        String orgign = entry.getKey();
+        final String origin = entry.getKey();
+        Log.d("TOOLBAR_", "entry.getKey: " + origin);
         String translation = DictionaryItem.getTranslation(items);
 
 
-        holder.itemOrigin.setText(orgign);
+        holder.itemOrigin.setText(origin);
         holder.itemTranslation.setText(translation);
 
+
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TOOLBAR_", "onItemClick: " + origin);
+                onListItemClickListener.onItemClick(origin, items, position);
+            }
+        });
 
 //        final DictionaryItem item = list.get(position);
 //
@@ -108,20 +107,6 @@ public class GeneralDictionaryAdapter
 //        holder.itemTranslation.setText(item.getTranslationsAsString());
 
 
-        holder.itemOrigin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onListItemClickListener.onItemClick(view, items, position);
-            }
-        });
-
-
-        holder.itemOrigin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onListItemClickListener.onItemClick(view, items, position);
-            }
-        });
     }
 
     @Override
@@ -130,15 +115,17 @@ public class GeneralDictionaryAdapter
     }
 
 
-
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private Context context;
         private TextView itemOrigin;
         private TextView itemTranslation;
 
+        private View view;
+
         public ViewHolder(View itemView) {
             super(itemView);
+            this.view = itemView;
             context = itemView.getContext();
             itemOrigin = (TextView) itemView.findViewById(R.id.item_text);
             itemTranslation = (TextView) itemView.findViewById(R.id.item_translation);

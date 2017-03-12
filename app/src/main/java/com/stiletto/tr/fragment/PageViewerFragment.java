@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -109,6 +110,12 @@ public class PageViewerFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         book = getArguments().getParcelable("book");
+    }
+
+    @Override
+    protected void onCreateActionBar(ActionBar actionBar) {
+        super.onCreateActionBar(actionBar);
+        hideActionBar(actionBar);
     }
 
     @Nullable

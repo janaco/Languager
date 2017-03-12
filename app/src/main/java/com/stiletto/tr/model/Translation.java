@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by yana on 11.03.17.
  */
@@ -22,7 +24,7 @@ public class Translation extends Text implements Parcelable {
     @SerializedName("mean")
     private Text[] meanings;
     @SerializedName("ex")
-    private UsageSample[] usageSamples;
+    private List<UsageSample> usageSamples;
 
     public Translation(String text) {
         super(text);
@@ -35,7 +37,7 @@ public class Translation extends Text implements Parcelable {
         number = in.readString();
         synonyms = in.createTypedArray(Translation.CREATOR);
         meanings = in.createTypedArray(Text.CREATOR);
-        usageSamples = in.createTypedArray(UsageSample.CREATOR);
+        usageSamples = in.createTypedArrayList(UsageSample.CREATOR);
     }
 
     @Override
@@ -46,7 +48,7 @@ public class Translation extends Text implements Parcelable {
         dest.writeString(number);
         dest.writeTypedArray(synonyms, flags);
         dest.writeTypedArray(meanings, flags);
-        dest.writeTypedArray(usageSamples, flags);
+        dest.writeTypedList(usageSamples);
     }
 
     @Override
@@ -135,11 +137,11 @@ public class Translation extends Text implements Parcelable {
         this.meanings = meanings;
     }
 
-    public UsageSample[] getUsageSamples() {
+    public List<UsageSample> getUsageSamples() {
         return usageSamples;
     }
 
-    public void setUsageSamples(UsageSample[] usageSamples) {
+    public void setUsageSamples(List<UsageSample> usageSamples) {
         this.usageSamples = usageSamples;
     }
 
@@ -156,6 +158,6 @@ public class Translation extends Text implements Parcelable {
     }
 
     public boolean hasUsageExamples(){
-        return usageSamples != null && usageSamples.length > 0;
+        return usageSamples != null && usageSamples.size() > 0;
     }
 }

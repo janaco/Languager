@@ -51,13 +51,6 @@
             android:layout_marginStart="10dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Examples:"
-                android:textColor="@color/colorText"
-                android:textStyle="italic" />
-
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:id="@+id/recycler_view"

@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kingfisherphuoc.quickactiondialog.AlignmentFlag;
 import com.stiletto.tr.R;
-import com.stiletto.tr.adapter.CategoryAdapter;
 import com.stiletto.tr.adapter.GeneralDictionaryAdapter;
 import com.stiletto.tr.db.tables.DictionaryTable;
-import com.stiletto.tr.dialog.DictionaryItemDialog;
+import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.widget.list.CategoriredList;
@@ -20,7 +18,6 @@ import com.stiletto.tr.widget.list.CategoriredList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -76,8 +73,8 @@ public class DictionaryFragment extends Fragment implements GeneralDictionaryAda
     }
 
     @Override
-    public void onItemClick(View view, ArrayList<DictionaryItem> item, int position) {
-        DictionaryItemDialog.show( getActivity(), item);
+    public void onItemClick( String key, ArrayList<DictionaryItem> items, int position) {
+        NavigationManager.addFragment(getActivity(), WordDetailsFragment.getInstance(key, items));
     }
 
 

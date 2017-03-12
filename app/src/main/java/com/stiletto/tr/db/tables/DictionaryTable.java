@@ -8,13 +8,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.stiletto.tr.db.ServiceOpenDB;
 import com.stiletto.tr.model.DictionaryItem;
-import com.stiletto.tr.translator.yandex.Language;
-
-import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +56,10 @@ public class DictionaryTable extends ServiceOpenDB {
         new DictionaryTable(context).insert(contentValues);
     }
 
+    public static void remove(Context context, DictionaryItem item){
+        new DictionaryTable(context).remove(item);
+    }
+
     public static Map<String, ArrayList<DictionaryItem>> getDictionary(Context context) {
         return new DictionaryTable(context).getDictionary();
     }
@@ -86,7 +86,7 @@ public class DictionaryTable extends ServiceOpenDB {
 
     }
 
-    private Map<String, ArrayList<DictionaryItem>>  getDictionary() {
+    private Map<String, ArrayList<DictionaryItem>> getDictionary() {
         Map<String, ArrayList<DictionaryItem>> map = new HashMap<>();
 
         Cursor cursor = getReadableDatabase().rawQuery("SELECT original,  data, lang_from, lang_to FROM dictionary ORDER BY original", null);
@@ -104,15 +104,15 @@ public class DictionaryTable extends ServiceOpenDB {
                 JsonParser jsonParser = new JsonParser();
                 JsonArray jsonArray = (JsonArray) jsonParser.parse(data);
 
-                for (int i = 0; i < jsonArray.size(); i++){
+                for (int i = 0; i < jsonArray.size(); i++) {
                     items.add(gson.fromJson(jsonArray.get(i), DictionaryItem.class));
                 }
 
-                if (map.containsKey(key)){
+                if (map.containsKey(key)) {
                     ArrayList<DictionaryItem> keyItems = map.get(key);
                     keyItems.addAll(items);
                     map.put(key, keyItems);
-                }else {
+                } else {
                     map.put(key, items);
                 }
 
@@ -121,6 +121,10 @@ public class DictionaryTable extends ServiceOpenDB {
         cursor.close();
 
         return map;
+    }
+
+    private void remove(DictionaryItem item) {
+        getWritableDatabase().delete(getName(), "original LIKE('" + item.getOriginText() + "')", null);
     }
 
 }

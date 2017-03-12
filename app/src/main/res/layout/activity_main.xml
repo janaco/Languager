@@ -7,11 +7,11 @@
     android:id="@+id/root_view"
     tools:context="com.stiletto.tr.activity.MainActivity">
 
+    <include layout="@layout/layout_toolbar"/>
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/container"/>
-
 
 </LinearLayout>

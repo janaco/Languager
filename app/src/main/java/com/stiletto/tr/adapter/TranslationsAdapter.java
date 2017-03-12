@@ -48,34 +48,20 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
         Translation translation = list.get(position);
 
         String translated = translation.getText();
-        String type = " (" + translation.getPartOfSpeech() + ")";
-        String origin = translation.hasMeanings() ? " [" + translation.getMeaningsAsString() + "]" : "";
+        String meanings = translation.hasMeanings() ? " (" + translation.getMeaningsAsString() + ")" : "";
         String synonyms = translation.hasSynonyms() ? ", " + translation.getSynonymsAsString() : "";
 
-        String textStr = translated + origin + type + synonyms;
+        String textStr = translated + meanings + synonyms;
 
         SpannableString text = new SpannableString(textStr);
 
         int indexFrom = translated.length();
-        int indexTo = translated.length() + origin.length();
-        text.setSpan(new StyleSpan(Typeface.MONOSPACE.getStyle()), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        int indexTo = indexFrom + meanings.length();
+        text.setSpan(new StyleSpan(Typeface.ITALIC), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.itemTranslation.getContext(),
                 R.color.colorSecondaryText)), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        indexFrom = translated.length() + origin.length();
-        indexTo = indexFrom + type.length();
-
-        text.setSpan(new RelativeSizeSpan(0.5f), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new StyleSpan(Typeface.ITALIC), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        indexFrom = indexTo;
-        indexTo = text.length();
-
-        text.setSpan(new RelativeSizeSpan(0.8f), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new StyleSpan(Typeface.ITALIC), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         holder.itemTranslation.setText(text);
-
 
         if (translation.hasUsageExamples()) {
 

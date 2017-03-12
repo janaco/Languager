@@ -1,9 +1,11 @@
 package com.stiletto.tr.adapter;
 
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -25,8 +27,8 @@ public class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder
 
     private List<UsageSample> list;
 
-    public UsagesAdapter(UsageSample [] examples) {
-        this.list = Arrays.asList(examples);
+    public UsagesAdapter(List<UsageSample>  examples) {
+        this.list = examples;
     }
 
     @Override
@@ -41,9 +43,12 @@ public class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder
         UsageSample example = list.get(position);
 
         String origin = example.getText();
-        String translations = "(" + example.getTranslations() + ")";
+        String translations = example.hasTranslations() ? ": " + example.getTranslationsAsString()  :" ";
 
         SpannableString text = new SpannableString(origin + " " + translations);
+
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.textView.getContext(),
+                R.color.colorPrimary)), 0, origin.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         text.setSpan(new RelativeSizeSpan(0.9f), origin.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.ITALIC), origin.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

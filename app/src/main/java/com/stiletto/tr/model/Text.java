@@ -51,4 +51,9 @@ public class Text implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(text);
     }
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }

@@ -41,6 +41,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
         this.list.add(item);
         this.context = context;
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(parent.getContext(),
@@ -52,27 +53,28 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
 
         DictionaryItem item = list.get(position);
 
-        if (position == 0){
-            holder.itemLine.setVisibility(View.GONE);
-        }else {
-            holder.itemLine.setVisibility(View.VISIBLE);
-        }
-
+        String index = getItemCount() > 1 ? (position + 1) + ") " : "";
         String origin = item.getOriginText();
         String partOfSpeech = item.isKnownPartOfSpeech() ? " (" + item.getPartOfSpeech() + ")" : "";
-        String transcription = item.hasTranscription() ? "\t[" + item.getTranscription() + "]" : "";
+        String transcription = item.hasTranscription() ? "    [" + item.getTranscription() + "]" : "";
+
+        SpannableString text = new SpannableString(index + origin + partOfSpeech + transcription);
 
         int from = 0;
-        int to = origin.length();
-        SpannableString text = new SpannableString(origin + partOfSpeech + transcription);
+        int to = index.length();
+        text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorSecondaryText)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        from = to;
+        to += origin.length();
         text.setSpan(new UnderlineSpan(), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.BOLD), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-
         from = to;
         to = from + partOfSpeech.length();
-        text.setSpan(new RelativeSizeSpan(0.5f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new RelativeSizeSpan(0.4f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorPrimary)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         from = to;
         to = from + transcription.length();
@@ -97,14 +99,12 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView itemKey;
-        private TextView itemLine;
         private RecyclerView recyclerView;
 
-         ViewHolder(Context context, View view) {
+        ViewHolder(Context context, View view) {
             super(view);
 
             itemKey = (TextView) view.findViewById(R.id.item_key);
-            itemLine = (TextView) view.findViewById(R.id.item_line);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
