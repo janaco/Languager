@@ -41,7 +41,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.0.0' //okhttp client
     compile 'com.squareup.retrofit2:retrofit:2.1.0' //retrofit client
     compile 'com.squareup.retrofit2:converter-gson:2.1.0' //retrofit gson conventer
-
+    compile 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1'
     compile 'io.github.yuweiguocn:SquareLoading:1.3.0'
 
 //    compile 'com.nightonke:boommenu:2.0.6'
