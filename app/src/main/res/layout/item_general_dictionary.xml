@@ -17,7 +17,7 @@
             android:background="@color/colorLightPrimary" />
 
         <TextView
-            android:id="@+id/item_text"
+            android:id="@+id/item_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_delimiter"
@@ -29,9 +29,29 @@
             android:paddingStart="15dp"
             android:paddingTop="5dp"
             android:scrollbars="horizontal"
-            android:text="Translation"
+            android:text="A"
+            android:visibility="gone"
+            android:textAllCaps="true"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_16" />
+
+
+        <TextView
+            android:id="@+id/item_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_key"
+            android:gravity="center_vertical"
+            android:paddingBottom="5dp"
+            android:paddingEnd="50dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="50dp"
+            android:paddingStart="15dp"
+            android:paddingTop="5dp"
+            android:scrollbars="horizontal"
+            android:text="Translation"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="@dimen/text_14" />
 
 
     </RelativeLayout>

@@ -21,7 +21,12 @@ import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.model.Word;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by yana on 08.03.17.
@@ -42,6 +47,16 @@ public class GeneralDictionaryAdapter
 
     public GeneralDictionaryAdapter(List<Word> list) {
         this.list = list;
+
+        HashMap<String, Integer> map =new HashMap<>();
+        int index = 0;
+        for (Word word: list){
+            String key = word.getText().substring(0, 1);
+            if (!map.containsKey(key)){
+                map.put(key, index);
+            }
+            index++;
+        }
     }
 
     public void setOnListItemClickListener(OnItemClickListener onListItemClickListener) {
@@ -65,7 +80,6 @@ public class GeneralDictionaryAdapter
 
         SpannableString text = new SpannableString(origin + translation);
 
-        text.setSpan(new UnderlineSpan(), 0, origin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.BOLD), 0, origin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         int from = origin.length();
@@ -82,6 +96,27 @@ public class GeneralDictionaryAdapter
                 onListItemClickListener.onItemClick(origin, word, position);
             }
         });
+
+
+        if (position > 0){
+            Word prev = list.get(position-1);
+            String prevIndex = prev.getText().substring(0, 1);
+            String currentIndex = word.getText().substring(0, 1);
+
+            if (prevIndex.equalsIgnoreCase(currentIndex)){
+                holder.itemDelimiter.setVisibility(View.GONE);
+                holder.itemKey.setVisibility(View.GONE);
+            }else {
+                holder.itemDelimiter.setVisibility(View.VISIBLE);
+                holder.itemKey.setText(currentIndex);
+                holder.itemKey.setVisibility(View.VISIBLE);
+            }
+        }else {
+            String currentIndex = word.getText().substring(0, 1);
+            holder.itemDelimiter.setVisibility(View.VISIBLE);
+            holder.itemKey.setText(currentIndex);
+            holder.itemKey.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -105,6 +140,9 @@ public class GeneralDictionaryAdapter
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView itemText;
+        private TextView itemDelimiter;
+private
+        TextView itemKey;
 
         private View view;
         private Context context;
@@ -112,8 +150,10 @@ public class GeneralDictionaryAdapter
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            this.context = view.getContext();
+            context = itemView.getContext();
             itemText = (TextView) itemView.findViewById(R.id.item_text);
+            itemDelimiter = (TextView) itemView.findViewById(R.id.item_delimiter);
+            itemKey = (TextView) itemView.findViewById(R.id.item_key);
         }
     }
 }
