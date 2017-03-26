@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.fragment.BooksFragment;
-import com.stiletto.tr.fragment.BookshelfFragment;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.utils.ReaderPrefs;
 
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case 1:
-                NavigationManager.replaceFragment(this, new BookshelfFragment());
+                NavigationManager.replaceFragment(this, new BooksFragment());
                 break;
         }
     }

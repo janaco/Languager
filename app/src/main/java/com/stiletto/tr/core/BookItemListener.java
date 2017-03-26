@@ -8,7 +8,7 @@ import com.stiletto.tr.model.Book;
 
 public interface BookItemListener {
 
-    void remove(Book book, int position);
+    void rename(Book book, int position);
 
     void read(Book book);
 

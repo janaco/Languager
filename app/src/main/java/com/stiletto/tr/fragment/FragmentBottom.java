@@ -48,23 +48,6 @@ public class FragmentBottom extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_bottom, container, false);
         ButterKnife.bind(this, view);
-        view.findViewById(R.id.item_remove).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("TR_", "remove");
-                bookItemListener.remove(book,position );
-            }
-        });
-
-        view.findViewById(R.id.item_read).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("TR_", "read");
-                bookItemListener.read(book);
-
-            }
-        });
-
         return view;
     }
 
@@ -88,15 +71,17 @@ public class FragmentBottom extends Fragment {
         }
     }
 
-//    @OnClick(R.id.item_remove)
-//    void onRemoveItemClick(){
-//        bookItemListener.remove(book,position );
-//    }
-//
-//    @OnClick(R.id.item_read)
-//    void onReadItemClick(){
-//        bookItemListener.read(book);
-//    }
+    @OnClick(R.id.item_rename)
+    void onRemoveItemClick(){
+        Log.d("TR_", "remove click");
+        bookItemListener.rename(book,position );
+    }
+
+    @OnClick(R.id.item_read)
+    void onReadItemClick(){
+        Log.d("TR_", "read click");
+        bookItemListener.read(book);
+    }
 
     public void setBookItemListener(BookItemListener bookItemListener) {
         this.bookItemListener = bookItemListener;

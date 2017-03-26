@@ -1,7 +1,9 @@
 package com.stiletto.tr.view;
 
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
@@ -27,6 +29,7 @@ public abstract class ExpandingViewPagerAdapter extends FragmentStatePagerAdapte
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        Log.d("TR_", "setPrimaryItem");
         if (getCurrentFragment() != object && object instanceof Fragment) {
             currentFragmentReference = new WeakReference<>((Fragment) object);
         }
