@@ -2,7 +2,6 @@ package com.stiletto.tr.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.view.ExpandingFragment;
@@ -14,34 +13,44 @@ import com.stiletto.tr.view.Fragment;
 
 public class BookExpandingFragment extends ExpandingFragment {
 
-    public static BookExpandingFragment newInstance(Book book){
-        BookExpandingFragment fragment = new BookExpandingFragment();
 
-        return fragment;
-    }
+    private Book book;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
+        book = getArguments().getParcelable("book");
 
     }
 
     /**
      * include TopFragment
+     *
      * @return
      */
     @Override
     public Fragment getFragmentTop() {
-        return FragmentTop.newInstance();
+        return FragmentTop.newInstance(book);
     }
 
     /**
      * include BottomFragment
+     *
      * @return
      */
     @Override
     public Fragment getFragmentBottom() {
-        return FragmentBottom.newInstance();
+        return FragmentBottom.newInstance(book);
+    }
+
+    public static BookExpandingFragment newInstance(Book book) {
+
+        Bundle args = new Bundle();
+        args.putParcelable("book", book);
+
+        BookExpandingFragment fragment = new BookExpandingFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 public class BookShelfAdapter extends ExpandingViewPagerAdapter {
 
-    private List<Book> bookList;
+    private List<BookExpandingFragment> bookList;
 
     public BookShelfAdapter(FragmentManager fm) {
         super(fm);
@@ -26,17 +26,18 @@ public class BookShelfAdapter extends ExpandingViewPagerAdapter {
     public void addBook(Book book) {
 
         if (!bookList.contains(book)) {
-            bookList.add(book);
+            bookList.add(BookExpandingFragment.newInstance(book));
             notifyDataSetChanged();
         }
     }
 
     @Override
     public Fragment getItem(int position) {
-        return BookExpandingFragment.newInstance(getContent(position));
+        return
+                getContent(position);
     }
 
-    private Book getContent(int position){
+    private BookExpandingFragment getContent(int position){
         return bookList.get(position);
     }
 

@@ -2,18 +2,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:elevation="3dp"
     tools:context=".fragment.FragmentTop">
 
-
-    <TextView
-        android:id="@+id/item_content"
-        android:background="@color/white"
-        android:padding="10dp"
-        android:text="contentcmjskdsakdjsakjdsadk"
-        android:gravity="center"
-        android:textSize="16sp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:id="@+id/item_cover"
+        android:background="@drawable/cover_1"
+        android:elevation="3dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginStart="40dp"
+                android:background="@drawable/border_dark"
+                android:elevation="2dp"
+                android:gravity="center"
+                android:id="@+id/item_name"
+                android:padding="20dp"
+                android:text="Book Name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_14"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"></RelativeLayout>
+
+    </LinearLayout>
 
 
 </RelativeLayout>
