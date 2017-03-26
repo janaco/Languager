@@ -7,17 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.view.Fragment;
+import com.stiletto.tr.view.OnExpandableItemClickListener;
 
 import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by yana on 19.03.17.
@@ -31,6 +33,7 @@ public class FragmentTop extends Fragment {
     TextView itemName;
 
     private Book book;
+    private OnExpandableItemClickListener listener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,19 +51,29 @@ public class FragmentTop extends Fragment {
         return view;
     }
 
+    @OnClick(R.id.item_cover)
+    void onItemClick(){
+     listener.onExpandableItemClick();
+    }
+
     private int getCover() {
-        int[] covers = {R.drawable.cover_1, R.drawable.cover_3, R.drawable.cover_10};
+        int[] covers = {R.drawable.cover_1, R.drawable.cover_3, R.drawable.cover_4, R.drawable.cover_6, R.drawable.cover_7, R.drawable.cover_8, R.drawable.cover_9, R.drawable.cover_10};
         int index = new Random().nextInt(covers.length);
         Log.d("COVER_", "index: "+ index);
         return index == covers.length ? covers[0] : covers[index];
     }
 
-    public static FragmentTop newInstance(Book book) {
+    public void setListener(OnExpandableItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public static FragmentTop newInstance(Book book, OnExpandableItemClickListener listener) {
         Bundle args = new Bundle();
         args.putParcelable("book", book);
 
         FragmentTop fragment = new FragmentTop();
         fragment.setArguments(args);
+        fragment.setListener(listener);
         return fragment;
     }
 }

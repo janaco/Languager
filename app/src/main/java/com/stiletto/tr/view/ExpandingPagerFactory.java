@@ -42,7 +42,7 @@ public class ExpandingPagerFactory {
 //            @Override
 //            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //                ExpandingFragment expandingFragment = getCurrentFragment(viewPager);
-//                if(expandingFragment != null && expandingFragment.isOpenend()){
+//                if(expandingFragment != null && expandingFragment.isOpened()){
 //                    expandingFragment.close();
 //                }
 //            }
@@ -61,7 +61,7 @@ public class ExpandingPagerFactory {
 
     public static boolean onBackPressed(ViewPager viewPager) {
         ExpandingFragment expandingFragment = getCurrentFragment(viewPager);
-        if(expandingFragment != null && expandingFragment.isOpenend()){
+        if(expandingFragment != null && expandingFragment.isOpened()){
             expandingFragment.close();
             return true;
         }

@@ -2,7 +2,6 @@ package com.stiletto.tr.view;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -18,7 +17,8 @@ import com.stiletto.tr.R;
  * Created by yana on 19.03.17.
  */
 
-public abstract class ExpandingFragment extends Fragment {
+public abstract class ExpandingFragment extends Fragment
+        implements OnExpandableItemClickListener {
 
     private static final float SCALE_OPENED = 1.2f;
     private static final int SCALE_CLOSED = 1;
@@ -34,13 +34,17 @@ public abstract class ExpandingFragment extends Fragment {
     private float startY;
 
     float defaultCardElevation;
-    private OnExpandingClickListener mListener;
     private ObjectAnimator frontAnimator;
     private ObjectAnimator backAnimator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.expanding_fragment, container, false);
+    }
+
+    @Override
+    public void onExpandableItemClick() {
+        toggle();
     }
 
     @Override
@@ -60,11 +64,12 @@ public abstract class ExpandingFragment extends Fragment {
         back = (CardView) view.findViewById(R.id.back);
         front = (CardView) view.findViewById(R.id.front);
         layout3 = (CardView) view.findViewById(R.id.bottomLayout);
-        view.setOnClickListener(new OnClick());
-        setupDownGesture(view);
+
+//        setupDownGesture(view);
 
         defaultCardElevation = front.getCardElevation();
     }
+
 
     private void setupDownGesture(View view) {
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -79,7 +84,7 @@ public abstract class ExpandingFragment extends Fragment {
                         my = event.getY();
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (isOpenend() && event.getY() - startY > 0) {
+                        if (isOpened() && event.getY() - startY > 0) {
                             close();
                             return true;
                         }
@@ -91,18 +96,6 @@ public abstract class ExpandingFragment extends Fragment {
 
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnExpandingClickListener) {
-//            mListener = (OnExpandingClickListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + "ExpandingFragment must implement OnExpandingClickListener");
-//        }
-    }
-
     public abstract Fragment getFragmentTop();
 
     public abstract Fragment getFragmentBottom();
@@ -111,15 +104,15 @@ public abstract class ExpandingFragment extends Fragment {
         return ViewCompat.getScaleX(back) == SCALE_CLOSED;
     }
 
-    public boolean isOpenend() {
+    public boolean isOpened() {
         return ViewCompat.getScaleX(back) == SCALE_OPENED;
     }
 
     public void toggle() {
-        if (isClosed()) {
-            open();
-        } else {
+        if (isOpened()) {
             close();
+        } else {
+            open();
         }
     }
 
@@ -152,39 +145,6 @@ public abstract class ExpandingFragment extends Fragment {
             frontAnimator = null;
         }
         front.setCardElevation(defaultCardElevation);
-    }
-
-    class OnClick implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            if (isOpenend()) {
-                if (mListener != null) {
-                    mListener.onExpandingClick(v);
-                }
-            } else {
-                open();
-            }
-        }
-    }
-
-    public interface OnExpandingClickListener {
-        void onExpandingClick(View v);
-    }
-
-    /**
-     * Temporarily not used
-     */
-    interface Child {
-        void onAttachedToExpanding(ExpandingFragment expandingFragment);
-
-        void onDetachedToExpanding();
-    }
-
-    public interface ChildTop extends ExpandingFragment.Child {
-    }
-
-    public interface ChildBottom extends ExpandingFragment.Child {
     }
 
 }

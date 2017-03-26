@@ -2,6 +2,7 @@ package com.stiletto.tr.adapter;
 
 import android.support.v4.app.FragmentManager;
 
+import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.fragment.BookExpandingFragment;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.view.ExpandingViewPagerAdapter;
@@ -16,21 +17,32 @@ import java.util.List;
 
 public class BookShelfAdapter extends ExpandingViewPagerAdapter {
 
-    private List<BookExpandingFragment> bookList;
+    private List<BookExpandingFragment> fragments;
+    private List<Book> books = new ArrayList<>();
 
     public BookShelfAdapter(FragmentManager fm) {
         super(fm);
-        this.bookList = new ArrayList<>();
+        this.fragments = new ArrayList<>();
     }
 
-    public void addBook(Book book) {
+    public void addBook(Book book, BookItemListener listener) {
 
-        if (!bookList.contains(book)) {
-            bookList.add(BookExpandingFragment.newInstance(book));
+        if (!books.contains(book)) {
+            int position = fragments.size();
+            fragments.add(BookExpandingFragment.newInstance(book, position, listener));
+            books.add(book);
             notifyDataSetChanged();
         }
     }
 
+    public boolean removeItem(Book book, int position){
+
+        books.remove(book);
+        fragments.remove(position);
+        notifyDataSetChanged();
+
+        return fragments.size() > 0;
+    }
     @Override
     public Fragment getItem(int position) {
         return
@@ -38,12 +50,12 @@ public class BookShelfAdapter extends ExpandingViewPagerAdapter {
     }
 
     private BookExpandingFragment getContent(int position){
-        return bookList.get(position);
+        return fragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return bookList.size();
+        return fragments.size();
     }
 
 }
