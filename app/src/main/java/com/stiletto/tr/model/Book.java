@@ -38,9 +38,6 @@ public class Book implements Comparable<Book>, Parcelable {
         this.name = name.contains(".") ? name.substring(0, name.lastIndexOf(".")) : name;
         this.fileType = name.contains(".") ? FileType.getType(name.substring(name.lastIndexOf(".")).toLowerCase()) : FileType.UNKNOWN;
         this.size = size;
-
-        setMetaData();
-
     }
 
     public Book(File file) {
@@ -83,26 +80,6 @@ public class Book implements Comparable<Book>, Parcelable {
             return new Book[size];
         }
     };
-
-    private void setMetaData() {
-
-        switch (fileType) {
-
-            case EPUB:
-                cover = EPUBReader.getCover(path);
-                break;
-
-            case TXT:
-                cover = TextUtils.textAsBitmap(TxtReader.getFirstPage(new File(path)));
-                break;
-
-            case PDF:
-                cover = TextUtils.textAsBitmap(PDFReader.getPage(path, name, 52));
-                break;
-
-        }
-        hasCover = cover != null;
-    }
 
 
     @Override
