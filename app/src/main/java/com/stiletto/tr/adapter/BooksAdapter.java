@@ -23,21 +23,11 @@ public class BooksAdapter extends ExpandingViewPagerAdapter {
 
     private BookItemListener listener;
 
-    public BooksAdapter(FragmentManager fm, List<Book> books, BookItemListener listener) {
+    public BooksAdapter(FragmentManager fm, BookItemListener listener) {
         super(fm);
-        this.books = books;
         this.fragments = new ArrayList<>();
         this.listener = listener;
 
-        initFragments();
-    }
-
-    private void initFragments() {
-
-        for (Book book : books) {
-            int position = fragments.size();
-            fragments.add(BookExpandingFragment.newInstance(book, position, listener));
-        }
     }
 
     public void add(Book book) {

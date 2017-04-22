@@ -4,7 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
+import com.stiletto.tr.core.FileSeekerCallback;
 import com.stiletto.tr.db.ServiceOpenDB;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.translator.yandex.Language;
@@ -86,36 +91,64 @@ public class BooksTable extends ServiceOpenDB {
         }
     }
 
-    private List<Book> getBooks() {
+    private void getBooksAsynchronously(final FileSeekerCallback callback){
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                super.handleMessage(message);
 
-        List<Book> list = new ArrayList<>();
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT path, bookmark, lang_origin, lang_tr FROM books ORDER BY name, length", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-
-                String path = cursor.getString(cursor.getColumnIndex("path"));
-                String originLanguageCode = cursor.getString(cursor.getColumnIndex("lang_origin"));
-                String translationLanguageCode = cursor.getString(cursor.getColumnIndex("lang_tr"));
-                int bookmark = cursor.getInt(cursor.getColumnIndex("bookmark"));
-
-                Book book = new Book(new File(path));
-                book.setBookmark(bookmark);
-                if (originLanguageCode != null && !originLanguageCode.isEmpty()){
-                    book.setOriginLanguage(Language.getLanguage(originLanguageCode));
+                if (message.what == 1){
+                    callback.afterBookSearchResults(null, true);
+                    return;
                 }
+                Book book = message.getData().getParcelable("book");
+                callback.onBookFound(book);
+            }
+        };
 
-                if (translationLanguageCode != null && !translationLanguageCode.isEmpty()){
-                    book.setTranslationLanguage(Language.getLanguage(translationLanguageCode));
+        new AsyncTask<Void, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                Cursor cursor = getReadableDatabase().rawQuery("SELECT path, bookmark, lang_origin, lang_tr FROM books ORDER BY name, length", null);
+
+                if (cursor.moveToFirst()) {
+                    do {
+
+                        String path = cursor.getString(cursor.getColumnIndex("path"));
+                        String originLanguageCode = cursor.getString(cursor.getColumnIndex("lang_origin"));
+                        String translationLanguageCode = cursor.getString(cursor.getColumnIndex("lang_tr"));
+                        int bookmark = cursor.getInt(cursor.getColumnIndex("bookmark"));
+
+                        Book book = new Book(new File(path));
+                        book.setBookmark(bookmark);
+                        if (originLanguageCode != null && !originLanguageCode.isEmpty()){
+                            book.setOriginLanguage(Language.getLanguage(originLanguageCode));
+                        }
+
+                        if (translationLanguageCode != null && !translationLanguageCode.isEmpty()){
+                            book.setTranslationLanguage(Language.getLanguage(translationLanguageCode));
+                        }
+
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("book", book);
+                        Message message = new Message();
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+
+                    } while (cursor.moveToNext());
                 }
+                cursor.close();
+                return null;
+            }
 
-                list.add(book);
-
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return list;
-    }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                handler.sendEmptyMessage(1);
+            }
+        }.execute();
+       }
 
     public static void insert(Context context, Book book) {
         new BooksTable(context).insert(book);
@@ -141,8 +174,8 @@ public class BooksTable extends ServiceOpenDB {
         new BooksTable(context).setLanguages(languages, pathToBook);
     }
 
-    public static List<Book> getBooks(Context context) {
-        return new BooksTable(context).getBooks();
+    public static void getBooksAsynchronously(Context context, FileSeekerCallback callback) {
+        new BooksTable(context).getBooksAsynchronously(callback);
     }
 
     public static void create(SQLiteDatabase database) {

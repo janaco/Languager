@@ -66,7 +66,7 @@ public class FileSeeker {
 
             @Override
             protected void onPostExecute(List<Book> books) {
-                callback.afterBookSearchResults(books);
+                callback.afterBookSearchResults(books, false);
             }
         }.execute();
 

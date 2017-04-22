@@ -2,6 +2,7 @@ package com.stiletto.tr.fragment;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,16 +142,12 @@ public class BooksFragment extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        List<Book> books = BooksTable.getBooks(getContext());
-        adapter = new BooksAdapter(getChildFragmentManager(), books, this);
+
+        adapter = new BooksAdapter(getChildFragmentManager(), this);
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(this);
+        viewPager.addOnPageChangeListener(BooksFragment.this);
 
-        for (Book book : books) {
-            autocompeteAdapter.add(book.getName());
-        }
-
-        FileSeeker.getBooks(this);
+        BooksTable.getBooksAsynchronously(getContext(), this);
     }
 
 
@@ -161,9 +159,13 @@ public class BooksFragment extends Fragment
     }
 
     @Override
-    public void afterBookSearchResults(List<Book> books) {
+    public void afterBookSearchResults(List<Book> books, boolean fromDB) {
 
-        BooksTable.setBooksList(getContext(), books);
+        if (fromDB) {
+            FileSeeker.getBooks(this);
+        } else {
+            BooksTable.setBooksList(getContext(), books);
+        }
     }
 
 
@@ -227,7 +229,7 @@ public class BooksFragment extends Fragment
         autoCompleteTextView.setText("");
     }
 
-    private void searchForBook(final String name){
+    private void searchForBook(final String name) {
 
         NavigationManager.hideKeyboard(getActivity());
 
@@ -236,9 +238,9 @@ public class BooksFragment extends Fragment
             public void run() {
 
                 int index = adapter.getPositionOf(name);
-                if (index >= 0){
+                if (index >= 0) {
                     viewPager.setCurrentItem(index);
-                }else{
+                } else {
 
                     Snackbar snackbar = Snackbar.make(layoutCoordinator, "Oops... Nothing found =(", Snackbar.LENGTH_SHORT);
                     View snackbarView = snackbar.getView();

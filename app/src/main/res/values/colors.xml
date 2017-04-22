@@ -67,4 +67,8 @@
     <!--<color name="green_a400">#00e676</color>-->
     <!--<color name="green_a700">#00c853</color>-->
 
+    <color name="book_loading_background">#00ffffff</color>
+    <color name="book_loading_book">#ffffff</color>
+    <color name="book_loading_page">#00ffffff</color>
+
 </resources>

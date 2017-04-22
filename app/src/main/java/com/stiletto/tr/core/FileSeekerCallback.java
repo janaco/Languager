@@ -13,5 +13,5 @@ public interface FileSeekerCallback {
 
     void onBookFound(Book book);
 
-    void afterBookSearchResults(List<Book> books);
+    void afterBookSearchResults(List<Book> books, boolean fromDB);
 }
