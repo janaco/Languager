@@ -22,6 +22,7 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.BookDictionaryAdapter;
 import com.stiletto.tr.adapter.PagerAdapter;
+import com.stiletto.tr.core.DialogListener;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.db.tables.BooksTable;
@@ -56,7 +57,7 @@ import io.github.yuweiguocn.lib.squareloading.SquareLoading;
 
 public class PageViewerFragment extends Fragment
         implements ViewPager.OnPageChangeListener, DiscreteSeekBar.OnProgressChangeListener,
-        TranslationCallback {
+        TranslationCallback, DialogListener {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
@@ -434,7 +435,7 @@ public class PageViewerFragment extends Fragment
 
     @OnClick(R.id.item_language_from)
     void chooseBookPrimaryLanguage() {
-        ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
+        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
                 String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
@@ -447,7 +448,7 @@ public class PageViewerFragment extends Fragment
 
     @OnClick(R.id.item_language_to)
     void chooseBookTranslationLanguage() {
-        ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
+        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
                 String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
@@ -463,6 +464,16 @@ public class PageViewerFragment extends Fragment
 
         myDictionaryAdapter.addTranslation(item);
         itemDictionaryAlert.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onDialogCreated() {
+
+    }
+
+    @Override
+    public void afterDialogClosed() {
 
     }
 }

@@ -17,6 +17,7 @@ import android.view.Window;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.LanguagesListAdapter;
+import com.stiletto.tr.core.DialogListener;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.translator.yandex.Language;
@@ -33,15 +34,18 @@ import butterknife.ButterKnife;
 
 public class ChooseLanguageDialog extends DialogFragment {
 
-    public static void show(FragmentActivity activity, OnLanguageSelectedListener onLanguageSelectedListener) {
+    public static void show(FragmentActivity activity, DialogListener dialogListener, OnLanguageSelectedListener onLanguageSelectedListener) {
         ChooseLanguageDialog dialog = new ChooseLanguageDialog();
         dialog.setOnLanguageSelectedListener(onLanguageSelectedListener);
+        dialog.setDialogListener(dialogListener);
+
         dialog.show(activity.getSupportFragmentManager(), "ChooseLanguageDialog");
     }
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     private OnLanguageSelectedListener onLanguageSelectedListener;
+    private DialogListener dialogListener;
 
     @NonNull
     @Override
@@ -74,6 +78,7 @@ public class ChooseLanguageDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        dialogListener.onDialogCreated();
 
         List<Language> languages = Arrays.asList(Language.values());
 
@@ -99,6 +104,7 @@ public class ChooseLanguageDialog extends DialogFragment {
 
     @Override
     public void onDestroy() {
+        dialogListener.afterDialogClosed();
 
         if (getDialog() != null && getRetainInstance())
             getDialog().setOnDismissListener(null);
@@ -108,5 +114,9 @@ public class ChooseLanguageDialog extends DialogFragment {
 
     public void setOnLanguageSelectedListener(OnLanguageSelectedListener onLanguageSelectedListener) {
         this.onLanguageSelectedListener = onLanguageSelectedListener;
+    }
+
+    public void setDialogListener(DialogListener dialogListener) {
+        this.dialogListener = dialogListener;
     }
 }

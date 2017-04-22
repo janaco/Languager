@@ -6,14 +6,12 @@
     android:clickable="true"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginEnd="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginStart="25dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
@@ -40,7 +38,7 @@
 
         <TextView
             android:id="@+id/btn_translate_from"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="60dp"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="5dp"
@@ -64,7 +62,7 @@
 
         <TextView
             android:id="@+id/btn_translate_to"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="60dp"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="5dp"
@@ -79,7 +77,7 @@
         <RelativeLayout
             android:id="@+id/btn_read"
             android:layout_marginTop="30dp"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:background="@color/colorLightPrimary"
             android:layout_height="60dp"
             android:orientation="horizontal">
@@ -111,10 +109,10 @@
 
     </LinearLayout>
 
-</RelativeLayout><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:orientation="vertical"--><!--android:layout_width="match_parent"--><!--android:background="@color/amber_light"--><!--android:layout_height="match_parent">-->
-
-
-    <!--<com.stiletto.tr.widget.ListMenuButton--><!--android:id="@+id/bmb1"--><!--android:layout_centerInParent="true"--><!--android:layout_width="@dimen/default_bmb_ham_button_width"--><!--android:layout_height="@dimen/default_bmb_ham_button_height"--><!--app:bmb_buttonEnum="ham"--><!--app:bmb_piecePlaceEnum="piecePlace_ham_3"--><!--app:bmb_buttonPlaceEnum="buttonPlace_ham_3 "--><!--app:bmb_inFragment="true"--><!--/>-->
-
-
-    <!--</RelativeLayout>-->
+    <RelativeLayout
+        android:id="@+id/layout_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/white"/>
+</RelativeLayout>

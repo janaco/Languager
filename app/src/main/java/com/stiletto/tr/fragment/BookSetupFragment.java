@@ -8,9 +8,11 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.core.DialogListener;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
@@ -29,12 +31,14 @@ import butterknife.OnClick;
  * Created by yana on 20.01.17.
  */
 
-public class BookSetupFragment extends Fragment {
+public class BookSetupFragment extends Fragment implements DialogListener {
 
     @Bind(R.id.btn_translate_from)
     TextView viewTranslateFrom;
     @Bind(R.id.btn_translate_to)
     TextView viewTranslateTo;
+    @Bind(R.id.layout_cover)
+    RelativeLayout layoutCover;
 
     private Language languagePrimary;
     private Language languageTranslation;
@@ -96,7 +100,7 @@ public class BookSetupFragment extends Fragment {
 
     @OnClick(R.id.btn_translate_from)
     void chooseBookPrimaryLanguage() {
-        ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
+        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
                 languagePrimary = language;
@@ -108,7 +112,7 @@ public class BookSetupFragment extends Fragment {
 
     @OnClick(R.id.btn_translate_to)
     void chooseBookTranslationLanguage() {
-        ChooseLanguageDialog.show(getActivity(), new OnLanguageSelectedListener() {
+        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
             @Override
             public void onLanguageSelected(Language language) {
                 languageTranslation = language;
@@ -132,4 +136,13 @@ public class BookSetupFragment extends Fragment {
     }
 
 
+    @Override
+    public void onDialogCreated() {
+        layoutCover.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void afterDialogClosed() {
+        layoutCover.setVisibility(View.GONE);
+    }
 }
