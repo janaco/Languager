@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.itextpdf.text.pdf.PdfReader;
@@ -38,6 +39,7 @@ import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.model.YandexTranslateResponse;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
+import com.victor.loading.book.BookLoading;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -61,10 +63,10 @@ public class PageViewerFragment extends Fragment
 
     @Bind(R.id.pager)
     ViewPager viewPager;
-    @Bind(R.id.item_progress)
-    SquareLoading progressBar;
-    @Bind(R.id.item_alert)
-    TextView itemAlert;
+    @Bind(R.id.loading_progress)
+    BookLoading bookLoading;
+    @Bind(R.id.layout_loading)
+    RelativeLayout layoutLoading;
     @Bind(R.id.seek_bar)
     DiscreteSeekBar seekBar;
     @Bind(R.id.item_header)
@@ -81,12 +83,10 @@ public class PageViewerFragment extends Fragment
     RecyclerView dictionaryList;
     @Bind(R.id.pages)
     TextView pageNumber;
-
+    @Bind(R.id.item_alert)
+    TextView itemAlert;
 
     private BookDictionaryAdapter myDictionaryAdapter;
-
-
-    private boolean isFullScreen = false;
 
     private PagerAdapter pagerAdapter;
     private Pagination pagination;
@@ -121,6 +121,9 @@ public class PageViewerFragment extends Fragment
         View view = inflater.inflate(R.layout.fragmet_viewer, container, false);
         ButterKnife.bind(this, view);
 
+        bookLoading.start();
+        itemAlert.setText(book.getName());
+
         itemLanguageFrom.setText(new Locale(book.getOriginLanguage().toString()).getDisplayLanguage());
         itemLanguageTo.setText(new Locale(book.getTranslationLanguage().toString()).getDisplayLanguage());
 
@@ -134,7 +137,6 @@ public class PageViewerFragment extends Fragment
 
         String textProgress = bookmark + "/--";
         itemPages.setText(textProgress);
-        pageNumber.setText(textProgress);
 
 
         String bookName = book.getName();
@@ -150,10 +152,7 @@ public class PageViewerFragment extends Fragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        setDecorViewState();
         setUpPages();
-
-
     }
 
 
@@ -179,8 +178,8 @@ public class PageViewerFragment extends Fragment
             @Override
             protected void onPostExecute(Void aVoid) {
                 int bookmark = book.getBookmark();
-                progressBar.setVisibility(View.GONE);
-                itemAlert.setVisibility(View.GONE);
+                bookLoading.stop();
+                layoutLoading.setVisibility(View.GONE);
                 viewPager.setAdapter(pagerAdapter);
                 viewPager.setCurrentItem(bookmark);
                 seekBar.setMax(pagination.getPagesCount());
@@ -220,8 +219,8 @@ public class PageViewerFragment extends Fragment
 
                     case 2:
 
-                        progressBar.setVisibility(View.GONE);
-                        itemAlert.setVisibility(View.GONE);
+                        bookLoading.stop();
+                        layoutLoading.setVisibility(View.GONE);
 
                         int currentItem = viewPager.getCurrentItem();
                         viewPager.setAdapter(pagerAdapter);
@@ -318,58 +317,6 @@ public class PageViewerFragment extends Fragment
         return "";
     }
 
-    /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-     */
-    public void setDecorViewState() {
-        View decorView = getActivity().getWindow().getDecorView();
-        int newUiOptions = decorView.getSystemUiVisibility();
-
-        if (!isFullScreen) {
-            isFullScreen = true;
-            Log.d("DECOR_VIEW", "hide");
-            if (Build.VERSION.SDK_INT > 18) {
-
-                newUiOptions ^=
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            } else if (Build.VERSION.SDK_INT >= 16) {
-
-                newUiOptions ^= View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN;
-
-            } else if (Build.VERSION.SDK_INT >= 14) {
-                newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-            }
-
-            decorView.setSystemUiVisibility(newUiOptions);
-        } else {
-            Log.d("DECOR_VIEW", "show");
-            isFullScreen = false;
-
-            getActivity().getWindow().clearFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
-            if (Build.VERSION.SDK_INT >= 16) {
-                getActivity().getWindow().clearFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);
-            }
-
-            if (Build.VERSION.SDK_INT >= 19) {
-
-                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
-            }
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//            ActivitiesCurrentContentView.requestLayout();
-
-//            getView().requestLayout();
-
-
-        }
-
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

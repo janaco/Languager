@@ -1,16 +1,11 @@
 package com.stiletto.tr.model;
 
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.stiletto.tr.emums.FileType;
-import com.stiletto.tr.readers.EPUBReader;
-import com.stiletto.tr.readers.PDFReader;
-import com.stiletto.tr.readers.TxtReader;
 import com.stiletto.tr.translator.yandex.Language;
-import com.stiletto.tr.utils.TextUtils;
 
 import java.io.File;
 import java.util.Objects;
@@ -24,9 +19,7 @@ public class Book implements Comparable<Book>, Parcelable {
     private String path;
     private String name;
     private FileType fileType;
-    private Bitmap cover;
     private long size;
-    private boolean hasCover = false;
 
     private Language originLanguage;
     private Language translationLanguage;
@@ -48,9 +41,7 @@ public class Book implements Comparable<Book>, Parcelable {
     protected Book(Parcel in) {
         path = in.readString();
         name = in.readString();
-        cover = in.readParcelable(Bitmap.class.getClassLoader());
         size = in.readLong();
-        hasCover = in.readByte() != 0;
         bookmark = in.readInt();
     }
 
@@ -58,9 +49,7 @@ public class Book implements Comparable<Book>, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(path);
         dest.writeString(name);
-        dest.writeParcelable(cover, flags);
         dest.writeLong(size);
-        dest.writeByte((byte) (hasCover ? 1 : 0));
         dest.writeInt(bookmark);
     }
 
@@ -88,25 +77,13 @@ public class Book implements Comparable<Book>, Parcelable {
                 "path='" + path + '\'' + "\n" +
                 ", name='" + name + '\'' + "\n" +
                 ", fileType=" + fileType.name() + "\n" +
-                ", cover=" + cover + "\n" +
                 ", size=" + size + "\n" +
-                ", hasCover=" + hasCover + "\n" +
                 '}';
-    }
-
-    public boolean hasCover() {
-        return hasCover;
     }
 
     public FileType getFileType() {
         return fileType;
     }
-
-
-    public Bitmap getCover() {
-        return cover;
-    }
-
 
     public long getSize() {
         return size;
