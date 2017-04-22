@@ -62,5 +62,10 @@ public class NavigationManager {
             }
     }
 
+    public static void showKeyboard(Context context){
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
 
 }

@@ -222,9 +222,13 @@ public class PageViewerFragment extends Fragment
                         bookLoading.stop();
                         layoutLoading.setVisibility(View.GONE);
 
-                        int currentItem = viewPager.getCurrentItem();
-                        viewPager.setAdapter(pagerAdapter);
-                        viewPager.setCurrentItem(currentItem);
+                        try {
+                            int currentItem = viewPager.getCurrentItem();
+                            viewPager.setAdapter(pagerAdapter);
+                            viewPager.setCurrentItem(currentItem);
+                        }catch (NullPointerException e){
+                            e.printStackTrace();
+                        }
                         break;
                 }
 

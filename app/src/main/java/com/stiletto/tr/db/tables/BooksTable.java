@@ -150,6 +150,15 @@ public class BooksTable extends ServiceOpenDB {
         }.execute();
        }
 
+    public void rename( Book book, String oldPath){
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", book.getName());
+        contentValues.put("path", book.getPath());
+
+        getWritableDatabase().update(getName(), contentValues, "path LIKE(?)", new String[]{oldPath});
+    }
+
     public static void insert(Context context, Book book) {
         new BooksTable(context).insert(book);
     }
@@ -178,6 +187,9 @@ public class BooksTable extends ServiceOpenDB {
         new BooksTable(context).getBooksAsynchronously(callback);
     }
 
+    public static void rename(Context context, Book book, String oldPath){
+        new BooksTable(context).rename(book, oldPath);
+    }
     public static void create(SQLiteDatabase database) {
         database.execSQL("CREATE TABLE IF NOT EXISTS books(path VARCHAR(216) PRIMARY KEY, name VARCHAR(108), length LONG, bookmark INTEGER, lang_origin VARCHAR(32), lang_tr VARCHAR(32));");
     }

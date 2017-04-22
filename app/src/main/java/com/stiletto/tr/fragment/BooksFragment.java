@@ -172,19 +172,7 @@ public class BooksFragment extends Fragment
     @Override
     public void rename(Book book, int position) {
 
-        closeItemBeforeMoveToAnother();
-
-        if (position < adapter.getCount() - 1) {
-            viewPager.setCurrentItem(position + 1);
-        } else if (position > 0) {
-            viewPager.setCurrentItem(position - 1);
-        }
-
-        boolean isBooks = adapter.removeItem(book, position);
-
-        if (!isBooks) {
-            //TODO
-        }
+        adapter.set(book, position);
     }
 
     @Override

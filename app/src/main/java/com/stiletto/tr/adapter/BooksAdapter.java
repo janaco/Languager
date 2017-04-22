@@ -43,6 +43,7 @@ public class BooksAdapter extends ExpandingViewPagerAdapter {
     public void set(Book book, int position) {
         books.set(position, book);
         fragments.set(position, BookExpandingFragment.newInstance(book, position, listener));
+        notifyDataSetChanged();
     }
 
     public int getPositionOf(String name) {

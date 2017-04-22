@@ -117,6 +117,10 @@ public class Book implements Comparable<Book>, Parcelable {
         return translationLanguage != null;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public void setTranslationLanguage(Language translationLanguage) {
         this.translationLanguage = translationLanguage;
     }
@@ -127,6 +131,11 @@ public class Book implements Comparable<Book>, Parcelable {
 
     public void setOriginLanguage(Language originLanguage) {
         this.originLanguage = originLanguage;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

@@ -18,7 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.3">
-            <TextView
+            <EditText
+                android:enabled="false"
+                android:maxLines="5"
+                android:maxWidth="100dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
