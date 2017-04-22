@@ -25,6 +25,7 @@ public class Book implements Comparable<Book>, Parcelable {
     private Language translationLanguage;
 
     private int bookmark;
+    private int pages;
 
     public Book(String path, String name, long size) {
         this.path = path;
@@ -43,6 +44,7 @@ public class Book implements Comparable<Book>, Parcelable {
         name = in.readString();
         size = in.readLong();
         bookmark = in.readInt();
+        pages = in.readInt();
     }
 
     @Override
@@ -51,6 +53,7 @@ public class Book implements Comparable<Book>, Parcelable {
         dest.writeString(name);
         dest.writeLong(size);
         dest.writeInt(bookmark);
+        dest.writeInt(pages);
     }
 
     @Override
@@ -69,7 +72,6 @@ public class Book implements Comparable<Book>, Parcelable {
             return new Book[size];
         }
     };
-
 
     @Override
     public String toString() {
@@ -136,6 +138,14 @@ public class Book implements Comparable<Book>, Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
+
+    public int getPages() {
+        return pages;
     }
 
     @Override

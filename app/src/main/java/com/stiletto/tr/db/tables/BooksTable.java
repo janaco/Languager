@@ -71,9 +71,10 @@ public class BooksTable extends ServiceOpenDB {
 
         getWritableDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
     }
-    private void setBookmark(int bookmark, String bookPath){
+    private void setBookmark(int bookmark, int pages, String bookPath){
         ContentValues contentValues = new ContentValues();
         contentValues.put("bookmark", bookmark);
+        contentValues.put("pages", pages);
 
         getWritableDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
 
@@ -110,7 +111,7 @@ public class BooksTable extends ServiceOpenDB {
 
             @Override
             protected Void doInBackground(Void... params) {
-                Cursor cursor = getReadableDatabase().rawQuery("SELECT path, bookmark, lang_origin, lang_tr FROM books ORDER BY name, length", null);
+                Cursor cursor = getReadableDatabase().rawQuery("SELECT path, bookmark, pages, lang_origin, lang_tr FROM books ORDER BY name, length", null);
 
                 if (cursor.moveToFirst()) {
                     do {
@@ -119,9 +120,11 @@ public class BooksTable extends ServiceOpenDB {
                         String originLanguageCode = cursor.getString(cursor.getColumnIndex("lang_origin"));
                         String translationLanguageCode = cursor.getString(cursor.getColumnIndex("lang_tr"));
                         int bookmark = cursor.getInt(cursor.getColumnIndex("bookmark"));
+                        int pages = cursor.getInt(cursor.getColumnIndex("pages"));
 
                         Book book = new Book(new File(path));
                         book.setBookmark(bookmark);
+                        book.setPages(pages);
                         if (originLanguageCode != null && !originLanguageCode.isEmpty()){
                             book.setOriginLanguage(Language.getLanguage(originLanguageCode));
                         }
@@ -167,8 +170,8 @@ public class BooksTable extends ServiceOpenDB {
         new BooksTable(context).setBooksList(books);
     }
 
-    public static void setBookmark(Context context, int bookmark, String pathToBook){
-        new BooksTable(context).setBookmark(bookmark, pathToBook);
+    public static void setBookmark(Context context, int bookmark, int pages, String pathToBook){
+        new BooksTable(context).setBookmark(bookmark, pages,pathToBook);
     }
 
     public static void setOriginLanguage(Context context, Language language, String pathToBook){
@@ -191,7 +194,7 @@ public class BooksTable extends ServiceOpenDB {
         new BooksTable(context).rename(book, oldPath);
     }
     public static void create(SQLiteDatabase database) {
-        database.execSQL("CREATE TABLE IF NOT EXISTS books(path VARCHAR(216) PRIMARY KEY, name VARCHAR(108), length LONG, bookmark INTEGER, lang_origin VARCHAR(32), lang_tr VARCHAR(32));");
+        database.execSQL("CREATE TABLE IF NOT EXISTS books(path VARCHAR(216) PRIMARY KEY, name VARCHAR(108), length LONG, bookmark INTEGER, pages INTEGER, lang_origin VARCHAR(32), lang_tr VARCHAR(32));");
     }
 
     private static String getName() {

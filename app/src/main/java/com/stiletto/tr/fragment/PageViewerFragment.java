@@ -213,7 +213,7 @@ public class PageViewerFragment extends Fragment
 
                         int bookmark = viewPager.getCurrentItem();
                         book.setBookmark(bookmark);
-                        BooksTable.setBookmark(getContext(), bookmark, book.getPath());
+                        BooksTable.setBookmark(getContext(), bookmark, pagination.getPagesCount(), book.getPath());
 
                         break;
 
@@ -336,7 +336,7 @@ public class PageViewerFragment extends Fragment
 
         int bookmark = viewPager.getCurrentItem();
         book.setBookmark(bookmark);
-        BooksTable.setBookmark(getContext(), bookmark, book.getPath());
+        BooksTable.setBookmark(getContext(), bookmark, pagination.getPagesCount(), book.getPath());
 
     }
 
@@ -354,7 +354,7 @@ public class PageViewerFragment extends Fragment
 
     @Override
     public void onDestroy() {
-        BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), book.getPath());
+        BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
         super.onDestroy();
 
     }
@@ -370,7 +370,7 @@ public class PageViewerFragment extends Fragment
             pageNumber.setText(textProgress);
 
             book.setBookmark(viewPager.getCurrentItem());
-            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), book.getPath());
+            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
 
         }
     }

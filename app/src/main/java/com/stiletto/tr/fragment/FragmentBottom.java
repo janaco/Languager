@@ -64,6 +64,7 @@ public class FragmentBottom extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         int bookmark = book.getBookmark();
         if (bookmark > 0) {
+            progressBar.setMax(book.getPages());
             progressBar.setProgress(bookmark);
             progressBar.setVisibility(View.VISIBLE);
         }
