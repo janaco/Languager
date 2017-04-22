@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -53,8 +55,6 @@ public class BooksFragment extends Fragment
     @Bind(R.id.pager)
     ViewPager viewPager;
 
-    @Bind(R.id.layout_toolbar)
-    RelativeLayout layoutToolbar;
     @Bind(R.id.layout_search)
     RelativeLayout layoutSearch;
     @Bind(R.id.item_text)
@@ -199,22 +199,30 @@ public class BooksFragment extends Fragment
 
     }
 
-    @OnClick(R.id.item_open_search)
-    void openSearchView() {
-        layoutToolbar.setVisibility(View.GONE);
-        layoutSearch.setVisibility(View.VISIBLE);
-        autoCompleteTextView.setText("");
-    }
-
     @OnClick(R.id.item_back)
     void closeSearchView() {
         layoutSearch.setVisibility(View.GONE);
-        layoutToolbar.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.item_clean)
     void cleanSearchView() {
         autoCompleteTextView.setText("");
+    }
+
+    @OnClick(R.id.item_dictionary)
+    void onDictionaryButtonClick(){
+        NavigationManager.addFragment(getActivity(), new DictionariesFragment());
+    }
+
+    @OnClick(R.id.item_open_search)
+    void onOpenSearchItemClick(){
+        if (layoutSearch.getVisibility() == View.GONE) {
+            autoCompleteTextView.setText("");
+            layoutSearch.setVisibility(View.VISIBLE);
+            layoutSearch.setAnimation(AnimationUtils.makeInAnimation(getContext(), true));
+        }else {
+            closeSearchView();
+        }
     }
 
     private void searchForBook(final String name) {
