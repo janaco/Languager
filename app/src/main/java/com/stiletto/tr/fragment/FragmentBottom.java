@@ -62,24 +62,23 @@ public class FragmentBottom extends Fragment {
 
         if (book.hasOriginLanguage() && book.hasTranslationLanguage()){
 
-            String origin = new Locale("", book.getOriginLanguage().toString()).getDisplayLanguage();
-            String translation = new Locale("", book.getTranslationLanguage().toString()).getDisplayLanguage();
+            String origin = new Locale(book.getOriginLanguage().toString()).getDisplayLanguage();
+            String translation = new Locale(book.getTranslationLanguage().toString()).getDisplayLanguage();
 
             itemLanguages.setText(origin.concat(" - ").concat(translation));
-            itemLanguages.setVisibility(View.VISIBLE);
-
+        }else {
+            itemLanguages.setText(getString(R.string.you_have_not_read_book));
         }
+
     }
 
     @OnClick(R.id.item_rename)
     void onRemoveItemClick(){
-        Log.d("TR_", "remove click");
         bookItemListener.rename(book,position );
     }
 
     @OnClick(R.id.item_read)
     void onReadItemClick(){
-        Log.d("TR_", "read click");
         bookItemListener.read(book);
     }
 

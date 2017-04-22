@@ -27,11 +27,9 @@ public abstract class ExpandingFragment extends Fragment
     Fragment fragmentFront;
     Fragment fragmentBottom;
 
-    private CardView back;
-    private CardView front;
-    private CardView layout3;
-
-    private float startY;
+    private CardView cardBack;
+    private CardView cardFront;
+    private CardView cardBottom;
 
     float defaultCardElevation;
     private ObjectAnimator frontAnimator;
@@ -61,39 +59,11 @@ public abstract class ExpandingFragment extends Fragment
                     .commit();
         }
 
-        back = (CardView) view.findViewById(R.id.back);
-        front = (CardView) view.findViewById(R.id.front);
-        layout3 = (CardView) view.findViewById(R.id.bottomLayout);
+        cardBack = (CardView) view.findViewById(R.id.back);
+        cardFront = (CardView) view.findViewById(R.id.front);
+        cardBottom = (CardView) view.findViewById(R.id.bottomLayout);
 
-//        setupDownGesture(view);
-
-        defaultCardElevation = front.getCardElevation();
-    }
-
-
-    private void setupDownGesture(View view) {
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float my = 0;
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        startY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        my = event.getY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (isOpened() && event.getY() - startY > 0) {
-                            close();
-                            return true;
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
-
+        defaultCardElevation = cardFront.getCardElevation();
     }
 
     public abstract Fragment getFragmentTop();
@@ -101,11 +71,11 @@ public abstract class ExpandingFragment extends Fragment
     public abstract Fragment getFragmentBottom();
 
     public boolean isClosed() {
-        return ViewCompat.getScaleX(back) == SCALE_CLOSED;
+        return ViewCompat.getScaleX(cardBack) == SCALE_CLOSED;
     }
 
     public boolean isOpened() {
-        return ViewCompat.getScaleX(back) == SCALE_OPENED;
+        return ViewCompat.getScaleX(cardBack) == SCALE_OPENED;
     }
 
     public void toggle() {
@@ -117,24 +87,24 @@ public abstract class ExpandingFragment extends Fragment
     }
 
     public void open() {
-        ViewGroup.LayoutParams layoutParams = layout3.getLayoutParams();
-        layoutParams.height = (int) (front.getHeight() * SCALE_OPENED / 4 * SCALE_OPENED);
-        layout3.setLayoutParams(layoutParams);
+        ViewGroup.LayoutParams layoutParams = cardBottom.getLayoutParams();
+        layoutParams.height = (int) (cardFront.getHeight() * SCALE_OPENED / 3 * SCALE_OPENED);
+        cardBottom.setLayoutParams(layoutParams);
 
 
-        ViewCompat.setPivotY(back, 0);
+        ViewCompat.setPivotY(cardBack, 0);
 
-        PropertyValuesHolder front1 = PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0, -front.getHeight() / 4);
+        PropertyValuesHolder front1 = PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0, -cardFront.getHeight() / 4);
         PropertyValuesHolder front2 = PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 1);
-        frontAnimator = ObjectAnimator.ofPropertyValuesHolder(front, front1, front2);
+        frontAnimator = ObjectAnimator.ofPropertyValuesHolder(cardFront, front1, front2);
         PropertyValuesHolder backX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.2f);
         PropertyValuesHolder backY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.2f);
-        backAnimator = ObjectAnimator.ofPropertyValuesHolder(back, backX, backY);
-        back.setPivotY(0);
+        backAnimator = ObjectAnimator.ofPropertyValuesHolder(cardBack, backX, backY);
+        cardBack.setPivotY(0);
         frontAnimator.start();
         backAnimator.start();
 
-        front.setCardElevation(ELEVATION_OPENED);
+        cardFront.setCardElevation(ELEVATION_OPENED);
     }
 
     public void close() {
@@ -144,7 +114,7 @@ public abstract class ExpandingFragment extends Fragment
             backAnimator = null;
             frontAnimator = null;
         }
-        front.setCardElevation(defaultCardElevation);
+        cardFront.setCardElevation(defaultCardElevation);
     }
 
 }

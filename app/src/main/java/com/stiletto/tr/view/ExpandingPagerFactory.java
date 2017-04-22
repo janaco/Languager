@@ -37,34 +37,5 @@ public class ExpandingPagerFactory {
         }
 
         viewPager.setPageTransformer(true, new ExpandingViewPagerTransformer());
-
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                ExpandingFragment expandingFragment = getCurrentFragment(viewPager);
-//                if(expandingFragment != null && expandingFragment.isOpened()){
-//                    expandingFragment.close();
-//                }
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-    }
-
-    public static boolean onBackPressed(ViewPager viewPager) {
-        ExpandingFragment expandingFragment = getCurrentFragment(viewPager);
-        if(expandingFragment != null && expandingFragment.isOpened()){
-            expandingFragment.close();
-            return true;
-        }
-        return false;
     }
 }

@@ -10,4 +10,6 @@
     <string name="in_what_language_book_is_written">The book is written in</string>
     <string name="in_what_language_book_should_be_translated">And I want to translate it in</string>
     <string name="during_reading">during reading</string>
+
+    <string name="you_have_not_read_book">You haven\'t read this book yet.</string>
 </resources>

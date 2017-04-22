@@ -21,15 +21,15 @@
             android:id="@+id/item_languages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:paddingBottom="5dp"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingStart="10dp"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_12"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <com.daimajia.numberprogressbar.NumberProgressBar
             android:id="@+id/item_progress"
@@ -54,8 +54,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="45dp"
             android:gravity="right|end"
-            android:layout_marginBottom="25dp"
             android:orientation="horizontal">
 
 
@@ -64,10 +64,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|end|bottom"
-                android:padding="15dp"
-                android:text="Rename"
-                android:textAllCaps="true"
                 android:clickable="true"
+                android:text="Rename"
+                android:paddingBottom="5dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:paddingTop="5dp"
+                android:textAllCaps="true"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_14"
                 android:textStyle="bold" />
@@ -77,8 +82,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|end|bottom"
-             android:padding="15dp"
                 android:clickable="true"
+                android:paddingBottom="5dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:paddingTop="5dp"
                 android:text="Read"
                 android:textAllCaps="true"
                 android:textSize="@dimen/text_14"
