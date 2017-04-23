@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.AutocompleteAdapter;
@@ -223,6 +224,21 @@ public class BooksFragment extends Fragment
         }else {
             closeSearchView();
         }
+    }
+
+    @OnClick(R.id.item_settings)
+    void onSettingsClick(){
+        Toast.makeText(getContext(), "Not implemented yet.", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.item_statistics)
+    void onStatisticsClick(){
+        Toast.makeText(getContext(), "Not implemented yet.", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.item_exams)
+    void onExamsClick(){
+        Toast.makeText(getContext(), "Not implemented yet.", Toast.LENGTH_SHORT).show();
     }
 
     private void searchForBook(final String name) {

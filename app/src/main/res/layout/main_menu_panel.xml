@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="5dp"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/item_settings"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_weight="0.2"
+        android:layout_gravity="bottom"
+        android:padding="10dp"
+        android:src="@drawable/option_settings" />
+
+    <ImageView
+        android:id="@+id/item_statistics"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_weight="0.2"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:src="@drawable/option_statistics" />
+
+    <ImageView
+        android:id="@+id/item_exams"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_weight="0.2"
+        android:layout_gravity="top"
+        android:layout_marginBottom="5dp"
+        android:padding="10dp"
+        android:src="@drawable/option_exams" />
+
+    <ImageView
+        android:id="@+id/item_dictionary"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_weight="0.2"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:src="@drawable/option_dictionary" />
+
+    <ImageView
+        android:id="@+id/item_open_search"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_weight="0.2"
+        android:layout_gravity="bottom"
+        android:padding="10dp"
+        android:src="@drawable/option_search" />
+
+
+</LinearLayout>
