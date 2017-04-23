@@ -1,23 +1,21 @@
-package com.stiletto.tr.view;
+package com.softes.cardviewer;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.stiletto.tr.R;
 
 /**
  * Created by yana on 19.03.17.
  */
 
-public abstract class ExpandingFragment extends Fragment
+public abstract class ExpandableCard extends Fragment
         implements OnExpandableItemClickListener {
 
     private static final float SCALE_OPENED = 1.2f;
@@ -37,7 +35,7 @@ public abstract class ExpandingFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.expanding_fragment, container, false);
+        return inflater.inflate(R.layout.expandable_card, container, false);
     }
 
     @Override

@@ -1,7 +1,7 @@
-package com.stiletto.tr.view;
+package com.softes.cardviewer;
 
 /**
- * Created by yana on 26.03.17.
+ * Created by yana on 23.04.17.
  */
 
 public interface OnExpandableItemClickListener {

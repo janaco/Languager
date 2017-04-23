@@ -2,7 +2,6 @@ package com.stiletto.tr.fragment;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -12,13 +11,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -27,6 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.softes.cardviewer.ExpandableCard;
+import com.softes.cardviewer.ExpandablePagerFactory;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.AutocompleteAdapter;
 import com.stiletto.tr.adapter.BooksAdapter;
@@ -36,8 +35,6 @@ import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.utils.FileSeeker;
-import com.stiletto.tr.view.ExpandingFragment;
-import com.stiletto.tr.view.ExpandingPagerFactory;
 import com.stiletto.tr.view.Fragment;
 
 import java.util.List;
@@ -79,7 +76,7 @@ public class BooksFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_books, container, false);
         ButterKnife.bind(this, view);
-        ExpandingPagerFactory.setupViewPager(viewPager);
+        ExpandablePagerFactory.setupViewPager(viewPager);
 
         Point pointSize = new Point();
         ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getSize(pointSize);
@@ -267,7 +264,7 @@ public class BooksFragment extends Fragment
     }
 
     private void closeItemBeforeMoveToAnother() {
-        ExpandingFragment expandingFragment = ExpandingPagerFactory.getCurrentFragment(viewPager);
+        ExpandableCard expandingFragment = ExpandablePagerFactory.getCurrentFragment(viewPager);
         if (expandingFragment != null && expandingFragment.isOpened()) {
             expandingFragment.close();
         }

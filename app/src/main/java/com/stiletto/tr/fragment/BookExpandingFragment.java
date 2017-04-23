@@ -3,17 +3,13 @@ package com.stiletto.tr.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.stiletto.tr.R;
+import com.softes.cardviewer.ExpandableCard;
 import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.core.RenameModeCallback;
 import com.stiletto.tr.db.tables.BooksTable;
-import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
-import com.stiletto.tr.view.ExpandingFragment;
-import com.stiletto.tr.view.Fragment;
 
 import java.io.File;
 
@@ -21,7 +17,7 @@ import java.io.File;
  * Created by yana on 19.03.17.
  */
 
-public class BookExpandingFragment extends ExpandingFragment implements RenameModeCallback{
+public class BookExpandingFragment extends ExpandableCard implements RenameModeCallback{
 
 
     private int position;

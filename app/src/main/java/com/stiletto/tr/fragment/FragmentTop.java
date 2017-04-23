@@ -8,14 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.softes.cardviewer.OnExpandableItemClickListener;
 import com.stiletto.tr.R;
-import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.view.Fragment;
-import com.stiletto.tr.view.OnExpandableItemClickListener;
 
 import java.util.Random;
 

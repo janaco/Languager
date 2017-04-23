@@ -1,13 +1,13 @@
 package com.stiletto.tr.adapter;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
+import com.softes.cardviewer.ExpandablePagerAdapter;
 import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.fragment.BookExpandingFragment;
 import com.stiletto.tr.model.Book;
-import com.stiletto.tr.view.ExpandingViewPagerAdapter;
-import com.stiletto.tr.view.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by yana on 19.03.17.
  */
 
-public class BooksAdapter extends ExpandingViewPagerAdapter {
+public class BooksAdapter extends ExpandablePagerAdapter {
 
     private List<BookExpandingFragment> fragments;
     private List<Book> books = new ArrayList<>();
@@ -70,8 +70,7 @@ public class BooksAdapter extends ExpandingViewPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return getContent(position);
+    public Fragment getItem(int position) {return getContent(position);
     }
 
     private BookExpandingFragment getContent(int position) {

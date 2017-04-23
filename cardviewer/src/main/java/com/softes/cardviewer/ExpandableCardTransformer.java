@@ -1,4 +1,4 @@
-package com.stiletto.tr.view;
+package com.softes.cardviewer;
 
 import android.os.Build;
 import android.support.v4.view.ViewPager;
@@ -7,8 +7,7 @@ import android.view.View;
 /**
  * Created by yana on 19.03.17.
  */
-
-public class ExpandingViewPagerTransformer implements ViewPager.PageTransformer {
+public class ExpandableCardTransformer implements ViewPager.PageTransformer {
 
     public static final float MAX_SCALE = 0.9f;
     public static final float MIN_SCALE = 0.8f;

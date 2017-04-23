@@ -1,9 +1,9 @@
-package com.stiletto.tr.view;
+package com.softes.cardviewer;
 
+
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
@@ -12,11 +12,11 @@ import java.lang.ref.WeakReference;
  * Created by yana on 19.03.17.
  */
 
-public abstract class ExpandingViewPagerAdapter extends FragmentStatePagerAdapter {
+public abstract class ExpandablePagerAdapter extends FragmentStatePagerAdapter {
 
     WeakReference<Fragment> currentFragmentReference;
 
-    public ExpandingViewPagerAdapter(FragmentManager fm) {
+    public ExpandablePagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -29,7 +29,7 @@ public abstract class ExpandingViewPagerAdapter extends FragmentStatePagerAdapte
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
-        Log.d("TR_", "setPrimaryItem");
+
         if (getCurrentFragment() != object && object instanceof Fragment) {
             currentFragmentReference = new WeakReference<>((Fragment) object);
         }
