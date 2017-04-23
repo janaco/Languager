@@ -1,8 +1,7 @@
-package com.stiletto.tr.view.bottom_sheet;
+package com.softes.bottomsheetpanel;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.app.Application;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -22,15 +21,13 @@ import android.widget.ScrollView;
 
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
-import com.stiletto.tr.R;
 
 /**
  * Created by yana on 26.02.17.
  */
 
-public class SlideBottomPanel extends FrameLayout {
+public class BottomSheetPanel extends FrameLayout {
 
-    private static final String TAG = SlideBottomPanel.class.getSimpleName();
     private static final int TAG_BACKGROUND = 1;
     private static final int TAG_PANEL = 2;
 
@@ -80,17 +77,17 @@ public class SlideBottomPanel extends FrameLayout {
     private Interpolator mCloseAnimationInterpolator = new AccelerateInterpolator();
 
     private Context mContext;
-    private DarkFrameLayout mDarkFrameLayout;
+    private FadingLayout mDarkFrameLayout;
 
-    public SlideBottomPanel(Context context) {
+    public BottomSheetPanel(Context context) {
         this(context, null);
     }
 
-    public SlideBottomPanel(Context context, AttributeSet attrs) {
+    public BottomSheetPanel(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SlideBottomPanel(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BottomSheetPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         mContext = context;
@@ -101,16 +98,16 @@ public class SlideBottomPanel extends FrameLayout {
         mMinVelocity = vc.getScaledMinimumFlingVelocity();
         mTouchSlop = vc.getScaledTouchSlop();
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SlideBottomPanel, defStyleAttr, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BottomSheetPanel, defStyleAttr, 0);
 
-        mBackgroundId = a.getResourceId(R.styleable.SlideBottomPanel_sbp_background_layout, DEFAULT_BACKGROUND_ID);
-        mPanelHeight = a.getDimension(R.styleable.SlideBottomPanel_sbp_panel_height, dp2px(DEFAULT_PANEL_HEIGHT));
-        mBoundary = a.getBoolean(R.styleable.SlideBottomPanel_sbp_boundary, DEFAULT_BOUNDARY);
-        MAX_CLICK_DISTANCE = mTitleHeightNoDisplay = a.getDimension(R.styleable.SlideBottomPanel_sbp_title_height_no_display,dp2px(DEFAULT_TITLE_HEIGHT_NO_DISPLAY));
-        mMoveDistanceToTrigger = a.getDimension(R.styleable.SlideBottomPanel_sbp_move_distance_trigger, dp2px(DEFAULT_MOVE_DISTANCE_TO_TRIGGER));
-        mAnimationDuration = a.getInt(R.styleable.SlideBottomPanel_sbp_animation_duration, DEFAULT_ANIMATION_DURATION);
-        mHidePanelTitle = a.getBoolean(R.styleable.SlideBottomPanel_sbp_hide_panel_title, DEFAULT_HIDE_PANEL_TITLE);
-        mIsFade = a.getBoolean(R.styleable.SlideBottomPanel_sbp_fade, DEFAULT_FADE);
+        mBackgroundId = a.getResourceId(R.styleable.BottomSheetPanel_sbp_background_layout, DEFAULT_BACKGROUND_ID);
+        mPanelHeight = a.getDimension(R.styleable.BottomSheetPanel_sbp_panel_height, dp2px(DEFAULT_PANEL_HEIGHT));
+        mBoundary = a.getBoolean(R.styleable.BottomSheetPanel_sbp_boundary, DEFAULT_BOUNDARY);
+        MAX_CLICK_DISTANCE = mTitleHeightNoDisplay = a.getDimension(R.styleable.BottomSheetPanel_sbp_title_height_no_display, dp2px(DEFAULT_TITLE_HEIGHT_NO_DISPLAY));
+        mMoveDistanceToTrigger = a.getDimension(R.styleable.BottomSheetPanel_sbp_move_distance_trigger, dp2px(DEFAULT_MOVE_DISTANCE_TO_TRIGGER));
+        mAnimationDuration = a.getInt(R.styleable.BottomSheetPanel_sbp_animation_duration, DEFAULT_ANIMATION_DURATION);
+        mHidePanelTitle = a.getBoolean(R.styleable.BottomSheetPanel_sbp_hide_panel_title, DEFAULT_HIDE_PANEL_TITLE);
+        mIsFade = a.getBoolean(R.styleable.BottomSheetPanel_sbp_fade, DEFAULT_FADE);
 
         a.recycle();
 
@@ -130,9 +127,9 @@ public class SlideBottomPanel extends FrameLayout {
 //                if (childView instanceof ViewGroup) {
 //                    ((ViewGroup)childView).setClipChildren(false);
 //                }
-            } else if ((int)childView.getTag() == TAG_BACKGROUND){
+            } else if ((int) childView.getTag() == TAG_BACKGROUND) {
                 childView.layout(0, 0, childView.getMeasuredWidth(), childView.getMeasuredHeight());
-                childView.setPadding(0, 0, 0, (int)mTitleHeightNoDisplay);
+                childView.setPadding(0, 0, 0, (int) mTitleHeightNoDisplay);
             }
         }
     }
@@ -175,7 +172,7 @@ public class SlideBottomPanel extends FrameLayout {
 
     private void initBackgroundView() {
         if (mBackgroundId != -1) {
-            mDarkFrameLayout = new DarkFrameLayout(mContext);
+            mDarkFrameLayout = new FadingLayout(mContext);
             mDarkFrameLayout.addView(LayoutInflater.from(mContext).inflate(mBackgroundId, null));
             mDarkFrameLayout.setTag(TAG_BACKGROUND);
             mDarkFrameLayout.setSlideBottomPanel(this);
@@ -196,7 +193,7 @@ public class SlideBottomPanel extends FrameLayout {
                 distance(firstDownX, firstDownY, event.getX(), event.getY()) < MAX_CLICK_DISTANCE) {
             displayPanel();
         } else if (!isPanelShowing && isDragging && ((event.getY() - firstDownY > 0) ||
-                Math.abs(event.getY() - firstDownY) < mMoveDistanceToTrigger)){
+                Math.abs(event.getY() - firstDownY) < mMoveDistanceToTrigger)) {
             hidePanel();
         }
 
@@ -207,7 +204,7 @@ public class SlideBottomPanel extends FrameLayout {
                     currentY < (mMeasureHeight - mPanelHeight + mMoveDistanceToTrigger)) {
                 ObjectAnimator.ofFloat(mPanel, "y", currentY, mMeasureHeight - mPanelHeight)
                         .setDuration(mAnimationDuration).start();
-            } else if (currentY > mMeasureHeight - mPanelHeight + mMoveDistanceToTrigger){
+            } else if (currentY > mMeasureHeight - mPanelHeight + mMoveDistanceToTrigger) {
                 hidePanel();
             }
         }
@@ -248,7 +245,7 @@ public class SlideBottomPanel extends FrameLayout {
                 if (currentY > mMeasureHeight - mPanelHeight &&
                         currentY < mMeasureHeight - mTitleHeightNoDisplay) {
                     mDarkFrameLayout.fade(
-                            (int) ((1 - currentY / (mMeasureHeight - mTitleHeightNoDisplay)) * DarkFrameLayout.MAX_ALPHA));
+                            (int) ((1 - currentY / (mMeasureHeight - mTitleHeightNoDisplay)) * FadingLayout.MAX_ALPHA));
                 }
             }
             if (!mBoundary) {
@@ -290,7 +287,7 @@ public class SlideBottomPanel extends FrameLayout {
             return;
         }
         final View mPanel = findViewWithTag(TAG_PANEL);
-        final int t = (int)(mMeasureHeight - mTitleHeightNoDisplay);
+        final int t = (int) (mMeasureHeight - mTitleHeightNoDisplay);
         ValueAnimator animator = ValueAnimator.ofFloat(
                 ViewHelper.getY(mPanel), mMeasureHeight - mTitleHeightNoDisplay);
         animator.setInterpolator(mCloseAnimationInterpolator);
@@ -301,7 +298,7 @@ public class SlideBottomPanel extends FrameLayout {
                 float value = (float) animation.getAnimatedValue();
                 ViewHelper.setY(mPanel, value);
                 if (mDarkFrameLayout != null && mIsFade && value < t) {
-                    mDarkFrameLayout.fade((int) ((1 - value / t) * DarkFrameLayout.MAX_ALPHA));
+                    mDarkFrameLayout.fade((int) ((1 - value / t) * FadingLayout.MAX_ALPHA));
                 }
             }
         });
@@ -350,9 +347,9 @@ public class SlideBottomPanel extends FrameLayout {
                 float value = (float) animation.getAnimatedValue();
                 ViewHelper.setY(mPanel, value);
                 if (mDarkFrameLayout != null && mIsFade
-                        && mDarkFrameLayout.getCurrentAlpha() != DarkFrameLayout.MAX_ALPHA) {
+                        && mDarkFrameLayout.getCurrentAlpha() != FadingLayout.MAX_ALPHA) {
                     mDarkFrameLayout.fade(
-                            (int) ((1 - value / (mMeasureHeight - mTitleHeightNoDisplay)) * DarkFrameLayout.MAX_ALPHA));
+                            (int) ((1 - value / (mMeasureHeight - mTitleHeightNoDisplay)) * FadingLayout.MAX_ALPHA));
                 }
             }
         });
@@ -406,7 +403,7 @@ public class SlideBottomPanel extends FrameLayout {
     }
 
     public void hide() {
-        if(!isPanelShowing) return;
+        if (!isPanelShowing) return;
         hidePanel();
     }
 
@@ -430,7 +427,7 @@ public class SlideBottomPanel extends FrameLayout {
                 if (Build.VERSION.SDK_INT >= 19) {
                     return absListView.canScrollList(direction);
                 } else {
-                    return absListViewCanScrollList(absListView,direction);
+                    return absListViewCanScrollList(absListView, direction);
                 }
             } else if (childView instanceof ScrollView) {
                 ScrollView scrollView = (ScrollView) childView;
@@ -440,7 +437,7 @@ public class SlideBottomPanel extends FrameLayout {
                     return scrollViewCanScrollVertically(scrollView, direction);
                 }
 
-            } else if (childView instanceof ViewGroup){
+            } else if (childView instanceof ViewGroup) {
                 View grandchildView = findTopChildUnder((ViewGroup) childView, firstDownX, firstDownY);
                 if (grandchildView == null) {
                     return false;
@@ -451,7 +448,7 @@ public class SlideBottomPanel extends FrameLayout {
                         if (Build.VERSION.SDK_INT >= 19) {
                             return absListView.canScrollList(direction);
                         } else {
-                            return absListViewCanScrollList(absListView,direction);
+                            return absListViewCanScrollList(absListView, direction);
                         }
                     } else if (grandchildView instanceof ScrollView) {
                         ScrollView scrollView = (ScrollView) grandchildView;
@@ -475,7 +472,7 @@ public class SlideBottomPanel extends FrameLayout {
             final View child = parentView.getChildAt(i);
             if (x >= child.getLeft() && x < child.getRight() &&
                     y >= child.getTop() + mMeasureHeight - mPanelHeight &&
-                    y < child.getBottom()  + mMeasureHeight - mPanelHeight) {
+                    y < child.getBottom() + mMeasureHeight - mPanelHeight) {
                 return child;
             }
         }
@@ -483,13 +480,14 @@ public class SlideBottomPanel extends FrameLayout {
     }
 
     /**
-     *  Copy From ScrollView (API Level >= 14)
+     * Copy From ScrollView (API Level >= 14)
+     *
      * @param direction Negative to check scrolling up, positive to check
      *                  scrolling down.
-     *   @return true if the scrollView can be scrolled in the specified direction,
-     *         false otherwise
+     * @return true if the scrollView can be scrolled in the specified direction,
+     * false otherwise
      */
-    private  boolean scrollViewCanScrollVertically(ScrollView scrollView,int direction) {
+    private boolean scrollViewCanScrollVertically(ScrollView scrollView, int direction) {
         final int offset = Math.max(0, scrollView.getScrollY());
         final int range = computeVerticalScrollRange(scrollView) - scrollView.getHeight();
         if (range == 0) return false;
@@ -526,13 +524,14 @@ public class SlideBottomPanel extends FrameLayout {
 
     /**
      * Copy From AbsListView (API Level >= 19)
+     *
      * @param absListView AbsListView
-     * @param direction Negative to check scrolling up, positive to check
-     *                  scrolling down.
+     * @param direction   Negative to check scrolling up, positive to check
+     *                    scrolling down.
      * @return true if the list can be scrolled in the specified direction,
-     *         false otherwise
+     * false otherwise
      */
-    private boolean absListViewCanScrollList(AbsListView absListView,int direction) {
+    private boolean absListViewCanScrollList(AbsListView absListView, int direction) {
         final int childCount = absListView.getChildCount();
         if (childCount == 0) {
             return false;

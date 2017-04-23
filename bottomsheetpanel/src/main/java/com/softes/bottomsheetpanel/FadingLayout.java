@@ -1,4 +1,4 @@
-package com.stiletto.tr.view.bottom_sheet;
+package com.softes.bottomsheetpanel;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,24 +12,24 @@ import android.widget.FrameLayout;
  * Created by yana on 26.02.17.
  */
 
-public class DarkFrameLayout extends FrameLayout {
+public class FadingLayout extends FrameLayout {
 
     public static final int MAX_ALPHA = 0X9f;
 
     private int alpha = 0x00;
     private Paint mFadePaint;
 
-    private SlideBottomPanel slideBottomPanel;
+    private BottomSheetPanel slideBottomPanel;
 
-    public DarkFrameLayout(Context context) {
+    public FadingLayout(Context context) {
         this(context, null);
     }
 
-    public DarkFrameLayout(Context context, AttributeSet attrs) {
+    public FadingLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DarkFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FadingLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mFadePaint = new Paint();
     }
@@ -64,7 +64,7 @@ public class DarkFrameLayout extends FrameLayout {
         return alpha;
     }
 
-    public void setSlideBottomPanel(SlideBottomPanel slideBottomPanel) {
+    public void setSlideBottomPanel(BottomSheetPanel slideBottomPanel) {
         this.slideBottomPanel = slideBottomPanel;
     }
 }

@@ -1,1 +1,1 @@
-include ':app', ':cardviewer'
+include ':app', ':cardviewer', ':bottomsheetpanel'
