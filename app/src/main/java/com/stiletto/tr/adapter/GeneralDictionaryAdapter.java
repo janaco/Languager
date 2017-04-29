@@ -29,34 +29,23 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * Adapter to organize list of all words learned by user.
+ * Used on GeneralDictionary.
+ * <p>
  * Created by yana on 08.03.17.
  */
 
-public class GeneralDictionaryAdapter
-        extends RecyclerView.Adapter<GeneralDictionaryAdapter.ViewHolder> {
-
+public class GeneralDictionaryAdapter extends RecyclerView.Adapter<GeneralDictionaryAdapter.ViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(String key, Word word, int position);
     }
 
-    //    private List<DictionaryItem> list;
     private List<Word> list;
     private OnItemClickListener onListItemClickListener;
 
-
     public GeneralDictionaryAdapter(List<Word> list) {
         this.list = list;
-
-        HashMap<String, Integer> map =new HashMap<>();
-        int index = 0;
-        for (Word word: list){
-            String key = word.getText().substring(0, 1);
-            if (!map.containsKey(key)){
-                map.put(key, index);
-            }
-            index++;
-        }
     }
 
     public void setOnListItemClickListener(OnItemClickListener onListItemClickListener) {
@@ -80,8 +69,10 @@ public class GeneralDictionaryAdapter
 
         SpannableString text = new SpannableString(origin + translation);
 
+        //highlight origin word
         text.setSpan(new StyleSpan(Typeface.BOLD), 0, origin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        //and its translation
         int from = origin.length();
         int to = text.length();
         text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -89,7 +80,6 @@ public class GeneralDictionaryAdapter
         text.setSpan(new RelativeSizeSpan(0.8f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         holder.itemText.setText(text);
-
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,26 +88,31 @@ public class GeneralDictionaryAdapter
         });
 
 
-        if (position > 0){
-            Word prev = list.get(position-1);
+    }
+
+    private void showDelimiter(ViewHolder holder, Word word, int position) {
+        if (position > 0) {
+            Word prev = list.get(position - 1);
             String prevIndex = prev.getText().substring(0, 1);
             String currentIndex = word.getText().substring(0, 1);
 
-            if (prevIndex.equalsIgnoreCase(currentIndex)){
+            //if previous and current items starts from
+            //different letters, we will highlight new list view section
+            if (prevIndex.equalsIgnoreCase(currentIndex)) {
                 holder.itemDelimiter.setVisibility(View.GONE);
                 holder.itemKey.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.itemDelimiter.setVisibility(View.VISIBLE);
                 holder.itemKey.setText(currentIndex);
                 holder.itemKey.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
+            //list view section is always show before first item
             String currentIndex = word.getText().substring(0, 1);
             holder.itemDelimiter.setVisibility(View.VISIBLE);
             holder.itemKey.setText(currentIndex);
             holder.itemKey.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -125,13 +120,13 @@ public class GeneralDictionaryAdapter
         return list.size();
     }
 
-    public void remove(int position){
+    public void remove(int position) {
         list.remove(position);
         notifyItemRemoved(position);
         notifyDataSetChanged();
     }
 
-    public void cleanAll(){
+    public void cleanAll() {
         list.clear();
         notifyDataSetChanged();
     }
@@ -141,13 +136,12 @@ public class GeneralDictionaryAdapter
 
         private TextView itemText;
         private TextView itemDelimiter;
-private
-        TextView itemKey;
+        private TextView itemKey;
 
         private View view;
         private Context context;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
             context = itemView.getContext();

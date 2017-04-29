@@ -2,7 +2,6 @@ package com.stiletto.tr.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 
 import com.softes.cardviewer.ExpandablePagerAdapter;
 import com.stiletto.tr.core.BookItemListener;
@@ -13,21 +12,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Used to display books with its information on main screen.
+ *
  * Created by yana on 19.03.17.
  */
 
 public class BooksAdapter extends ExpandablePagerAdapter {
 
-    private List<BookExpandingFragment> fragments;
     private List<Book> books = new ArrayList<>();
+    private List<BookExpandingFragment> fragments = new ArrayList<>();
 
     private BookItemListener listener;
 
     public BooksAdapter(FragmentManager fm, BookItemListener listener) {
         super(fm);
-        this.fragments = new ArrayList<>();
         this.listener = listener;
+    }
 
+    @Override
+    public Fragment getItem(int position) {return fragments.get(position);
+    }
+
+    @Override
+    public int getCount() {
+        return fragments.size();
     }
 
     public void add(Book book) {
@@ -57,29 +65,6 @@ public class BooksAdapter extends ExpandablePagerAdapter {
         }
 
         return -1;
-    }
-
-    public boolean removeItem(Book book, int position) {
-
-        Log.d("TR_", "remove: " + position);
-        books.remove(book);
-        fragments.remove(position);
-        notifyDataSetChanged();
-
-        return fragments.size() > 0;
-    }
-
-    @Override
-    public Fragment getItem(int position) {return getContent(position);
-    }
-
-    private BookExpandingFragment getContent(int position) {
-        return fragments.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return fragments.size();
     }
 
 }

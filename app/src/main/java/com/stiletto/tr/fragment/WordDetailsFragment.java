@@ -69,7 +69,7 @@ public class WordDetailsFragment extends Fragment {
         itemTitle.setText(word.getText());
         itemSubtitle.setVisibility(View.VISIBLE);
 
-        adapter = new DictionaryAdapter(getContext(), word.getDictionaryItems());
+        adapter = new DictionaryAdapter( word.getDictionaryItems());
         recyclerView.setAdapter(adapter);
     }
 

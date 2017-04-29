@@ -1,6 +1,5 @@
 package com.stiletto.tr.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * PagerAdapter to display different dictionaries (different languages).
+ *
  * Created by yana on 12.03.17.
  */
 
@@ -27,6 +28,24 @@ public class DictionariesPagerAdapter extends FragmentPagerAdapter {
 
         this.titles = getTitles(dictionaries);
         setFragments(dictionaries);
+    }
+
+    @Override
+    public int getCount() {
+        return fragments.size();
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+
+        return fragments.get(position);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+
+        return titles[position];
+
     }
 
     private String[] getTitles(Map<String, ArrayList<Word>> dictionaries) {
@@ -43,25 +62,4 @@ public class DictionariesPagerAdapter extends FragmentPagerAdapter {
             fragments.add(DictionaryFragment.getInstance(dictionaries.get(title)));
         }
     }
-
-    @Override
-    public int getCount() {
-        return fragments.size();
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-
-        return fragments.get(position);
-
-    }
-
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-
-        return titles[position];
-
-    }
-
 }

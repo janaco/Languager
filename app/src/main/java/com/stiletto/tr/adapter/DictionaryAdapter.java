@@ -23,23 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Use it to organize all words with its translations
+ * and other additional information on your screen.
+ *
  * Created by yana on 08.01.17.
  */
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.ViewHolder> {
 
     private List<DictionaryItem> list;
-    private Context context;
 
-    public DictionaryAdapter(Context context, List<DictionaryItem> list) {
+    public DictionaryAdapter(List<DictionaryItem> list) {
         this.list = list;
-        this.context = context;
-    }
-
-    public DictionaryAdapter(Context context, DictionaryItem item) {
-        this.list = new ArrayList<>();
-        this.list.add(item);
-        this.context = context;
     }
 
     @Override
@@ -60,35 +55,38 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
 
         SpannableString text = new SpannableString(index + origin + partOfSpeech + transcription);
 
+        //index (like 1, 2 etc.)
         int from = 0;
         int to = index.length();
         text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorSecondaryText)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.context, R.color.colorSecondaryText)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        //origin word
         from = to;
         to += origin.length();
         text.setSpan(new UnderlineSpan(), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.BOLD), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        //part of speech (for origin word)
         from = to;
         to = from + partOfSpeech.length();
         text.setSpan(new RelativeSizeSpan(0.4f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorPrimary)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.context, R.color.colorPrimary)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        //transcription
         from = to;
         to = from + transcription.length();
         text.setSpan(new RelativeSizeSpan(0.85f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.MONOSPACE.getStyle()), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorSecondaryText)),
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.context, R.color.colorSecondaryText)),
                 from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         holder.itemKey.setText(text);
 
-
+        //list of possible translations related with origin word
         TranslationsAdapter translationsAdapter = new TranslationsAdapter(item.getTranslations());
         holder.recyclerView.setAdapter(translationsAdapter);
-
     }
 
     @Override
@@ -98,18 +96,18 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private Context context;
         private TextView itemKey;
         private RecyclerView recyclerView;
 
         ViewHolder(Context context, View view) {
             super(view);
 
+            this.context = context;
+
             itemKey = (TextView) view.findViewById(R.id.item_key);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
     }
 }

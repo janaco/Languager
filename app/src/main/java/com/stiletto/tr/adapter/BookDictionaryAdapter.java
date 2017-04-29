@@ -13,16 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Adapter for list of dictionary items used in
+ * bottomsheet-panel on PageViewerFragment
+ * (while user read book and learn new words)
+ * and displays words that was considered as unknown by user
+ * during reading.
+ *
  * Created by yana on 26.02.17.
  */
 
 public class BookDictionaryAdapter extends RecyclerView.Adapter<BookDictionaryAdapter.ViewHolder> {
 
     private List<DictionaryItem> list;
-
-    public BookDictionaryAdapter(List<DictionaryItem> list) {
-        this.list = list;
-    }
 
     public BookDictionaryAdapter() {
         this.list = new ArrayList<>();
@@ -48,6 +50,7 @@ public class BookDictionaryAdapter extends RecyclerView.Adapter<BookDictionaryAd
         list.add(translation);
         notifyDataSetChanged();
     }
+
     @Override
     public int getItemCount() {
         return list.size();

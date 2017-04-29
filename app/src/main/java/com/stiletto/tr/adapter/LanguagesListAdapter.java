@@ -16,13 +16,15 @@ import java.util.Locale;
 import java.util.Random;
 
 /**
+ * Displays all languages available on this or another case.
+ * <p>
  * Created by yana on 28.01.17.
  */
 
-public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdapter.ViewHolder>{
+public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdapter.ViewHolder> {
 
     private List<Language> list;
-    private OnListItemClickListener<Language>  onItemClickListener;
+    private OnListItemClickListener<Language> onItemClickListener;
 
     private int[] colors = {R.drawable.btn_background_1, R.drawable.btn_background_2, R.drawable.btn_background_3};
 
@@ -47,8 +49,8 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdap
         int drawableRes = new Random().nextInt(colors.length);
         drawableRes = drawableRes >= colors.length ? colors.length - 1 : drawableRes;
 
-        holder.textView.setBackground(ContextCompat.getDrawable(
-                holder.textView.getContext(), colors[drawableRes]));
+        holder.textView.setBackground(
+                ContextCompat.getDrawable(holder.textView.getContext(), colors[drawableRes]));
 
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,19 +62,14 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdap
 
     @Override
     public int getItemCount() {
-        try {
-            return list.size();
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
-        return 0;
+        return list != null ? list.size() : 0;
     }
 
     public void setOnItemClickListener(OnListItemClickListener<Language> onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
 

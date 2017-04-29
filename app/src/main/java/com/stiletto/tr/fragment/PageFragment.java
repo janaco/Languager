@@ -180,7 +180,7 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        DictionaryAdapter adapter = new DictionaryAdapter(getContext(), dictionary);
+        DictionaryAdapter adapter = new DictionaryAdapter(dictionary);
         recyclerView.setAdapter(adapter);
     }
 

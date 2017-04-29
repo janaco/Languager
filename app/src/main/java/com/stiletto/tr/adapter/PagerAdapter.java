@@ -10,6 +10,8 @@ import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.translator.yandex.Language;
 
 /**
+ * And its can be used to display book pages with texts and all things.
+ *
  * Created by yana on 04.01.17.
  */
 
@@ -38,7 +40,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
        return PageFragment.create(position, pagination.get(position),
                 primaryLanguage, translationLanguage, translationCallback);
     }
-
 
     @Override
     public int getCount() {
