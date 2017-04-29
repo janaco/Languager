@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
+/**Data model to represent word or phrase with its translations.
+ * Used with dictionary (DictionaryFragment)
+ *
  * Created by yana on 12.03.17.
  */
 

@@ -47,8 +47,8 @@ public abstract class ExpandableCard extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.fragmentFront = onCreateFragmentTop();
-        this.fragmentBottom = onCreateFragmentBottom();
+        this.fragmentFront = createFragmentTop();
+        this.fragmentBottom = createFragmentBottom();
 
         if (fragmentFront != null && fragmentBottom != null) {
             getChildFragmentManager().beginTransaction()
@@ -64,9 +64,9 @@ public abstract class ExpandableCard extends Fragment
         defaultCardElevation = cardFront.getCardElevation();
     }
 
-    public abstract Fragment onCreateFragmentTop();
+    public abstract Fragment createFragmentTop();
 
-    public abstract Fragment onCreateFragmentBottom();
+    public abstract Fragment createFragmentBottom();
 
     public boolean isClosed() {
         return ViewCompat.getScaleX(cardBack) == SCALE_CLOSED;

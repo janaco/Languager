@@ -29,21 +29,24 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * Dialog with list of all available languages.
+ * <p>
  * Created by yana on 28.01.17.
  */
 
-public class ChooseLanguageDialog extends DialogFragment {
+public class ChooseLanguageDialog extends DialogFragment implements OnListItemClickListener<Language> {
 
     public static void show(FragmentActivity activity, DialogListener dialogListener, OnLanguageSelectedListener onLanguageSelectedListener) {
         ChooseLanguageDialog dialog = new ChooseLanguageDialog();
         dialog.setOnLanguageSelectedListener(onLanguageSelectedListener);
         dialog.setDialogListener(dialogListener);
 
-        dialog.show(activity.getSupportFragmentManager(), "ChooseLanguageDialog");
+        dialog.show(activity.getSupportFragmentManager(), ChooseLanguageDialog.class.getName());
     }
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
+
     private OnLanguageSelectedListener onLanguageSelectedListener;
     private DialogListener dialogListener;
 
@@ -78,36 +81,31 @@ public class ChooseLanguageDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        dialogListener.onDialogCreated();
-
+        if (dialogListener != null) {
+            dialogListener.onDialogCreated();
+        }
         List<Language> languages = Arrays.asList(Language.values());
 
         LanguagesListAdapter adapter = new LanguagesListAdapter(languages);
-        adapter.setOnItemClickListener(new OnListItemClickListener<Language>() {
-            @Override
-            public void onListItemClick(Language item, int position) {
-                onLanguageSelectedListener.onLanguageSelected(item);
-                onDestroy();
-            }
-        });
+        adapter.setOnItemClickListener(this);
 
         recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void onDestroyView() {
-
-        if (getDialog() != null && getRetainInstance())
-            getDialog().setOnDismissListener(null);
-        super.onDestroyView();
+    public void onListItemClick(Language item, int position) {
+        onLanguageSelectedListener.onLanguageSelected(item);
+        onDestroy();
     }
 
     @Override
     public void onDestroy() {
-        dialogListener.afterDialogClosed();
+        if(dialogListener != null){dialogListener.afterDialogClosed();}
 
-        if (getDialog() != null && getRetainInstance())
+        if (getDialog() != null && getRetainInstance()) {
             getDialog().setOnDismissListener(null);
+        }
+
         onDestroyView();
         super.onDestroy();
     }

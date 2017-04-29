@@ -6,16 +6,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.softes.categorizedlistview.CategorizedListView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.GeneralDictionaryAdapter;
 import com.stiletto.tr.core.DictionaryItemListener;
-import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Word;
 import com.stiletto.tr.view.Fragment;
-import com.stiletto.tr.widget.list.CategoriredList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,9 +22,10 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
+ * Used to display list of all items available in the dictionary.
+ *
  * Created by yana on 08.03.17.
  */
 
@@ -34,7 +33,7 @@ public class DictionaryFragment extends Fragment
         implements GeneralDictionaryAdapter.OnItemClickListener, DictionaryItemListener {
 
     @Bind(R.id.recycler_view)
-    CategoriredList recyclerView;
+    CategorizedListView categoriredListView;
 
     private GeneralDictionaryAdapter adapter;
     private List<Word> dictionary;
@@ -50,7 +49,8 @@ public class DictionaryFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dictionary, container, false);
         ButterKnife.bind(this, view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        categoriredListView = (CategorizedListView) view.findViewById(R.id.recycler_view);
+        categoriredListView.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
 
@@ -61,20 +61,17 @@ public class DictionaryFragment extends Fragment
         Collections.sort(dictionary);
         adapter = new GeneralDictionaryAdapter(dictionary);
         adapter.setOnListItemClickListener(this);
-        recyclerView.setAdapter(adapter);
+        categoriredListView.setAdapter(adapter);
 
-        HashSet<String> set = new HashSet<>();
-        for (Word item : dictionary) {
-            String word = item.getText().substring(0, 1).toUpperCase();
-            set.add(word);
-        }
-
-        ArrayList<String> items = new ArrayList<>(set);
+//        Create and display list of available sections
+//         (all words in dictionary are grouped in sections by principe:
+//         words that starts with the same letter are grouped to the same section)
+        ArrayList<String> items = getSectionKeys();
         Collections.sort(items);
-        recyclerView.setIndexBarItems(items);
+        categoriredListView.setIndexBarItems(items);
 
         if (adapter.getItemCount() <= 10) {
-            recyclerView.setIndexBarVisibility(View.GONE);
+            categoriredListView.setIndexBarVisibility(false);
         }
 
     }
@@ -89,6 +86,15 @@ public class DictionaryFragment extends Fragment
         adapter.remove(position);
     }
 
+    private ArrayList<String> getSectionKeys(){
+        HashSet<String> set = new HashSet<>();
+        for (Word item : dictionary) {
+            String word = item.getText().substring(0, 1).toUpperCase();
+            set.add(word);
+        }
+        return new ArrayList<>(set);
+    }
+
     public static DictionaryFragment getInstance(ArrayList<Word> list){
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("items", list);
@@ -98,4 +104,5 @@ public class DictionaryFragment extends Fragment
 
         return fragment;
     }
+
 }

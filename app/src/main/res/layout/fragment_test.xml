@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <com.stiletto.tr.widget.ClickableTextView
+        <com.softes.clickabletextview.ClickableTextView
             android:id="@+id/test_view"
             android:textIsSelectable="true"
             android:layout_width="match_parent"

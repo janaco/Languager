@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Used to adapt list of possible translations with its explanations to word.
+ *
  * Created by yana on 08.01.17.
  */
 
@@ -30,7 +32,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
     private List<Translation> list;
 
-    public TranslationsAdapter(List<Translation> translations) {
+    TranslationsAdapter(List<Translation> translations) {
         this.list = translations;
     }
 
@@ -43,18 +45,15 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        holder.layoutUsages.setVisibility(View.GONE);
-
         Translation translation = list.get(position);
 
         String translated = translation.getText();
         String meanings = translation.hasMeanings() ? " (" + translation.getMeaningsAsString() + ")" : "";
         String synonyms = translation.hasSynonyms() ? ", " + translation.getSynonymsAsString() : "";
 
-        String textStr = translated + meanings + synonyms;
+        SpannableString text = new SpannableString(translated + meanings + synonyms);
 
-        SpannableString text = new SpannableString(textStr);
-
+        //highlight possible meanings
         int indexFrom = translated.length();
         int indexTo = indexFrom + meanings.length();
         text.setSpan(new StyleSpan(Typeface.ITALIC), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -64,11 +63,13 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
         holder.itemTranslation.setText(text);
 
         if (translation.hasUsageExamples()) {
-
             holder.layoutUsages.setVisibility(View.VISIBLE);
 
+            //show usage examples
             UsagesAdapter adapter = new UsagesAdapter(translation.getUsageSamples());
             holder.recyclerView.setAdapter(adapter);
+        }else {
+            holder.layoutUsages.setVisibility(View.GONE);
         }
 
 

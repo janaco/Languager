@@ -1,13 +1,11 @@
 package com.stiletto.tr.fragment;
 
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,12 +21,11 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.BookDictionaryAdapter;
 import com.stiletto.tr.adapter.PagerAdapter;
-import com.stiletto.tr.core.DialogListener;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.db.tables.BooksTable;
-import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
+import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.pagination.Pagination;
@@ -36,7 +33,6 @@ import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.readers.TxtReader;
 import com.stiletto.tr.translator.yandex.Language;
-import com.stiletto.tr.translator.yandex.model.YandexTranslateResponse;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 import com.victor.loading.book.BookLoading;
@@ -45,21 +41,21 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.github.yuweiguocn.lib.squareloading.SquareLoading;
 
 /**
+ * Book content viewer.
+ * <p>
  * Created by yana on 04.01.17.
  */
 
 public class PageViewerFragment extends Fragment
-        implements ViewPager.OnPageChangeListener, DiscreteSeekBar.OnProgressChangeListener,
-        TranslationCallback, DialogListener {
+        implements ViewPager.OnPageChangeListener,
+        DiscreteSeekBar.OnProgressChangeListener, TranslationCallback {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
@@ -86,7 +82,7 @@ public class PageViewerFragment extends Fragment
     @Bind(R.id.item_alert)
     TextView itemAlert;
 
-    private BookDictionaryAdapter myDictionaryAdapter;
+    private BookDictionaryAdapter bookDictionaryAdapter;
 
     private PagerAdapter pagerAdapter;
     private Pagination pagination;
@@ -144,8 +140,8 @@ public class PageViewerFragment extends Fragment
         itemHeader.setText(header);
 
         dictionaryList.setLayoutManager(new LinearLayoutManager(getContext()));
-        myDictionaryAdapter = new BookDictionaryAdapter();
-        dictionaryList.setAdapter(myDictionaryAdapter);
+        bookDictionaryAdapter = new BookDictionaryAdapter();
+        dictionaryList.setAdapter(bookDictionaryAdapter);
 
         return view;
     }
@@ -155,12 +151,80 @@ public class PageViewerFragment extends Fragment
         setUpPages();
     }
 
+    @Override
+    public void onPageSelected(int position) {
+        seekBar.setProgress(position + 1);
+        String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
+        itemPages.setText(textProgress);
+        pageNumber.setText(textProgress);
+
+        int bookmark = viewPager.getCurrentItem();
+        book.setBookmark(bookmark);
+        BooksTable.setBookmark(getContext(), bookmark, pagination.getPagesCount(), book.getPath());
+
+    }
+
+    @Override
+    public void onDestroy() {
+        BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
+        super.onDestroy();
+
+    }
+
+    @Override
+    public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean byUser) {
+
+        if (byUser) {
+            viewPager.setCurrentItem(value);
+
+            String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
+            itemPages.setText(textProgress);
+            pageNumber.setText(textProgress);
+
+            book.setBookmark(viewPager.getCurrentItem());
+            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
+
+        }
+    }
+
+    @OnClick(R.id.item_language_from)
+    void chooseBookPrimaryLanguage() {
+        ChooseLanguageDialog.show(getActivity(), null, new OnLanguageSelectedListener() {
+            @Override
+            public void onLanguageSelected(Language language) {
+                String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
+                itemLanguageFrom.setText(displayLanguage);
+                book.setOriginLanguage(language);
+                BooksTable.setOriginLanguage(getContext(), language, book.getPath());
+            }
+        });
+    }
+
+    @OnClick(R.id.item_language_to)
+    void chooseBookTranslationLanguage() {
+        ChooseLanguageDialog.show(getActivity(), null, new OnLanguageSelectedListener() {
+            @Override
+            public void onLanguageSelected(Language language) {
+                String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
+                itemLanguageTo.setText(displayLanguage);
+                book.setTranslationLanguage(language);
+                BooksTable.setTranslationLanguage(getContext(), language, book.getPath());
+            }
+        });
+    }
+
+    @Override
+    public void newTranslation(CharSequence originText, DictionaryItem item) {
+
+        bookDictionaryAdapter.addTranslation(item);
+        itemDictionaryAlert.setVisibility(View.GONE);
+
+    }
 
     private void setUpPages() {
 
-        String path = book.getPath();
-        if (path.endsWith(".pdf")) {
-            parsePdf(new File(path));
+        if (book.getFileType() == FileType.PDF) {
+            parsePdf();
             return;
         }
 
@@ -169,8 +233,7 @@ public class PageViewerFragment extends Fragment
             @Override
             protected Void doInBackground(Void... voids) {
 
-                pagination = new Pagination(getBookContent(),
-                        ReaderPrefs.getPreferences(getContext()));
+                pagination = new Pagination(getBookContent(), ReaderPrefs.getPreferences(getContext()));
                 setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
                 return null;
             }
@@ -194,7 +257,8 @@ public class PageViewerFragment extends Fragment
 
     }
 
-    private void parsePdf(final File file) {
+    private void parsePdf() {
+        //TODO: invalid implementation, fix it.
 
         final Handler handler = new Handler() {
 
@@ -226,7 +290,7 @@ public class PageViewerFragment extends Fragment
                             int currentItem = viewPager.getCurrentItem();
                             viewPager.setAdapter(pagerAdapter);
                             viewPager.setCurrentItem(currentItem);
-                        }catch (NullPointerException e){
+                        } catch (NullPointerException e) {
                             e.printStackTrace();
                         }
                         break;
@@ -298,22 +362,19 @@ public class PageViewerFragment extends Fragment
 
     }
 
-
     private CharSequence getBookContent() {
 
         File file = new File(book.getPath());
 
-        String extension = file.getName().substring(file.getName().indexOf(".")).toLowerCase();
+        switch (book.getFileType()) {
 
-        switch (extension) {
-
-            case ".pdf":
+            case PDF:
                 return PDFReader.parseAsText(file.getPath());
 
-            case ".epub":
+            case EPUB:
                 return EPUBReader.parseAsText(file);
 
-            case ".txt":
+            case TXT:
                 return TxtReader.parseAsText(file);
         }
 
@@ -321,110 +382,28 @@ public class PageViewerFragment extends Fragment
         return "";
     }
 
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    private void setAdapter(PagerAdapter adapter) {
+        this.pagerAdapter = adapter;
+        this.pagerAdapter.setTranslationCallback(this);
     }
 
     @Override
-    public void onPageSelected(int position) {
-        seekBar.setProgress(position + 1);
-        String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
-        itemPages.setText(textProgress);
-        pageNumber.setText(textProgress);
-
-        int bookmark = viewPager.getCurrentItem();
-        book.setBookmark(bookmark);
-        BooksTable.setBookmark(getContext(), bookmark, pagination.getPagesCount(), book.getPath());
-
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        //Do nothing.
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
-    }
-
-
-    private void setAdapter(PagerAdapter adapter) {
-        this.pagerAdapter = adapter;
-        this.pagerAdapter.setTranslationCallback(this);
-
-    }
-
-    @Override
-    public void onDestroy() {
-        BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
-        super.onDestroy();
-
-    }
-
-    @Override
-    public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean byUser) {
-
-        if (byUser) {
-            viewPager.setCurrentItem(value);
-
-            String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
-            itemPages.setText(textProgress);
-            pageNumber.setText(textProgress);
-
-            book.setBookmark(viewPager.getCurrentItem());
-            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
-
-        }
+        //Do nothing.
     }
 
     @Override
     public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+        //Do nothing.
     }
 
     @Override
     public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-    }
-
-    @OnClick(R.id.item_language_from)
-    void chooseBookPrimaryLanguage() {
-        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
-            @Override
-            public void onLanguageSelected(Language language) {
-                String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
-                itemLanguageFrom.setText(displayLanguage);
-                book.setOriginLanguage(language);
-                BooksTable.setOriginLanguage(getContext(), language, book.getPath());
-            }
-        });
-    }
-
-    @OnClick(R.id.item_language_to)
-    void chooseBookTranslationLanguage() {
-        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
-            @Override
-            public void onLanguageSelected(Language language) {
-                String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
-                itemLanguageTo.setText(displayLanguage);
-                book.setTranslationLanguage(language);
-                BooksTable.setTranslationLanguage(getContext(), language, book.getPath());
-            }
-        });
-    }
-
-    @Override
-    public void newTranslation(CharSequence originText, DictionaryItem item) {
-
-        myDictionaryAdapter.addTranslation(item);
-        itemDictionaryAlert.setVisibility(View.GONE);
-
-    }
-
-    @Override
-    public void onDialogCreated() {
-
-    }
-
-    @Override
-    public void afterDialogClosed() {
-
+        //Do nothing.
     }
 }

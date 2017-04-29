@@ -2,10 +2,10 @@ package com.stiletto.tr.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.softes.cardviewer.ExpandableCard;
+import com.stiletto.tr.R;
 import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.core.RenameModeCallback;
 import com.stiletto.tr.db.tables.BooksTable;
@@ -14,11 +14,12 @@ import com.stiletto.tr.model.Book;
 import java.io.File;
 
 /**
+ * Item of books list
+ *
  * Created by yana on 19.03.17.
  */
 
 public class BookExpandingFragment extends ExpandableCard implements RenameModeCallback{
-
 
     private int position;
     private Book book;
@@ -33,31 +34,13 @@ public class BookExpandingFragment extends ExpandableCard implements RenameModeC
     }
 
     @Override
-    public FragmentTop onCreateFragmentTop() {
+    public FragmentTop createFragmentTop() {
         return FragmentTop.newInstance(book, this);
     }
 
     @Override
-    public FragmentBottom onCreateFragmentBottom() {
+    public FragmentBottom createFragmentBottom() {
         return FragmentBottom.newInstance(book, bookItemListener, this, position);
-    }
-
-
-    public void setBookItemListener(BookItemListener bookItemListener) {
-        this.bookItemListener = bookItemListener;
-    }
-
-    public static BookExpandingFragment newInstance(Book book, int position, BookItemListener listener) {
-
-        Bundle args = new Bundle();
-        args.putParcelable("book", book);
-        args.putInt("position", position);
-
-        BookExpandingFragment fragment = new BookExpandingFragment();
-        fragment.setArguments(args);
-        fragment.setBookItemListener(listener);
-
-        return fragment;
     }
 
     @Override
@@ -70,6 +53,10 @@ public class BookExpandingFragment extends ExpandableCard implements RenameModeC
     public void onRenameModeCanceled() {
         ((FragmentTop)getFragmentFront()).setRenameModeEnabled(false);
         ((FragmentBottom) getFragmentBottom()).setRenameModeEnabled(false);
+    }
+
+    public void setBookItemListener(BookItemListener bookItemListener) {
+        this.bookItemListener = bookItemListener;
     }
 
     @Override
@@ -88,11 +75,8 @@ public class BookExpandingFragment extends ExpandableCard implements RenameModeC
 
         String newPath = path.replace(oldName, newName);
 
-        Log.d("RENAME_", "from: " + path + "\tto: " + newPath);
         File newFile = new File(newPath);
-        boolean remamed = file.renameTo(newFile);
-
-        if (remamed){
+        if (file.renameTo(newFile)){
 
             book.setPath(newPath);
             book.setName(newName);
@@ -100,9 +84,23 @@ public class BookExpandingFragment extends ExpandableCard implements RenameModeC
             BooksTable.rename(getContext(), book, path);
             bookItemListener.rename(book, position);
         }else {
-            Toast.makeText(getContext(), "Failed to remove book.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.failed_to_remove_book), Toast.LENGTH_SHORT).show();
         }
         onRenameModeCanceled();
 
     }
+
+    public static BookExpandingFragment newInstance(Book book, int position, BookItemListener listener) {
+
+        Bundle args = new Bundle();
+        args.putParcelable("book", book);
+        args.putInt("position", position);
+
+        BookExpandingFragment fragment = new BookExpandingFragment();
+        fragment.setArguments(args);
+        fragment.setBookItemListener(listener);
+
+        return fragment;
+    }
+
 }

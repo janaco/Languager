@@ -30,24 +30,6 @@ public class DictionariesPagerAdapter extends FragmentPagerAdapter {
         setFragments(dictionaries);
     }
 
-    @Override
-    public int getCount() {
-        return fragments.size();
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-
-        return fragments.get(position);
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-
-        return titles[position];
-
-    }
-
     private String[] getTitles(Map<String, ArrayList<Word>> dictionaries) {
 
         List<String> list = new ArrayList<>(dictionaries.keySet());
@@ -62,4 +44,25 @@ public class DictionariesPagerAdapter extends FragmentPagerAdapter {
             fragments.add(DictionaryFragment.getInstance(dictionaries.get(title)));
         }
     }
+
+    @Override
+    public int getCount() {
+        return fragments.size();
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+
+        return fragments.get(position);
+
+    }
+
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+
+        return titles[position];
+
+    }
+
 }

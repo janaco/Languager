@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
+ * Represents Translation object of Yandex Dictionary Response Model.
+ *
  * Created by yana on 11.03.17.
  */
 

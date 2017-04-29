@@ -3,6 +3,7 @@ package com.stiletto.tr.model;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.translator.yandex.Language;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.util.Objects;
 
 /**
+ * Data model to represent book item.
+ * <p>
  * Created by yana on 03.01.17.
  */
 
@@ -111,11 +114,11 @@ public class Book implements Comparable<Book>, Parcelable {
         return translationLanguage;
     }
 
-    public boolean hasOriginLanguage(){
+    public boolean hasOriginLanguage() {
         return originLanguage != null;
     }
 
-    public boolean hasTranslationLanguage(){
+    public boolean hasTranslationLanguage() {
         return translationLanguage != null;
     }
 
@@ -149,7 +152,7 @@ public class Book implements Comparable<Book>, Parcelable {
     }
 
     @Override
-    public int compareTo(Book book) {
+    public int compareTo(@NonNull Book book) {
         return name.compareTo(book.getName());
     }
 

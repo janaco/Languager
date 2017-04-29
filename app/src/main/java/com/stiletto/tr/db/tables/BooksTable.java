@@ -15,10 +15,22 @@ import com.stiletto.tr.model.Book;
 import com.stiletto.tr.translator.yandex.Language;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * BooksTable (information about all books to show its list on start without any delays).
+ *
+ * Name: books
+ *
+ * Fields:
+ * path VARCHAR(216) PRIMARY KEY
+ * name VARCHAR(108)
+ * length LONG
+ * bookmark INTEGER
+ * pages INTEGER
+ * lang_origin VARCHAR(32)
+ * lang_tr VARCHAR(32)
+ *
  * Created by yana on 05.03.17.
  */
 
@@ -35,7 +47,7 @@ public class BooksTable extends ServiceOpenDB {
         contentValues.put("name", book.getName());
         contentValues.put("length", book.getSize());
 
-        getWritableDatabase().insertWithOnConflict(getName(), null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+        getDatabase().insertWithOnConflict(getName(), null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     private boolean update(Book book) {
@@ -44,7 +56,7 @@ public class BooksTable extends ServiceOpenDB {
         contentValues.put("name", book.getName());
         contentValues.put("length", book.getSize());
 
-        int count = getWritableDatabase().updateWithOnConflict(getName(), contentValues,
+        int count = getDatabase().updateWithOnConflict(getName(), contentValues,
                 "path LIKE('" + book.getPath() + "')", null, SQLiteDatabase.CONFLICT_REPLACE);
 
         return count > 0;
@@ -54,14 +66,14 @@ public class BooksTable extends ServiceOpenDB {
         ContentValues contentValues = new ContentValues();
         contentValues.put("lang_tr", language.toString());
 
-        getWritableDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
+        getDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     private void setOriginLanguage(Language language, String bookPath) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("lang_origin", language.toString());
 
-        getWritableDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
+        getDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     private void setLanguages(Language[] languages, String bookPath) {
@@ -69,14 +81,14 @@ public class BooksTable extends ServiceOpenDB {
         contentValues.put("lang_origin", languages[0].toString());
         contentValues.put("lang_tr", languages[1].toString());
 
-        getWritableDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
+        getDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
     }
     private void setBookmark(int bookmark, int pages, String bookPath){
         ContentValues contentValues = new ContentValues();
         contentValues.put("bookmark", bookmark);
         contentValues.put("pages", pages);
 
-        getWritableDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
+        getDatabase().updateWithOnConflict(getName(), contentValues, "path LIKE('" + bookPath + "')", null, SQLiteDatabase.CONFLICT_IGNORE);
 
     }
 
@@ -111,7 +123,7 @@ public class BooksTable extends ServiceOpenDB {
 
             @Override
             protected Void doInBackground(Void... params) {
-                Cursor cursor = getReadableDatabase().rawQuery("SELECT path, bookmark, pages, lang_origin, lang_tr FROM books ORDER BY name, length", null);
+                Cursor cursor = getDatabase().rawQuery("SELECT path, bookmark, pages, lang_origin, lang_tr FROM books ORDER BY name, length", null);
 
                 if (cursor.moveToFirst()) {
                     do {
@@ -159,7 +171,7 @@ public class BooksTable extends ServiceOpenDB {
         contentValues.put("name", book.getName());
         contentValues.put("path", book.getPath());
 
-        getWritableDatabase().update(getName(), contentValues, "path LIKE(?)", new String[]{oldPath});
+        getDatabase().update(getName(), contentValues, "path LIKE(?)", new String[]{oldPath});
     }
 
     public static void insert(Context context, Book book) {

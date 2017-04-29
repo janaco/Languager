@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
+ * There are functions to read streams as text.
+ *
  * Created by yana on 25.12.16.
  */
 
@@ -16,7 +18,7 @@ public class Reader {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
         StringBuilder sb = new StringBuilder();
-        String line = null;
+        String line;
 
         try {
             while ((line = reader.readLine()) != null) {

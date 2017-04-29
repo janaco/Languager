@@ -22,6 +22,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * Translation, usage examples and any additional information about certain word
+ * are displayed on this fragment.
+ *
  * Created by yana on 12.03.17.
  */
 
@@ -36,7 +39,6 @@ public class WordDetailsFragment extends Fragment {
     @Bind(R.id.item_lang)
     TextView itemLanguages;
 
-    private DictionaryAdapter adapter;
     private Word word;
     private DictionaryItemListener listener;
     private int position;
@@ -69,12 +71,8 @@ public class WordDetailsFragment extends Fragment {
         itemTitle.setText(word.getText());
         itemSubtitle.setVisibility(View.VISIBLE);
 
-        adapter = new DictionaryAdapter( word.getDictionaryItems());
+        DictionaryAdapter adapter = new DictionaryAdapter(word.getDictionaryItems());
         recyclerView.setAdapter(adapter);
-    }
-
-    public void setListener(DictionaryItemListener listener) {
-        this.listener = listener;
     }
 
     @OnClick(R.id.item_remove)
@@ -87,6 +85,10 @@ public class WordDetailsFragment extends Fragment {
     @OnClick(R.id.item_back)
     void onBackClick() {
         getActivity().onBackPressed();
+    }
+
+    public void setListener(DictionaryItemListener listener) {
+        this.listener = listener;
     }
 
     public static WordDetailsFragment getInstance(Word word, int position, DictionaryItemListener listener) {

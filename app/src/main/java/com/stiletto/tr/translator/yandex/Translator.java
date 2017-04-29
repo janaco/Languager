@@ -25,6 +25,8 @@ import retrofit2.http.QueryMap;
 
 
 /**
+ * Requests to Yandex Translator and Yandex Dictionary Services.
+ * <p>
  * Created by yana on 05.01.17.
  */
 
@@ -57,8 +59,6 @@ public class Translator {
                 callback.translationError(call, t);
             }
         });
-
-        Log.d("TRANSLATOR_", "translate: " + textToTranslate + "\n" + call.request().url().toString());
     }
 
     public static void getDictionary(final CharSequence textToTranslate, final Language languageFrom,
@@ -90,7 +90,6 @@ public class Translator {
                 callback.translationError(call, t);
             }
         });
-        Log.d("TRANSLATOR_", "dictionary: " + textToTranslate + "\n" + call.request().url().toString());
     }
 
     private static OkHttpClient getClient() {
@@ -101,10 +100,6 @@ public class Translator {
                 .readTimeout(3600, TimeUnit.SECONDS)
                 .build();
     }
-
-    //    https://translate.yandex.net/api/v1.5/tr.json/translate?
-    // key=trnsl.1.1.20170105T192130Z.763c3568bf7993c1.410e91622919218bdb9e9afddfa05f48d5280716
-    // &lang=en-uk&text=Project
 
     private static Retrofit getRetrofit(String baseUrl) {
         return new Retrofit.Builder()

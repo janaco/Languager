@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -21,22 +20,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.softes.clickabletextview.ClickableTextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
 import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.model.DictionaryItem;
-import com.stiletto.tr.model.Translation;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translator;
 import com.stiletto.tr.translator.yandex.TranslatorCallback;
-import com.stiletto.tr.translator.yandex.model.YandexDictionaryResponse;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
 import com.stiletto.tr.view.StyleCallback;
-import com.stiletto.tr.widget.JCTextView;
 
 import java.util.List;
 import java.util.Locale;
@@ -44,24 +41,23 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ * Single book page content is displayed there.
+ *
  * Created by yana on 01.01.17.
  */
 
-public class PageFragment extends Fragment implements JCTextView.OnWordClickListener, ActionModeCallback {
+public class PageFragment extends Fragment implements ClickableTextView.OnWordClickListener, ActionModeCallback {
 
     @Bind(R.id.item_content)
-    JCTextView textView;
+    ClickableTextView textView;
 
     private TranslationCallback translationCallback;
 
-
     public static final String ARG_PAGE = "page";
     public static final String ARG_CONTENT = "content";
-    private int pageNumber;
     private CharSequence content;
 
     private View popView;
@@ -86,12 +82,10 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pageNumber = getArguments().getInt(ARG_PAGE);
         content = getArguments().getCharSequence(ARG_CONTENT);
         primaryLanguage = Language.getLanguage(getArguments().getString("primary_lang"));
         translationLangusage = Language.getLanguage(getArguments().getString("trans_lang"));
@@ -106,25 +100,17 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         popupFragment = new PopupFragment(getActivity(), view, R.layout.pop_view);
 
         ReaderPrefs prefs = ReaderPrefs.getPreferences(getContext());
-        textView.setPadding(prefs.getPaddingHorizontal(), prefs.getPaddingVertical(),
-                prefs.getPaddingHorizontal(), 0);
-//        textView.setWidth(prefs.getPageWidth());
-//        textView.setHeight(prefs.getPageHeight());
+        textView.setPadding(prefs.getPaddingHorizontal(), prefs.getPaddingVertical(), prefs.getPaddingHorizontal(), 0);
 
         TextPaint paint = prefs.getTextPaint();
-
         textView.setTextSize(prefs.getTextSize());
-
         textView.setTextColor(paint.getColor());
         textView.setTypeface(paint.getTypeface());
-
         textView.setLineSpacing(prefs.getLineSpacingExtra(), prefs.getLineSpacingMultiplier());
-
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setCustomSelectionActionModeCallback(new StyleCallback(textView, this));
-
+        textView.setTextIsSelectable(true);
         textView.setOnWordClickListener(this);
-        textView.setTextIsSelectable(false);
 
         return view;
     }
@@ -134,30 +120,14 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         textView.setText(content.toString());
     }
 
-    /**
-     * Returns the page number represented by this fragment object.
-     */
-    public int getPageNumber() {
-        return pageNumber;
+    @Override
+    public void onTranslateOptionSelected(CharSequence text) {
+        onTranslate(text);
     }
-
 
     @Override
     public void onClick(final String word) {
-
         onTranslate(word);
-
-    }
-
-    private void onTranslate(CharSequence text) {
-        showPopup();
-        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
-        textOrigin.setTextColor(Color.WHITE);
-        textOrigin.setText(text);
-        translate(text);
-        if (text.toString().split(" ").length < 3) {
-            lookup(text);
-        }
     }
 
     public void showPopup() {
@@ -173,7 +143,6 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
 
     }
 
-
     private void setUpDictionary(List<DictionaryItem> dictionary) {
         RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -184,7 +153,22 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
         recyclerView.setAdapter(adapter);
     }
 
+    private void onTranslate(CharSequence text) {
+        showPopup();
+        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
+        textOrigin.setTextColor(Color.WHITE);
+        textOrigin.setText(text);
+        translate(text);
+        if (text.toString().split(" ").length < 3) {
+            lookup(text);
+        }
+    }
 
+    /**
+     * Request translation in Yandex Translator API.
+     *
+     * @param word - word or phrase to translate.
+     */
     private void translate(final CharSequence word) {
         Translator.translate(word, primaryLanguage, translationLangusage, new TranslatorCallback() {
             @Override
@@ -235,74 +219,41 @@ public class PageFragment extends Fragment implements JCTextView.OnWordClickList
     }
 
 
+    /**
+     * Request translation from Yandex Dictionary.
+     *
+     * @param word - word to translate
+     */
     private void lookup(final CharSequence word) {
         Translator.getDictionary(word, primaryLanguage, translationLangusage, new TranslatorCallback() {
-                    @Override
-                    public void translationSuccess(List<DictionaryItem> items) {
+            @Override
+            public void translationSuccess(List<DictionaryItem> items) {
 
-                        if (popView == null) {
-                            showPopup();
-                        }
+                if (popView == null) {
+                    showPopup();
+                }
 
-                        setUpDictionary(items);
-                        DictionaryItem dictionaryItem = new DictionaryItem(word.toString());
-                        dictionaryItem.setOriginLanguage(primaryLanguage);
-                        dictionaryItem.setTranslationLanguage(translationLangusage);
-                        DictionaryTable.insert(getContext(), items, dictionaryItem);
+                setUpDictionary(items);
+                DictionaryItem dictionaryItem = new DictionaryItem(word.toString());
+                dictionaryItem.setOriginLanguage(primaryLanguage);
+                dictionaryItem.setTranslationLanguage(translationLangusage);
+                DictionaryTable.insert(getContext(), items, dictionaryItem);
 
-//                    List<DictionaryItem> list = new ArrayList<>();
-//                    if (dictionary != null && dictionary.getDictionary() != null) {
-//
-//                        for (DictionaryWord w : dictionary.getDictionary()) {
-//                            String origin = w.getOriginText();
-//                            if (w.getTranslations() != null) {
-//
-//                                for (DictionaryTranslation translation : w.getTranslations()) {
-//
-//                                    DictionaryItem item = new DictionaryItem(origin);
-//                                    item.addTranslation(translation.getTranslatedText());
-//                                    item.setTranscription(w.getTranscryption());
-//                                    item.setPartOfSpeech(PartOfSpeech.getPartOfSpeech(
-//                                            translation.getTranslatedWordType()));
-//                                    item.setOriginLanguage(primaryLanguage);
-//                                    item.setTranslationLanguage(translationLangusage);
-//                                    list.add(item);
-//
-//                                    if (translation.hasMeanings()) {
-//                                        item.setTranscription(null);
-//                                        for (Text text : translation.getMeanings()) {
-//                                            item.setOrigin(text.getText());
-//                                            list.add(item);
-//                                        }
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-//                        DictionaryTable.insert(getContext(), list);
-//                    }
+            }
 
-                    }
+            @Override
+            public void translationFailure(Call call, Response response) {
 
-                    @Override
-                    public void translationFailure(Call call, Response response) {
+            }
 
-                    }
+            @Override
+            public void translationError(Call call, Throwable error) {
 
-                    @Override
-                    public void translationError(Call call, Throwable error) {
-
-                    }
-                });
+            }
+        });
 
     }
 
-
-    @Override
-    public void onTranslateOptionSelected(CharSequence text) {
-
-        onTranslate(text);
-    }
 
     public void setTranslationCallback(TranslationCallback translationCallback) {
         this.translationCallback = translationCallback;

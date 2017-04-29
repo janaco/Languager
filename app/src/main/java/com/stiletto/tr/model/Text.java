@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * Part of Dictionary Item Yandex Response.
+ *
  * Created by yana on 11.03.17.
  */
 
@@ -14,11 +16,11 @@ public class Text implements Parcelable {
     @SerializedName("text")
     private String text;
 
-    public Text(String text) {
+    Text(String text) {
         this.text = text;
     }
 
-    protected Text(Parcel in) {
+    Text(Parcel in) {
         text = in.readString();
     }
 

@@ -8,36 +8,22 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by yana on 05.03.17.
  */
 
-public class ServiceOpenDB {
-    private SQLiteDatabase writableDatabase, readableDatabase;
+public abstract class ServiceOpenDB {
+
+    private SQLiteDatabase database;
     private Context context;
 
     public ServiceOpenDB(Context context){
         this.context = context;
     }
 
-    public synchronized SQLiteDatabase getReadableDatabase() {
-        if (readableDatabase == null || !readableDatabase.isOpen()) {
-            readableDatabase = new DBHelper(context).getReadableDatabase();
+    protected SQLiteDatabase getDatabase() {
+
+        if (database == null || !database.isOpen()) {
+            database = new DBHelper(context).getWritableDatabase();
         }
 
-        return readableDatabase;
-    }
-
-    public SQLiteDatabase getWritableDatabase() {
-
-        if (writableDatabase == null || !writableDatabase.isOpen()) {
-            writableDatabase = new DBHelper(context).getWritableDatabase();
-
-        }
-
-        return writableDatabase;
-    }
-
-    public static void closeCursor(Cursor cursor) {
-        if (cursor != null) {
-            cursor.close();
-        }
+        return database;
     }
 
     public Context getContext() {

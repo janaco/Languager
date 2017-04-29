@@ -8,6 +8,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
+ * Part of Yandex Dictionary API Response.
+ * Examples of possible word usages.
+ *
  * Created by yana on 11.03.17.
  */
 

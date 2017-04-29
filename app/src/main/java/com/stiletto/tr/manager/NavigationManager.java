@@ -10,6 +10,8 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.view.Fragment;
 
 /**
+ * Navigation between fragments, dialogs, activities.
+ *
  * Created by yana on 30.12.16.
  */
 

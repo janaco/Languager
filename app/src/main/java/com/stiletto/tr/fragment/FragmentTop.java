@@ -22,6 +22,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * It is a front part (cover) of BookExpandingFragment.
+ *
  * Created by yana on 19.03.17.
  */
 
@@ -59,7 +61,6 @@ public class FragmentTop extends Fragment {
     private int getCover() {
         int[] covers = {R.drawable.cover_1, R.drawable.cover_3, R.drawable.cover_4, R.drawable.cover_6, R.drawable.cover_7, R.drawable.cover_8, R.drawable.cover_9, R.drawable.cover_10};
         int index = new Random().nextInt(covers.length);
-        Log.d("COVER_", "index: " + index);
         return index == covers.length ? covers[0] : covers[index];
     }
 
@@ -81,7 +82,7 @@ public class FragmentTop extends Fragment {
     }
 
     public void setNameError() {
-        itemName.setError("Please, enter corect name.");
+        itemName.setError(getString(R.string.enter_correct_name));
     }
 
     public static FragmentTop newInstance(Book book, OnExpandableItemClickListener listener) {

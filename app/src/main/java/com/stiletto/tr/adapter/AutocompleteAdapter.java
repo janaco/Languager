@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User with search view on BooksFragment
+ * User with search view on BookShelfFragment
  *
  * Created by yana on 26.03.17.
  */

@@ -5,15 +5,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
+ *
  * Created by yana on 05.03.17.
  */
 
-public class DBHelper extends SQLiteOpenHelper {
+class DBHelper extends SQLiteOpenHelper {
 
     private static final String NAME = "tr_db";
     private static final int VERSION = 1;
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         super(context, NAME, null, VERSION);
     }
 

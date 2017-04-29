@@ -22,6 +22,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * All available dictionaries are displayed there.
+ *
  * Created by yana on 12.03.17.
  */
 
@@ -29,7 +31,6 @@ public class DictionariesFragment extends Fragment {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
-
     @Bind(R.id.title)
     TextView itemTitle;
 
@@ -40,7 +41,7 @@ public class DictionariesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dictionary_pager, container, false);
         ButterKnife.bind(this, view);
-        itemTitle.setText("My dictionary");
+        itemTitle.setText(getString(R.string.my_dictionary));
 
         return view;
     }

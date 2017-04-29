@@ -2,7 +2,6 @@ package com.stiletto.tr.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.core.RenameModeCallback;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.view.Fragment;
-import com.stiletto.tr.view.PopupFragment;
 
 import java.util.Locale;
 
@@ -25,6 +23,8 @@ import butterknife.OnClick;
 
 
 /**
+ * It is a bottom part of BookExpandingFragment.
+ *
  * Created by yana on 19.03.17.
  */
 
@@ -70,7 +70,6 @@ public class FragmentBottom extends Fragment {
         }
 
         if (book.hasOriginLanguage() && book.hasTranslationLanguage()) {
-
             String origin = new Locale(book.getOriginLanguage().toString()).getDisplayLanguage();
             String translation = new Locale(book.getTranslationLanguage().toString()).getDisplayLanguage();
 

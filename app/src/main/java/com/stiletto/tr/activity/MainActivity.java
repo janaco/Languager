@@ -9,16 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.fragment.BooksFragment;
+import com.stiletto.tr.fragment.BookShelfFragment;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.utils.ReaderPrefs;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by yana on 30.12.16.
@@ -34,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         ReaderPrefs.getPreferences(this);
         requestPermissions();
 
-        NavigationManager.replaceFragment(this, new BooksFragment());
+        NavigationManager.replaceFragment(this, new BookShelfFragment());
     }
 
     @Override
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case 1:
-                NavigationManager.replaceFragment(this, new BooksFragment());
+                NavigationManager.replaceFragment(this, new BookShelfFragment());
                 break;
         }
     }

@@ -3,6 +3,8 @@ package com.stiletto.tr.translator.yandex;
 import java.util.Locale;
 
 /**
+ * List of languages supported by Yandex Translator.
+ *
  * Created by yana on 05.01.17.
  */
 public enum Language {

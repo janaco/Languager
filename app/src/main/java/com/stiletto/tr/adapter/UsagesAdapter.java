@@ -16,18 +16,18 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.model.UsageSample;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Used to adapt usage examples on 'word-translation' combination.
+ *
  * Created by yana on 08.01.17.
  */
-
-public class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder> {
+ class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder> {
 
     private List<UsageSample> list;
 
-    public UsagesAdapter(List<UsageSample>  examples) {
+    UsagesAdapter(List<UsageSample> examples) {
         this.list = examples;
     }
 
@@ -43,13 +43,15 @@ public class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder
         UsageSample example = list.get(position);
 
         String origin = example.getText();
-        String translations = example.hasTranslations() ? ": " + example.getTranslationsAsString()  :" ";
+        String translations = example.hasTranslations() ? ": " + example.getTranslationsAsString() : " ";
 
         SpannableString text = new SpannableString(origin + " " + translations);
 
+        //highlight text on origin language
         text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.textView.getContext(),
                 R.color.colorPrimary)), 0, origin.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        //highlight its translation
         text.setSpan(new RelativeSizeSpan(0.9f), origin.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new StyleSpan(Typeface.ITALIC), origin.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -58,19 +60,14 @@ public class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        try {
-            return list.size();
-        }catch (NullPointerException e){
-            e.printStackTrace();
-            return 0;
-        }
+        return list != null ? list.size() : 0;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
 
             textView = (TextView) view.findViewById(R.id.item_text);

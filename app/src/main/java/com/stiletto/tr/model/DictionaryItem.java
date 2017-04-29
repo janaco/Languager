@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Data model to represent dictionary item (based on Yandex Dictionary API response).
+ * <p>
  * Created by yana on 08.03.17.
  */
 

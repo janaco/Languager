@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Search for book files in the file system.
+ *
  * Created by yana on 02.01.17.
  */
 
@@ -72,7 +74,6 @@ public class FileSeeker {
 
 
     }
-
 
     private static List<Book> listDir(File directory, Handler handler) {
 

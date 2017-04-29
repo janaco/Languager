@@ -1,10 +1,7 @@
 package com.stiletto.tr.readers;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,33 +10,16 @@ import java.io.InputStream;
 import java.util.List;
 
 import nl.siegmann.epublib.domain.Book;
-import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubReader;
 
 /**
+ * There are functions to get text content from file with .epub extension.
+ *
  * Created by yana on 25.12.16.
  */
 
 public class EPUBReader {
-
-    public static Bitmap getCover(String filePath) {
-
-        try {
-            InputStream inputStream = new FileInputStream(filePath);
-            Book book = (new EpubReader()).readEpub(inputStream);
-
-            Resource resource = book.getCoverImage();
-
-            if (resource != null) {
-               return BitmapFactory.decodeStream(resource.getInputStream());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     public static CharSequence parseAsText(File file) {
 
@@ -65,13 +45,12 @@ public class EPUBReader {
 
     }
 
-    public static String readContent(List<TOCReference> tocReferences, int depth) {
+    private static String readContent(List<TOCReference> tocReferences, int depth) {
         if (tocReferences == null) {
             return null;
         }
 
         StringBuilder builder = new StringBuilder();
-
 
         for (TOCReference tocReference : tocReferences) {
             for (int i = 0; i < depth; i++) {

@@ -1,8 +1,6 @@
 package com.stiletto.tr.utils;
 
-import android.os.Build;
 import android.os.Environment;
-import android.os.StatFs;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,8 +11,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import static java.io.File.separator;
 
 /**
  * Created by yana on 02.01.17.

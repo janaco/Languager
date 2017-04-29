@@ -20,28 +20,35 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Contains words with its translations and other information.
+ *
+ * Name: dictionary.
+ *
+ * Fields:
+ * original TEXT
+ * data TEXT
+ * book TEXT
+ * lang_from VARCHAR(16)
+ * lang_to VARCHAR(16)
+ *
  * Created by yana on 08.03.17.
  */
 
 public class DictionaryTable extends ServiceOpenDB {
 
-    public DictionaryTable(Context context) {
+    private DictionaryTable(Context context) {
         super(context);
     }
 
     public static void create(SQLiteDatabase database) {
 
-        database.execSQL("CREATE TABLE IF NOT EXISTS dictionary(original TEXT, data TEXT, book TEXT, " +
-                "lang_from VARCHAR(16), lang_to VARCHAR(16))");
+        database.execSQL("CREATE TABLE IF NOT EXISTS dictionary(original TEXT, data TEXT, book TEXT, " + "lang_from VARCHAR(16), lang_to VARCHAR(16))");
     }
 
     public static String getName() {
         return "dictionary";
     }
 
-//    public static void insert(Context context, DictionaryItem item) {
-//        new DictionaryTable(context).insert(item);
-//    }
 
     public static void clean(Context context){
         new DictionaryTable(context).clean();
@@ -82,20 +89,20 @@ public class DictionaryTable extends ServiceOpenDB {
 
         Log.d("DICTIONARY_SAVE", "" + json);
 
-        getWritableDatabase().insert(getName(), null, contentValues);
+        getDatabase().insert(getName(), null, contentValues);
 
     }
 
     private void insert(ContentValues contentValues) {
 
-        getWritableDatabase().insert(getName(), null, contentValues);
+        getDatabase().insert(getName(), null, contentValues);
 
     }
 
     private Map<String, ArrayList<Word>> getDictionary() {
         Map<String, ArrayList<Word>> map = new HashMap<>();
 
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT original,  data, lang_from, lang_to FROM dictionary ORDER BY original", null);
+        Cursor cursor = getDatabase().rawQuery("SELECT original,  data, lang_from, lang_to FROM dictionary ORDER BY original", null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -136,11 +143,11 @@ public class DictionaryTable extends ServiceOpenDB {
     }
 
     private void remove(DictionaryItem item) {
-        getWritableDatabase().delete(getName(), "original LIKE('" + item.getOriginText() + "')", null);
+        getDatabase().delete(getName(), "original LIKE('" + item.getOriginText() + "')", null);
     }
 
     private void clean(){
-        getWritableDatabase().delete(getName(), null, null);
+        getDatabase().delete(getName(), null, null);
     }
 
 }

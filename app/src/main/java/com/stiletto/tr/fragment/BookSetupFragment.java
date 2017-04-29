@@ -28,6 +28,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * Used when user opens the book for the first time
+ * to set its origin and translation language.
+ *
  * Created by yana on 20.01.17.
  */
 
@@ -40,8 +43,8 @@ public class BookSetupFragment extends Fragment implements DialogListener {
     @Bind(R.id.layout_cover)
     RelativeLayout layoutCover;
 
-    private Language languagePrimary;
-    private Language languageTranslation;
+    private Language languagePrimary = Language.ENGLISH;
+    private Language languageTranslation = Language.UKRAINIAN;
 
     private Book book;
 
@@ -75,7 +78,6 @@ public class BookSetupFragment extends Fragment implements DialogListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        languagePrimary = Language.ENGLISH;
         try {
             String countryCode = ((TelephonyManager) getContext()
                     .getSystemService(Context.TELEPHONY_SERVICE)).getSimCountryIso();

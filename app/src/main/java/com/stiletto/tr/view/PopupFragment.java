@@ -14,6 +14,8 @@ import android.widget.PopupWindow;
 import com.stiletto.tr.R;
 
 /**
+ * Smth like bottom sheet panel.
+ *
  * Created by yana on 08.01.17.
  */
 
@@ -23,7 +25,6 @@ public class PopupFragment {
     private View popupView;
     private PopupWindow popupWindow;
     private long duration = 400;
-    private int screenHeight;
     private int popHeight;
 
     public PopupFragment(Activity activity, View mainView, int displayLayoutId) {
@@ -31,7 +32,7 @@ public class PopupFragment {
         this.popupView = LayoutInflater.from(activity).inflate(displayLayoutId, null);
         Point screenSize = new Point();
         activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
-        screenHeight = screenSize.y;
+        int screenHeight = screenSize.y;
         popHeight = screenHeight / 2;
     }
 
@@ -97,31 +98,12 @@ public class PopupFragment {
         animatorSet.start();
     }
 
-    /**
-     * @return get Animated duration
-     */
     public long getDuration() {
         return duration;
     }
 
-    /**
-     * @param duration animation duration in milliseconds
-     */
     public void setDuration(long duration) {
         this.duration = duration;
     }
 
-    /**
-     * Setting pop-up view is one-third the height of the screen
-     */
-    public void setPopViewHeightIsOneThirdOfScreen() {
-        popHeight = screenHeight / 3;
-    }
-
-    /**
-     * Setting pop-up view is two-thirds the height of the screen
-     */
-    public void setPopViewHeightIsTwoThirdOfScreen() {
-        popHeight = 2 * screenHeight / 3;
-    }
 }
