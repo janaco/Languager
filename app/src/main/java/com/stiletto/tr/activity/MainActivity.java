@@ -15,6 +15,10 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.fragment.BooksFragment;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.utils.ReaderPrefs;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by yana on 30.12.16.
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
 
         ReaderPrefs.getPreferences(this);
+
 
         // Here, thisActivity is the current activity
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT
