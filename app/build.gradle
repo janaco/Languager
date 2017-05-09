@@ -54,7 +54,7 @@ dependencies {
     compile 'com.victor:lib:1.0.4'
 
     compile files('libs/epublib-core-latest.jar')
-
+    androidTestCompile 'com.android.support:support-annotations:25.0.1'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -64,6 +64,7 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile project(path: ':cardviewer')
     compile project(path: ':bottomsheetpanel')
+    compile project(path: ':flipview')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
         transitive = true;
     }
