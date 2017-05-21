@@ -31,7 +31,10 @@ import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
+import com.stiletto.tr.readers.PagesParserCallback;
 import com.stiletto.tr.readers.TxtReader;
+import com.stiletto.tr.readers.task.BaseParser;
+import com.stiletto.tr.readers.task.PDFParser;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
@@ -41,6 +44,7 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -55,7 +59,8 @@ import butterknife.OnClick;
 
 public class PageViewerFragment extends Fragment
         implements ViewPager.OnPageChangeListener,
-        DiscreteSeekBar.OnProgressChangeListener, TranslationCallback {
+        DiscreteSeekBar.OnProgressChangeListener, TranslationCallback,
+        PagesParserCallback {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
@@ -88,6 +93,8 @@ public class PageViewerFragment extends Fragment
     private Pagination pagination;
 
     private Book book;
+
+    private boolean loading = true;
 
     public static PageViewerFragment create(Book book) {
 
@@ -148,6 +155,9 @@ public class PageViewerFragment extends Fragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        this.pagerAdapter = new PagerAdapter(getChildFragmentManager(), book);
+        this.pagerAdapter.setTranslationCallback(this);
+
         setUpPages();
     }
 
@@ -224,168 +234,47 @@ public class PageViewerFragment extends Fragment
     private void setUpPages() {
 
         if (book.getFileType() == FileType.PDF) {
-            parsePdf();
+            new PDFParser(getContext()).parserCallback(this).execute(book);
             return;
         }
 
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                pagination = new Pagination(getBookContent(), ReaderPrefs.getPreferences(getContext()));
-                setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                int bookmark = book.getBookmark();
-                bookLoading.stop();
-                layoutLoading.setVisibility(View.GONE);
-                viewPager.setAdapter(pagerAdapter);
-                viewPager.setCurrentItem(bookmark);
-                seekBar.setMax(pagination.getPagesCount());
-                seekBar.setProgress(bookmark);
-
-                String textProgress = bookmark + "/" + pagination.getPagesCount();
-                itemPages.setText(textProgress);
-                pageNumber.setText(textProgress);
-
-            }
-        }.execute();
+        new BaseParser(getContext()).pagesParserCallback(this).execute(book);
 
     }
 
-    private void parsePdf() {
-        //TODO: invalid implementation, fix it.
+    @Override
+    public void onPagesParsed(Pagination pagination, List<CharSequence> newPages) {
+        pagerAdapter.addPages(newPages);
 
-        final Handler handler = new Handler() {
+        if (loading) {
+            loading = false;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
 
-            @Override
-            public void handleMessage(Message msg) {
+                    bookLoading.stop();
+                    layoutLoading.setVisibility(View.GONE);
+                    viewPager.setAdapter(pagerAdapter);
 
-                switch (msg.what) {
-
-                    case 1:
-                        int count = msg.getData().getInt("pages");
-                        seekBar.setMax(count);
-                        seekBar.setProgress(book.getBookmark());
-                        String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
-                        itemPages.setText(textProgress);
-                        pageNumber.setText(textProgress);
-
-                        int bookmark = viewPager.getCurrentItem();
-                        book.setBookmark(bookmark);
-                        BooksTable.setBookmark(getContext(), bookmark, pagination.getPagesCount(), book.getPath());
-
-                        break;
-
-                    case 2:
-
-                        bookLoading.stop();
-                        layoutLoading.setVisibility(View.GONE);
-
-                        try {
-                            int currentItem = viewPager.getCurrentItem();
-                            viewPager.setAdapter(pagerAdapter);
-                            viewPager.setCurrentItem(currentItem);
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                        }
-                        break;
                 }
-
-            }
-        };
-
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                String filePath = book.getPath();
-
-                int step = 0;
-                int maxStep = 10;
-
-                StringBuilder stringBuilder = new StringBuilder();
-
-                try {
-                    PdfReader reader = new PdfReader(filePath);
-
-                    int pages = reader.getNumberOfPages();
-                    Message message = new Message();
-                    message.what = 1;
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("pages", pages);
-                    message.setData(bundle);
-                    handler.sendMessage(message);
-
-                    int bookmark = 1;
-                    if (book.getBookmark() > 0 && book.getBookmark() > maxStep / 2) {
-                        bookmark = book.getBookmark() - maxStep / 2;
-                    }
-
-                    for (int page = bookmark; page <= pages; page++, step++) {
-                        stringBuilder.append(PdfTextExtractor.getTextFromPage(reader, page));
-
-                        if (step > maxStep) {
-                            step = 0;
-                            pagination = new Pagination(
-                                    stringBuilder.toString(), ReaderPrefs.getPreferences(getContext()));
-                            Log.d("PAGER_", "setAdapter: " + pagination.getPagesCount());
-                            setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
-                            handler.sendEmptyMessage(2);
-
-                        }
-
-                    }
-
-                    pagination = new Pagination(
-                            stringBuilder.toString(), ReaderPrefs.getPreferences(getContext()));
-                    Log.d("PAGER_", "setAdapter: " + pagination.getPagesCount());
-                    setAdapter(new PagerAdapter(getChildFragmentManager(), pagination, book));
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                viewPager.setAdapter(pagerAdapter);
-            }
-        }.execute();
-
-    }
-
-    private CharSequence getBookContent() {
-
-        File file = new File(book.getPath());
-
-        switch (book.getFileType()) {
-
-            case PDF:
-                return PDFReader.parseAsText(file.getPath());
-
-            case EPUB:
-                return EPUBReader.parseAsText(file);
-
-            case TXT:
-                return TxtReader.parseAsText(file);
+            });
         }
-
-
-        return "";
     }
 
-    private void setAdapter(PagerAdapter adapter) {
-        this.pagerAdapter = adapter;
-        this.pagerAdapter.setTranslationCallback(this);
+    @Override
+    public void afterPagesParsingFinished(Pagination pagination) {
+        this.pagination = pagination;
+
+        int bookmark = book.getBookmark();
+        viewPager.setCurrentItem(bookmark);
+        seekBar.setMax(pagination.getPagesCount());
+        seekBar.setProgress(bookmark);
+
+        String textProgress = bookmark + "/" + pagination.getPagesCount();
+        itemPages.setText(textProgress);
+        pageNumber.setText(textProgress);
     }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
