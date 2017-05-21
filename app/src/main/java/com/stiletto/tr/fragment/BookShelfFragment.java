@@ -205,7 +205,7 @@ public class BookShelfFragment extends Fragment
 
     @OnClick(R.id.item_dictionary)
     void onDictionaryButtonClick() {
-        NavigationManager.addFragment(getActivity(), new DictionariesFragment());
+        NavigationManager.addFragment(getActivity(), new DictionariesPagerFragment());
     }
 
     @OnClick(R.id.item_open_search)

@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * PagerAdapter to display different dictionaries (different languages).
- *
- * Created by yana on 12.03.17.
+ * Created by yana on 21.05.17.
  */
 
 public class DictionariesPagerAdapter extends FragmentPagerAdapter {
@@ -46,23 +44,17 @@ public class DictionariesPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public Fragment getItem(int position) {
+        return fragments.get(position);
+    }
+
+    @Override
     public int getCount() {
         return fragments.size();
     }
 
     @Override
-    public Fragment getItem(int position) {
-
-        return fragments.get(position);
-
-    }
-
-
-    @Override
     public CharSequence getPageTitle(int position) {
-
         return titles[position];
-
     }
-
 }

@@ -5,5 +5,5 @@ package com.softes.categorizedlistview;
  */
 
 public interface CategoryFilter {
-    void filterList(float sideIndexY, int position, String previewText);
+    void filterList(float sideIndexY,int position,String previewText);
 }

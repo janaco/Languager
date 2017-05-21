@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by yana on 09.03.17.
@@ -16,39 +16,45 @@ import java.util.List;
 
 public class IndexBarView extends View {
 
-    private boolean isIndexing = false;
-    private int currentSectionPosition = -1;
-    private float categoryBarMargin;
+    float indexBarMargin;
+    float sideIndexY;
 
-    private List<String> listItems;
-    private Paint categoryPaint;
-    private CategorizedListView listView;
+    boolean isIndexing = false;
+
+    int currentSectionPosition = -1;
+
+    ArrayList<String> listItems;
+    Paint indexPaint;
+
+    CategorizedListView listView;
 
 
     public IndexBarView(Context context) {
         super(context);
     }
 
+
     public IndexBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
 
     public IndexBarView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
 
-    public void setData(CategorizedListView listView, List<String> listItems) {
+    public void setData(CategorizedListView listView, ArrayList<String> listItems) {
         this.listItems = listItems;
         this.listView = listView;
 
-        categoryBarMargin = getResources().getDimension(R.dimen.category_bar_margin);
+        indexBarMargin = getResources().getDimension(R.dimen.category_bar_margin);
 
-        // category bar item color and text size
-        categoryPaint = new Paint();
-        categoryPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
-        categoryPaint.setAntiAlias(true);
-        categoryPaint.setTextSize(getResources().getDimension(R.dimen.category_bar_text_size));
+        // index bar item color and text size
+        indexPaint = new Paint();
+        indexPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
+        indexPaint.setAntiAlias(true);
+        indexPaint.setTextSize(getResources().getDimension(R.dimen.category_bar_text_size));
     }
 
 
@@ -57,20 +63,22 @@ public class IndexBarView extends View {
 
         if (listItems != null && listItems.size() > 1) {
             int itemCount = listItems.size();
-            float sectionHeight = (getMeasuredHeight() - 2 * categoryBarMargin) / itemCount;
-            float paddingTop = (sectionHeight - (categoryPaint.descent() - categoryPaint.ascent())) / 2;
+            float sectionHeight = (getMeasuredHeight() - 2 * indexBarMargin)/ itemCount;
+            float paddingTop = (sectionHeight - (indexPaint.descent() - indexPaint.ascent())) / 2;
 
             for (int i = 0; i < itemCount; i++) {
-                float paddingLeft = (getMeasuredWidth() - categoryPaint.measureText(listItems.get(i))) / 2;
+                float paddingLeft = (getMeasuredWidth() - indexPaint.measureText(listItems.get(i))) / 2;
 
                 canvas.drawText(listItems.get(i),
                         paddingLeft,
-                        categoryBarMargin + (sectionHeight * i) + paddingTop + categoryPaint.descent(),
-                        categoryPaint);
+                        indexBarMargin + (sectionHeight * i) + paddingTop + indexPaint.descent(),
+                        indexPaint);
             }
         }
         super.onDraw(canvas);
     }
+
+
 
 
     boolean contains(float x, float y) {
@@ -79,15 +87,16 @@ public class IndexBarView extends View {
 
 
     void filterListItem(float sideIndexY) {
+        this.sideIndexY = sideIndexY;
 
         // filter list items and get touched section position with in index bar
-        currentSectionPosition = (int) (((sideIndexY) - getTop() - categoryBarMargin) /
-                ((getMeasuredHeight() - (2 * categoryBarMargin)) / listItems.size()));
+        currentSectionPosition = (int) (((this.sideIndexY) - getTop() - indexBarMargin) /
+                ((getMeasuredHeight() - (2 * indexBarMargin)) / listItems.size()));
 
         if (currentSectionPosition >= 0 && currentSectionPosition < listItems.size()) {
             int position = currentSectionPosition;
             String previewText = listItems.get(position);
-            listView.filterList(sideIndexY, position, previewText);
+            listView.filterList(this.sideIndexY, position, previewText);
         }
     }
 
@@ -106,7 +115,8 @@ public class IndexBarView extends View {
                     // that section
                     filterListItem(ev.getY());
                     return true;
-                } else {
+                }
+                else {
                     currentSectionPosition = -1;
                     return false;
                 }
@@ -118,7 +128,8 @@ public class IndexBarView extends View {
                         // list to that section
                         filterListItem(ev.getY());
                         return true;
-                    } else {
+                    }
+                    else {
                         currentSectionPosition = -1;
                         return false;
                     }

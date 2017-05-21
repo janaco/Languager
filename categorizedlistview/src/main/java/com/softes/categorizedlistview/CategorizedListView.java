@@ -1,5 +1,6 @@
 package com.softes.categorizedlistview;
 
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
@@ -11,8 +12,7 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
-
+import java.util.List;
 
 /**
  * Created by yana on 09.03.17.
