@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.softes.categorizedlistview.CategorizedListView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.BaseDictionaryAdapter;
 import com.stiletto.tr.core.DictionaryItemListener;
@@ -17,6 +18,7 @@ import com.stiletto.tr.view.Fragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.Bind;
@@ -29,7 +31,7 @@ import butterknife.ButterKnife;
 public class DictionaryFragment extends Fragment implements BaseDictionaryAdapter.OnItemClickListener, DictionaryItemListener {
 
     @Bind(R.id.recycler_view)
-    RecyclerView recyclerView;
+    CategorizedListView recyclerView;
 
     private BaseDictionaryAdapter adapter;
     private List<Word> list;
@@ -59,19 +61,19 @@ public class DictionaryFragment extends Fragment implements BaseDictionaryAdapte
         adapter.setOnListItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
-//        HashSet<String> set = new HashSet<>();
-//        for (Word item : list) {
-//            String word = item.getText().substring(0, 1).toUpperCase();
-//            set.add(word);
-//        }
-//
-//        ArrayList<String> items = new ArrayList<>(set);
-//        Collections.sort(items);
-//        recyclerView.setIndexBarItems(items);
-//
-//        if (adapter.getItemCount() <= 10) {
-//            recyclerView.setIndexBarVisibility(View.GONE);
-//        }
+        HashSet<String> set = new HashSet<>();
+        for (Word item : list) {
+            String word = item.getText().substring(0, 1).toUpperCase();
+            set.add(word);
+        }
+
+        ArrayList<String> items = new ArrayList<>(set);
+        Collections.sort(items);
+        recyclerView.setIndexBarItems(items);
+
+        if (adapter.getItemCount() <= 10) {
+            recyclerView.setIndexBarVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -19,7 +20,8 @@ import java.util.List;
  */
 
 public class CategorizedListView extends RecyclerView
-        implements CategoryFilter {
+        implements CategoryFilter
+{
 
     IndexBarView indexBarView;
     TextView previewTextView;
@@ -75,7 +77,8 @@ public class CategorizedListView extends RecyclerView
 
     public void setIndexBarVisibility(int visibility){
         indexBarView.setVisibility(visibility);
-        setIndexBarVisibility(visibility==VISIBLE);
+        setIndexBarVisibility(visibility);
+        indexBarVisibility = visibility == VISIBLE;
     }
 
     private void setPreviewView() {
@@ -116,16 +119,6 @@ public class CategorizedListView extends RecyclerView
         }
     }
 
-
-    public void setIndexBarVisibility(Boolean isVisible) {
-        if (isVisible) {
-            indexBarVisibility = true;
-        } else {
-            indexBarVisibility = false;
-        }
-    }
-
-
     private void setPreviewTextVisibility(Boolean isVisible) {
         if (isVisible) {
             previewVisibility = true;
@@ -150,6 +143,7 @@ public class CategorizedListView extends RecyclerView
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (indexBarView != null && (indexBarView).onTouchEvent(ev)) {
+            Log.d("CATEGORY_LIST", "onTouchEvent: " + ev);
             setPreviewTextVisibility(true);
             return true;
         } else {
