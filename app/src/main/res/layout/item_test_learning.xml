@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.softes.flippy.FlipView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical"
+    android:paddingEnd="40dp"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"
+    android:paddingStart="40dp">
+
+    <include layout="@layout/layout_test_front" />
+
+    <include layout="@layout/layout_test_back" />
+
+</com.softes.flippy.FlipView>

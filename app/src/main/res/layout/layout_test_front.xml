@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:id="@+id/front"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_front"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rectangle_rounded"
+        android:gravity="center"
+        android:text="Front"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_16" />
+
+</LinearLayout>

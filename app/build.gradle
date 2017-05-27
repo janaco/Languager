@@ -69,4 +69,5 @@ dependencies {
     }
     compile project(path: ':clickabletextview')
     compile project(path: ':categorizedlistview')
+    compile project(path: ':flippy')
 }
