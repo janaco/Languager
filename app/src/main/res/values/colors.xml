@@ -26,7 +26,9 @@
     <color name="brown_4">#CCA698</color>
 
     <color name="red_500">#f44336</color>
+    <color name="red_400">#EF5350</color>
     <color name="green_500"> #4caf50</color>
+    <color name="green_400">#66BB6A</color>
     <color name="yellow_500">#ffeb3b</color>
 
 

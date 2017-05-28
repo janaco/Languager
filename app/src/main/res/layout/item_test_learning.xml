@@ -2,7 +2,6 @@
 <com.softes.flippy.FlipView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:layout_marginTop="10dp"
     android:orientation="vertical"
     android:paddingEnd="40dp"
     android:paddingLeft="40dp"
