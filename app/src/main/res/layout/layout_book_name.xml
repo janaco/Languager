@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:layout_weight="0.3"
+    android:padding="40dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_title"
+        android:layout_alignTop="@id/item_name"
+        android:layout_alignBottom="@id/item_name"
+        android:layout_alignLeft="@id/item_name"
+        android:layout_alignStart="@id/item_name"
+        android:layout_alignRight="@id/item_name"
+        android:layout_alignEnd="@id/item_name"/>
+
+    <EditText
+        android:id="@+id/item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@drawable/border_around_title"
+        android:elevation="2dp"
+        android:enabled="false"
+        android:gravity="center"
+        android:maxLines="5"
+        android:maxWidth="100dp"
+        android:padding="20dp"
+        android:text="Book Name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_14"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_alignBottom="@id/item_name"
+        android:layout_alignLeft="@id/item_name"
+        android:layout_alignStart="@id/item_name"
+        android:layout_alignEnd="@id/item_name"
+        android:layout_alignRight="@id/item_name"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="@color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.39" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.41"
+            android:background="@color/white" />
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_name"
+        android:layout_alignTop="@id/item_name"
+        android:layout_marginBottom="-11dp">
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/container"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="0.39"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:id="@+id/item_format"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_10"
+            android:textAllCaps="true"
+            android:padding="5dp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.41" />
+
+    </LinearLayout>
+
+</RelativeLayout>

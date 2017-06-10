@@ -70,8 +70,10 @@ public class Pagination {
 
     public List<CharSequence> appendContent(CharSequence content) {
         int lastPageIndex = getPagesCount() - 1;
-        content = new StringBuilder().append(get(lastPageIndex)).append(content).toString();
-        pages.remove(lastPageIndex);
+        if (lastPageIndex >= 0) {
+            content = new StringBuilder().append(get(lastPageIndex)).append(content).toString();
+            pages.remove(lastPageIndex);
+        }
 
         final StaticLayout layout =
                 new StaticLayout(content, textPaint, width, Layout.Alignment.ALIGN_NORMAL,

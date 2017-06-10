@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.softes.cardviewer.OnExpandableItemClickListener;
 import com.stiletto.tr.R;
@@ -33,6 +34,8 @@ public class FragmentTop extends Fragment {
     LinearLayout layoutCover;
     @Bind(R.id.item_name)
     EditText itemName;
+    @Bind(R.id.item_format)
+    TextView itemExtention;
 
     private Book book;
     private OnExpandableItemClickListener listener;
@@ -50,6 +53,7 @@ public class FragmentTop extends Fragment {
         ButterKnife.bind(this, view);
         layoutCover.setBackgroundResource(getCover());
         itemName.setText(book.getName());
+        itemExtention.setText(book.getFileType().name());
         return view;
     }
 

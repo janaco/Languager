@@ -3,6 +3,7 @@
     android:shape="rectangle" android:padding="10dp">
     <solid android:color="#60000000"/>
     <stroke android:width="3dip"
+        android:dashGap="10dp"
         android:color="@color/white" />
 
 </shape>

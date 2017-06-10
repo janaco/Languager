@@ -54,6 +54,10 @@ public class DictionaryTable extends ServiceOpenDB {
         new DictionaryTable(context).clean();
     }
 
+    public static List<Word> getDictionary(Context context, Language []languages){
+        return new DictionaryTable(context).getDictionary(languages);
+    }
+
     public static void insert(Context context, List<DictionaryItem> list, DictionaryItem item) {
 
         String json = new Gson().toJson(list);
@@ -73,8 +77,8 @@ public class DictionaryTable extends ServiceOpenDB {
         new DictionaryTable(context).remove(item);
     }
 
-    public static Map<String, ArrayList<Word>> getDictionary(Context context) {
-        return new DictionaryTable(context).getDictionary();
+    public static Map<String, ArrayList<Word>> getDictionaries(Context context) {
+        return new DictionaryTable(context).getDictionaries();
     }
 
     private void insert(DictionaryItem item) {
@@ -99,7 +103,7 @@ public class DictionaryTable extends ServiceOpenDB {
 
     }
 
-    private Map<String, ArrayList<Word>> getDictionary() {
+    private Map<String, ArrayList<Word>> getDictionaries() {
         Map<String, ArrayList<Word>> map = new HashMap<>();
 
         Cursor cursor = getDatabase().rawQuery("SELECT original,  data, lang_from, lang_to FROM dictionary ORDER BY original", null);
@@ -140,6 +144,39 @@ public class DictionaryTable extends ServiceOpenDB {
         cursor.close();
 
         return map;
+    }
+
+    private List<Word> getDictionary(Language []languages) {
+
+        List<Word> list = new ArrayList<>();
+
+        Cursor cursor = getDatabase()
+                .rawQuery("SELECT original,  data FROM dictionary WHERE lang_from=? AND lang_to=?",
+                        new String[]{languages[0].toString(), languages[1].toString()});
+
+        if (cursor.moveToFirst()) {
+            do {
+                String data = cursor.getString(cursor.getColumnIndex("data"));
+                String origin = cursor.getString(cursor.getColumnIndex("original"));
+
+                Gson gson = new Gson();
+                JsonParser jsonParser = new JsonParser();
+                JsonArray jsonArray = (JsonArray) jsonParser.parse(data);
+
+                ArrayList<DictionaryItem> items = new ArrayList<>();
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    items.add(gson.fromJson(jsonArray.get(i), DictionaryItem.class));
+                }
+
+                Word word = new Word(origin, languages[0], items, languages[1]);
+                list.add(word);
+
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return list;
     }
 
     private void remove(DictionaryItem item) {

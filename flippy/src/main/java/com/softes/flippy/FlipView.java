@@ -139,6 +139,10 @@ public class FlipView extends FrameLayout
         }
     }
 
+    public boolean isFlipped() {
+        return isFlipped;
+    }
+
     @Override
     public void onAnimationEnd(Animation animation) {
         if (listener != null) {

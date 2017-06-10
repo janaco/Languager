@@ -47,7 +47,7 @@ public class DictionariesPagerFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Map<String, ArrayList<Word>> dictionaries = DictionaryTable.getDictionary(getContext());
+        Map<String, ArrayList<Word>> dictionaries = DictionaryTable.getDictionaries(getContext());
         adapter = new DictionariesPagerAdapter(getChildFragmentManager(), dictionaries);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
@@ -61,7 +61,7 @@ public class DictionariesPagerFragment extends Fragment {
     @OnClick(R.id.item_clean)
     void onCleanAllClick(){
         DictionaryTable.clean(getContext());
-        Map<String, ArrayList<Word>> dictionaries = DictionaryTable.getDictionary(getContext());
+        Map<String, ArrayList<Word>> dictionaries = DictionaryTable.getDictionaries(getContext());
         adapter = new DictionariesPagerAdapter(getActivity().getSupportFragmentManager(), dictionaries);
         viewPager.setAdapter(adapter);    }
 }
