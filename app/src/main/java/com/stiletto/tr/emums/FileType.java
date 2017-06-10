@@ -6,7 +6,7 @@ package com.stiletto.tr.emums;
 
 public enum FileType {
 
-    PDF(".pdf"), EPUB(".epub"), TXT(".txt"), UNKNOWN("unknown");
+    PDF(".pdf"), EPUB(".epub"), FB2(".fb2"), TXT(".txt"), UNKNOWN("unknown");
 
     private String extension;
 
@@ -31,6 +31,9 @@ public enum FileType {
 
             case ".txt":
                 return TXT;
+
+            case ".fb2":
+                return FB2;
 
             default:
                 return UNKNOWN;

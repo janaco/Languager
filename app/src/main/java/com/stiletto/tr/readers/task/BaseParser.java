@@ -10,6 +10,7 @@ import com.stiletto.tr.readers.EPUBReader;
 import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.readers.PagesParserCallback;
 import com.stiletto.tr.readers.TxtReader;
+import com.stiletto.tr.readers.XMLReader;
 import com.stiletto.tr.utils.ReaderPrefs;
 
 import java.io.File;
@@ -59,6 +60,9 @@ public class BaseParser extends AsyncTask<Book, Void, Pagination> {
 
             case EPUB:
                 return EPUBReader.parseAsText(file);
+
+            case FB2:
+                return XMLReader.parseAsText(file);
 
             case TXT:
                 return TxtReader.parseAsText(file);
