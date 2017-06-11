@@ -1,20 +1,18 @@
 package com.stiletto.tr.readers;
 
 import android.util.Log;
+import android.util.Xml;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.stanfy.gsonxml.GsonXml;
-import com.stanfy.gsonxml.GsonXmlBuilder;
-import com.stanfy.gsonxml.XmlParserCreator;
+import com.stiletto.tr.model.Book;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
-
-import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
 /**
  * Created by yana on 10.06.17.
@@ -23,28 +21,83 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 public class XMLReader {
 
 
-    public static CharSequence parseAsText(File file){
-        XmlParserCreator parserCreator = new XmlParserCreator() {
-            @Override
-            public XmlPullParser createParser() {
-                try {
-                    return XmlPullParserFactory.newInstance().newPullParser();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+    public static CharSequence parseAsText(File file) {
+        String xml = TxtReader.parseAsText(file).toString();
+
+        StringBuilder builder = new StringBuilder();
+
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(new StringReader(xml));
+            parser.nextTag();
+
+            parser.require(XmlPullParser.START_TAG, null, "FictionBook");
+            while (parser.next() != XmlPullParser.END_DOCUMENT) {
+                if (parser.getEventType() != XmlPullParser.START_TAG) {
+                    continue;
+                }
+                String name = parser.getName();
+                Log.d("FB2_", "tag name: " + name);
+                // Starts by looking for the entry tag
+                if (name.equals("body")) {
+                    builder.append(parseBook(parser));
                 }
             }
-        };
-
-        GsonXml gsonXml = new GsonXmlBuilder()
-                .setXmlParserCreator(parserCreator)
-                .create();
-
-        String xml = TxtReader.parseAsText(file).toString();
-        FictionBook model = gsonXml.fromXml(xml, FictionBook.class);
 
 
-        return model.getContent();
+        } catch (XmlPullParserException | IOException e) {
+            e.printStackTrace();
+            Log.d("FB2_", "ERROR");
+        }
 
+        return builder.toString();
+    }
+
+    private static String parseBook(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, "body");
+
+        StringBuilder builder = new StringBuilder();
+
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            Log.d("FB2_", "BODY: tag name: " + name);
+            // Starts by looking for the entry tag
+            if (name.equals("title")) {
+                builder.append(parseTitle(parser));
+            }
+//            else if (name.equals("section")){
+//
+//            }
+        }
+
+        return builder.toString();
+    }
+
+    private static String parseTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, "title");
+        String title = readText(parser);
+//        parser.require(XmlPullParser.END_TAG, null, "title");
+        return title;
+    }
+
+    // For the tags title and summary, extracts their text values.
+    private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+        StringBuilder builder = new StringBuilder();
+
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            Log.d("FB2_", "TEXT: eventType " + parser.getEventType() + ", " + parser.getText());
+
+            if (parser.getEventType() == XmlPullParser.END_TAG && parser.getName() != null &&parser.getName().equals("title")) {
+                break;
+            } else if (parser.getEventType() == XmlPullParser.TEXT) {
+                builder.append(parser.getText());
+            }
+        }
+        return builder.toString();
     }
 
     public static class FictionBook {
@@ -62,14 +115,14 @@ public class XMLReader {
     /**
      *
      */
-    private static class Body{
+    private static class Body {
 
         @SerializedName("title")
         private Title title;
 //        @SerializedName("section")
 //        private Chapter[] chapters;
 
-        public String getText(){
+        public String getText() {
 
             StringBuilder builder = new StringBuilder();
 
@@ -84,18 +137,18 @@ public class XMLReader {
 
             return builder.toString();
         }
-}
+    }
 
 
-    private static class Title{
+    private static class Title {
         @SerializedName("p")
-        P  []parts;
+        P[] parts;
 
-        public String getText(){
+        public String getText() {
 
             StringBuilder builder = new StringBuilder();
 
-            for (P part:parts){
+            for (P part : parts) {
                 builder.append(part.content);
             }
 
@@ -105,11 +158,12 @@ public class XMLReader {
 
     }
 
-    private static class P{
+    private static class P {
 
         @SerializedName("$")
         String content;
     }
+
     private static class Chapter {
 
         @SerializedName("title")
@@ -117,13 +171,13 @@ public class XMLReader {
         @SerializedName("section")
         private List<Page> pages;
 
-        public String getText(){
+        public String getText() {
 
             StringBuilder builder = new StringBuilder();
             builder.append(title.getText());
             builder.append("\n");
 
-            for (Page page: pages){
+            for (Page page : pages) {
                 builder.append(page.getText());
             }
 
@@ -133,17 +187,17 @@ public class XMLReader {
     }
 
 
-    private static class Page{
+    private static class Page {
         @SerializedName("p")
-        Object [] content;
+        Object[] content;
 
-        public String getText(){
+        public String getText() {
 
             StringBuilder builder = new StringBuilder();
 
-            for (Object text: content){
+            for (Object text : content) {
                 if (text instanceof String)
-                builder.append((String) text);
+                    builder.append((String) text);
             }
 
             return builder.toString();
