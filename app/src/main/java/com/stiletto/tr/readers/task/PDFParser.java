@@ -11,22 +11,22 @@ import com.stiletto.tr.readers.PagesParserCallback;
 import com.stiletto.tr.utils.ReaderPrefs;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by yana on 21.05.17.
  */
 
-public class PDFParser extends AsyncTask<Book, Void, Pagination>{
+public class PDFParser extends AsyncTask<Book, Void, Pagination> {
 
 
-    private static final int STEP = 10;
+    private static final int STEP = 20;
+
 
     private Context context;
 
     private PagesParserCallback parserCallback;
 
-    public PDFParser(Context context){
+    public PDFParser(Context context) {
         this.context = context;
     }
 
@@ -44,38 +44,14 @@ public class PDFParser extends AsyncTask<Book, Void, Pagination>{
 
         String filePath = book.getPath();
 
-
         try {
             PdfReader reader = new PdfReader(filePath);
-
-            int pages = reader.getNumberOfPages();
-//            Message message = new Message();
-//            message.what = 1;
-//            Bundle bundle = new Bundle();
-//            bundle.putInt("pages", pages);
-//            message.setData(bundle);
-
-            int bookmark = 1;
-            int currentStep = 0;
-            if (book.getBookmark() > 0 && book.getBookmark() > STEP / 2) {
-                bookmark = book.getBookmark() - STEP / 2;
-            }
-
             StringBuilder builder = new StringBuilder();
-            for (int page = bookmark; page <= pages; page++, currentStep++) {
+
+            for (int page = 1; page <= reader.getNumberOfPages(); page++) {
                 builder.append(PdfTextExtractor.getTextFromPage(reader, page));
-
-                if (currentStep > STEP) {
-
-                    List<CharSequence> content = pagination.appendContent(builder.toString());
-                    parserCallback.onPagesParsed(pagination, content);
-
-                    currentStep = 0;
-                    builder.setLength(0);
-                    builder.trimToSize();
-                }
-
             }
+            pagination.splitOnPages(builder.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,50 +62,7 @@ public class PDFParser extends AsyncTask<Book, Void, Pagination>{
 
     @Override
     protected void onPostExecute(Pagination pagination) {
+        parserCallback.onPagesParsed(pagination);
         parserCallback.afterPagesParsingFinished(pagination);
-
     }
-
-
-//    final Handler handler = new Handler() {
-//
-//        @Override
-//        public void handleMessage(Message msg) {
-//
-//            switch (msg.what) {
-//
-//                case 1:
-//                    int count = msg.getData().getInt("pages");
-//                    seekBar.setMax(count);
-//                    seekBar.setProgress(book.getBookmark());
-//                    String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
-//                    itemPages.setText(textProgress);
-//                    pageNumber.setText(textProgress);
-//
-//                    int bookmark = viewPager.getCurrentItem();
-//                    book.setBookmark(bookmark);
-//                    BooksTable.setBookmark(getContext(), bookmark, pagination.getPagesCount(), book.getPath());
-//
-//                    break;
-//
-//                case 2:
-//
-//                    bookLoading.stop();
-//                    layoutLoading.setVisibility(View.GONE);
-//
-//                    try {
-//                        int currentItem = viewPager.getCurrentItem();
-//                        viewPager.setAdapter(pagerAdapter);
-//                        viewPager.setCurrentItem(currentItem);
-//                    } catch (NullPointerException e) {
-//                        e.printStackTrace();
-//                    }
-//                    break;
-//            }
-//
-//        }
-//    };
-
-
-
 }

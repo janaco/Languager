@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * And its can be used to display book pages with texts and all things.
- *
+ * <p>
  * Created by yana on 04.01.17.
  */
 
@@ -27,17 +27,15 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     private TranslationCallback translationCallback;
 
-    public PagerAdapter(FragmentManager fragmentManager,  Book book) {
+    public PagerAdapter(FragmentManager fragmentManager, Book book) {
         super(fragmentManager);
         this.primaryLanguage = book.getOriginLanguage();
         this.translationLanguage = book.getTranslationLanguage();
     }
 
-    public void addPages(List<CharSequence> pages){
+    public void stePages(List<CharSequence> pages) {
 
-        if (this.pages.size() > 0){
-            this.pages.remove(this.pages.size() - 1);
-        }
+        this.pages.clear();
         this.pages.addAll(pages);
         notifyDataSetChanged();
     }
@@ -50,7 +48,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
     @Override
     public android.support.v4.app.Fragment getItem(final int position) {
 
-       return PageFragment.create(position, pages.get(position),
+        return PageFragment.create(position, pages.get(position),
                 primaryLanguage, translationLanguage, translationCallback);
     }
 

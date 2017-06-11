@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PagesParserCallback {
 
-    void onPagesParsed(Pagination pagination, List<CharSequence> newPages);
+    void onPagesParsed(Pagination pagination);
 
     void afterPagesParsingFinished(Pagination pagination);
 }

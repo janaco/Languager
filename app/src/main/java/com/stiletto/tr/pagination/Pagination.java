@@ -41,7 +41,7 @@ public class Pagination {
         this.pages = new ArrayList<>();
     }
 
-    private void splitOnPages(CharSequence content) {
+    public void splitOnPages(CharSequence content) {
         final StaticLayout layout =
                 new StaticLayout(content, textPaint, width, Layout.Alignment.ALIGN_NORMAL,
                         lineSpacingMultiplier, lineSpacingExtra, false);
@@ -102,6 +102,8 @@ public class Pagination {
             }
         }
 
+        Log.d("PDF_", "appendContent: " + newPages.size() + "("+pages.size()+")");
+
         pages.addAll(newPages);
         return newPages;
     }
@@ -121,5 +123,9 @@ public class Pagination {
 
     public List<CharSequence> getPages() {
         return pages;
+    }
+
+    public void clear(){
+        pages.clear();
     }
 }

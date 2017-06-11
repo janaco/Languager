@@ -39,7 +39,7 @@ public class BaseParser extends AsyncTask<Book, Void, Pagination> {
     protected Pagination doInBackground(Book... books) {
 
         Pagination pagination = new Pagination(getBookContent(books[0]), ReaderPrefs.getPreferences(context));
-        pagesParserCallback.onPagesParsed(pagination, pagination.getPages());
+        pagesParserCallback.onPagesParsed(pagination);
         return pagination;
     }
 

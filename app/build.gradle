@@ -19,7 +19,6 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -35,39 +34,38 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
-    maven { url 'https://maven.fabric.io/public' }}
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.itextpdf:itextg:5.5.10'
+    compile 'com.itextpdf:itextg:5.5.10' //pdf parser (too slow)
 
     compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile 'org.adw.library:discrete-seekbar:1.0.1' //seekbar
+    compile 'com.daimajia.numberprogressbar:library:1.4@aar' //material progress bar
     compile 'com.squareup.okhttp3:okhttp:3.0.0' //okhttp client
     compile 'com.squareup.retrofit2:retrofit:2.1.0' //retrofit client
     compile 'com.squareup.retrofit2:converter-gson:2.1.0' //retrofit gson conventer
-    compile 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1'
-    compile 'io.github.yuweiguocn:SquareLoading:1.3.0'
-    compile 'com.daimajia.numberprogressbar:library:1.4@aar'
-    compile 'com.victor:lib:1.0.4'
 
-    compile files('libs/epublib-core-latest.jar')
+    compile 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1' //?
+    compile 'com.victor:lib:1.0.4'//?
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
-
-    compile 'org.jetbrains:annotations-java5:15.0'
-    compile 'com.android.support:design:25.0.1'
-    compile project(path: ':cardviewer')
-    compile project(path: ':bottomsheetpanel')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
         transitive = true;
     }
+
+    compile 'org.jetbrains:annotations-java5:15.0'
+
+    compile files('libs/epublib-core-latest.jar') //epub parser
+
+    compile project(path: ':bottomsheetpanel')
     compile project(path: ':clickabletextview')
     compile project(path: ':categorizedlistview')
+    compile project(path: ':cardviewer')
     compile project(path: ':flippy')
 }

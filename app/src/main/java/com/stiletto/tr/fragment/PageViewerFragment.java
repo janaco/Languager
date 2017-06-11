@@ -157,6 +157,7 @@ public class PageViewerFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         this.pagerAdapter = new PagerAdapter(getChildFragmentManager(), book);
         this.pagerAdapter.setTranslationCallback(this);
+        viewPager.setAdapter(pagerAdapter);
 
         setUpPages();
     }
@@ -243,22 +244,13 @@ public class PageViewerFragment extends Fragment
     }
 
     @Override
-    public void onPagesParsed(Pagination pagination, List<CharSequence> newPages) {
-        pagerAdapter.addPages(newPages);
+    public void onPagesParsed(Pagination pagination) {
+        this.pagination = pagination;
+        pagerAdapter.stePages(pagination.getPages());
 
-        if (loading) {
-            loading = false;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    bookLoading.stop();
-                    layoutLoading.setVisibility(View.GONE);
-                    viewPager.setAdapter(pagerAdapter);
-
-                }
-            });
-        }
+        loading = false;
+        bookLoading.stop();
+        layoutLoading.setVisibility(View.GONE);
     }
 
     @Override
