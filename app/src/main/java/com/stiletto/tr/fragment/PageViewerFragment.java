@@ -1,14 +1,10 @@
 package com.stiletto.tr.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +12,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.BookDictionaryAdapter;
 import com.stiletto.tr.adapter.PagerAdapter;
@@ -29,22 +23,15 @@ import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.model.DictionaryItem;
 import com.stiletto.tr.pagination.Pagination;
-import com.stiletto.tr.readers.EPUBReader;
-import com.stiletto.tr.readers.PDFReader;
 import com.stiletto.tr.readers.PagesParserCallback;
-import com.stiletto.tr.readers.TxtReader;
 import com.stiletto.tr.readers.task.BaseParser;
 import com.stiletto.tr.readers.task.PDFParser;
 import com.stiletto.tr.translator.yandex.Language;
-import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 import com.victor.loading.book.BookLoading;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -177,7 +164,9 @@ public class PageViewerFragment extends Fragment
 
     @Override
     public void onDestroy() {
-        BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
+        if (pagination !=null) {
+            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
+        }
         super.onDestroy();
 
     }
@@ -246,7 +235,7 @@ public class PageViewerFragment extends Fragment
     @Override
     public void onPagesParsed(Pagination pagination) {
         this.pagination = pagination;
-        pagerAdapter.stePages(pagination.getPages());
+        pagerAdapter.setPages(pagination.getPages());
 
         loading = false;
         bookLoading.stop();

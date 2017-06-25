@@ -62,6 +62,7 @@ dependencies {
     compile 'org.jetbrains:annotations-java5:15.0'
 
     compile files('libs/epublib-core-latest.jar') //epub parser
+    compile files('libs/slf4j-api-1.7.25.jar') //binder (for epub)
 
     compile project(path: ':bottomsheetpanel')
     compile project(path: ':clickabletextview')

@@ -33,7 +33,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
         this.translationLanguage = book.getTranslationLanguage();
     }
 
-    public void stePages(List<CharSequence> pages) {
+    public void setPages(List<CharSequence> pages) {
 
         this.pages.clear();
         this.pages.addAll(pages);
