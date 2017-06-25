@@ -1,5 +1,7 @@
 package com.stiletto.tr.dialog;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -74,6 +76,7 @@ public class ChooseLanguageDialog extends DialogFragment implements OnListItemCl
 
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        animShow();
 
         return view;
     }
@@ -100,6 +103,7 @@ public class ChooseLanguageDialog extends DialogFragment implements OnListItemCl
 
     @Override
     public void onDestroy() {
+        animHide();
         if(dialogListener != null){dialogListener.afterDialogClosed();}
 
         if (getDialog() != null && getRetainInstance()) {
@@ -116,5 +120,17 @@ public class ChooseLanguageDialog extends DialogFragment implements OnListItemCl
 
     public void setDialogListener(DialogListener dialogListener) {
         this.dialogListener = dialogListener;
+    }
+
+    private void animShow(){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(recyclerView, "alpha", 0, 1);
+        animator.setDuration(1000);
+        animator.start();
+    }
+
+    private void animHide(){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(recyclerView, "alpha", 1, 0);
+        animator.setDuration(1000);
+        animator.start();
     }
 }
