@@ -1,4 +1,4 @@
-package com.stiletto.tr.model;
+package com.stiletto.tr.model.word;
 
 import android.os.Parcel;
 import android.os.Parcelable;

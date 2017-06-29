@@ -1,11 +1,10 @@
 package com.stiletto.tr.translator.yandex.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.stiletto.tr.model.DictionaryItem;
-import com.stiletto.tr.model.Translation;
+import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Translation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

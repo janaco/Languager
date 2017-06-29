@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.stiletto.tr.fragment.DictionaryFragment;
-import com.stiletto.tr.model.Word;
+import com.stiletto.tr.model.word.Word;
 
 import java.util.ArrayList;
 import java.util.Collections;

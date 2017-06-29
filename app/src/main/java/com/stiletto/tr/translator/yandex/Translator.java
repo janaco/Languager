@@ -1,8 +1,6 @@
 package com.stiletto.tr.translator.yandex;
 
-import android.util.Log;
-
-import com.stiletto.tr.model.DictionaryItem;
+import com.stiletto.tr.model.word.DictionaryItem;
 import com.stiletto.tr.translator.yandex.model.YandexDictionaryResponse;
 import com.stiletto.tr.translator.yandex.model.YandexTranslateResponse;
 

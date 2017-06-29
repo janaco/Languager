@@ -1,6 +1,6 @@
 package com.stiletto.tr.translator.yandex;
 
-import com.stiletto.tr.model.DictionaryItem;
+import com.stiletto.tr.model.word.DictionaryItem;
 
 import java.util.List;
 

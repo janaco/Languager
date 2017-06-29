@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.softes.flippy.FlipView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.core.OnListItemClickListener;
-import com.stiletto.tr.model.TestVariant;
+import com.stiletto.tr.model.test.TestVariant;
 
 import java.util.List;
 

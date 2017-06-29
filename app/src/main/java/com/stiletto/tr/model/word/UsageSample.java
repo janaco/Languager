@@ -1,4 +1,4 @@
-package com.stiletto.tr.model;
+package com.stiletto.tr.model.word;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,7 +14,7 @@ import java.util.List;
  * Created by yana on 11.03.17.
  */
 
-public class UsageSample extends  Text implements Parcelable{
+public class UsageSample extends Text implements Parcelable{
 
     @SerializedName("tr") private List<Text> translations;
 

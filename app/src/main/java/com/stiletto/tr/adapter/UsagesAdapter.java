@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.model.UsageSample;
+import com.stiletto.tr.model.word.UsageSample;
 
 import java.util.List;
 

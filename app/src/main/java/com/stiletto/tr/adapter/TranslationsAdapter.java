@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.model.Translation;
+import com.stiletto.tr.model.word.Translation;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

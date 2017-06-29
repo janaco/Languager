@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.model.DictionaryItem;
-import com.stiletto.tr.model.Word;
+import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Word;
 
 import java.util.ArrayList;
 import java.util.HashMap;

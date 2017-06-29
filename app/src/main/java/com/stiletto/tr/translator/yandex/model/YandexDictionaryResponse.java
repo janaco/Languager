@@ -1,9 +1,7 @@
 package com.stiletto.tr.translator.yandex.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.stiletto.tr.model.DictionaryItem;
-
-import java.util.Arrays;
+import com.stiletto.tr.model.word.DictionaryItem;
 
 /**
  * Created by yana on 08.01.17.

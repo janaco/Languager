@@ -17,12 +17,11 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.TestLearningAdapter;
 import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.db.tables.DictionaryTable;
-import com.stiletto.tr.model.DictionaryItem;
-import com.stiletto.tr.model.TestLearning;
-import com.stiletto.tr.model.TestVariant;
-import com.stiletto.tr.model.Text;
-import com.stiletto.tr.model.Translation;
-import com.stiletto.tr.model.Word;
+import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.test.TestLearning;
+import com.stiletto.tr.model.test.TestVariant;
+import com.stiletto.tr.model.word.Translation;
+import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.view.Fragment;
 

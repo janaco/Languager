@@ -18,10 +18,6 @@ import java.io.IOException;
 
 public class PDFParser extends AsyncTask<Book, Void, Pagination> {
 
-
-    private static final int STEP = 20;
-
-
     private Context context;
 
     private PagesParserCallback parserCallback;

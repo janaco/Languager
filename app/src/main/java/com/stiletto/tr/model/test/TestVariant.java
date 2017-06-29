@@ -1,4 +1,4 @@
-package com.stiletto.tr.model;
+package com.stiletto.tr.model.test;
 
 /**
  * Created by yana on 27.05.17.

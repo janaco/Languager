@@ -26,7 +26,7 @@ import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
 import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.db.tables.DictionaryTable;
-import com.stiletto.tr.model.DictionaryItem;
+import com.stiletto.tr.model.word.DictionaryItem;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translator;
 import com.stiletto.tr.translator.yandex.TranslatorCallback;

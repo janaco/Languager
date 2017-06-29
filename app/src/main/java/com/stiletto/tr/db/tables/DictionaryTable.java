@@ -10,8 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.stiletto.tr.db.ServiceOpenDB;
-import com.stiletto.tr.model.DictionaryItem;
-import com.stiletto.tr.model.Word;
+import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.translator.yandex.Language;
 
 import java.util.ArrayList;

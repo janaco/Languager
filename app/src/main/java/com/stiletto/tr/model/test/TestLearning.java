@@ -1,4 +1,4 @@
-package com.stiletto.tr.model;
+package com.stiletto.tr.model.test;
 
 import java.util.List;
 

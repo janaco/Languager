@@ -1,4 +1,4 @@
-package com.stiletto.tr.model;
+package com.stiletto.tr.model.word;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import com.stiletto.tr.translator.yandex.Language;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**Data model to represent word or phrase with its translations.
  * Used with dictionary (DictionaryFragment)
