@@ -5,22 +5,22 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 /**
  * Part of Dictionary Item Yandex Response.
- *
+ * <p>
  * Created by yana on 11.03.17.
  */
 
- class Text implements Parcelable {
+public class Text extends RealmObject implements Parcelable{
 
     @SerializedName("text")
     private String text;
 
-    Text(String text) {
-        this.text = text;
-    }
+    public Text(){}
 
-    Text(Parcel in) {
+    protected Text(Parcel in) {
         text = in.readString();
     }
 
@@ -45,17 +45,17 @@ import com.google.gson.annotations.SerializedName;
     }
 
     @Override
+    public String toString() {
+        return text;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(text);
-    }
-
-    @Override
-    public String toString() {
-        return text;
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(text);
     }
 }

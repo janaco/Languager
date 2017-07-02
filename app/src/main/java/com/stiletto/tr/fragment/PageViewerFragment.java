@@ -214,6 +214,7 @@ public class PageViewerFragment extends Fragment
     @Override
     public void newTranslation(Word word) {
 
+        word.insert();
         bookDictionaryAdapter.addTranslation(word);
         itemDictionaryAlert.setVisibility(View.GONE);
 

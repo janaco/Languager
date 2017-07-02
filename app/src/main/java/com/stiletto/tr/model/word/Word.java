@@ -9,6 +9,11 @@ import com.stiletto.tr.translator.yandex.Language;
 
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Data model to represent word or phrase with its translations.
  * Used with dictionary (DictionaryFragment)
@@ -16,49 +21,35 @@ import java.util.List;
  * Created by yana on 12.03.17.
  */
 
-public class Word implements Comparable<Word>, Parcelable {
+public class Word extends RealmObject implements Comparable<Word>, Parcelable {
 
     private String original;
     @SerializedName("text")
-    private String[] translations;
+    private RealmList<RealmString> translations;
     private Dictionary dictionary;
 
     private String bookId;
 
-    private Language originLanguage;
-    private Language translationLanguage;
+    private String originLanguage;
+    private String translationLanguage;
 
     private String status = "Unknown";
 
     public Word(){}
 
-    public Word(String text,  String []translations, Language[]languages) {
+    public Word(String text,  String[] translations, Language[]languages) {
         this.original = text;
-        this.originLanguage = languages[0];
-        this.translationLanguage = languages[1];
-        this.translations = translations;
+        this.originLanguage = languages[0].toString();
+        this.translationLanguage = languages[1].toString();
+        this.translations = new RealmList<>(RealmString.convert(translations));
     }
 
     protected Word(Parcel in) {
         original = in.readString();
-        translations = in.createStringArray();
-        dictionary = in.readParcelable(Dictionary.class.getClassLoader());
         bookId = in.readString();
+        originLanguage = in.readString();
+        translationLanguage = in.readString();
         status = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(original);
-        dest.writeStringArray(translations);
-        dest.writeParcelable(dictionary, flags);
-        dest.writeString(bookId);
-        dest.writeString(status);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<Word> CREATOR = new Creator<Word>() {
@@ -78,12 +69,12 @@ public class Word implements Comparable<Word>, Parcelable {
         StringBuilder builder = new StringBuilder();
 
         if (translations != null) {
-            for (String text : translations) {
-                builder.append(text).append(", ");
+            for (RealmString text : translations) {
+                builder.append(text.getContent()).append(", ");
             }
         }else if (dictionary.getItems() != null){
 
-            for (Dictionary.Item item : dictionary.getItems()){
+            for (DictionaryItem item : dictionary.getItems()){
                 builder.append(item.getTranslations().get(0).getText()).append(", ");
             }
         }
@@ -121,22 +112,22 @@ public class Word implements Comparable<Word>, Parcelable {
     }
 
     public Language getOriginLanguage() {
-        return originLanguage;
+        return Language.getLanguage(originLanguage);
     }
 
     public void setOriginLanguage(Language originLanguage) {
-        this.originLanguage = originLanguage;
+        this.originLanguage = originLanguage.toString();
     }
 
     public Language getTranslationLanguage() {
-        return translationLanguage;
+        return Language.getLanguage(translationLanguage);
     }
 
     public void setTranslationLanguage(Language translationLanguage) {
-        this.translationLanguage = translationLanguage;
+        this.translationLanguage = translationLanguage.toString();
     }
 
-    public List<Dictionary.Item> getDictionaryItems() {
+    public List<DictionaryItem> getDictionaryItems() {
         return dictionary.getItems();
     }
 
@@ -159,4 +150,24 @@ public class Word implements Comparable<Word>, Parcelable {
         return getText().compareToIgnoreCase(word.getText());
     }
 
+    public void insert(){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        Word word = realm.copyToRealm(this);
+        realm.commitTransaction();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(original);
+        dest.writeString(bookId);
+        dest.writeString(originLanguage);
+        dest.writeString(translationLanguage);
+        dest.writeString(status);
+    }
 }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.model.word.Dictionary;
+import com.stiletto.tr.model.word.DictionaryItem;
 
 import java.util.List;
 
@@ -30,9 +31,9 @@ import java.util.List;
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.ViewHolder> {
 
-    private List<Dictionary.Item> list;
+    private List<DictionaryItem> list;
 
-    public DictionaryAdapter(List<Dictionary.Item> list) {
+    public DictionaryAdapter(List<DictionaryItem> list) {
         this.list = list;
     }
 
@@ -45,7 +46,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Dictionary.Item item = list.get(position);
+        DictionaryItem item = list.get(position);
 
         String index = getItemCount() > 1 ? (position + 1) + ") " : "";
         String origin = item.getOriginText();

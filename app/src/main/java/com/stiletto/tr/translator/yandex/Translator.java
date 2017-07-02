@@ -53,6 +53,7 @@ public class Translator {
         call.enqueue(new retrofit2.Callback<Word>() {
             @Override
             public void onResponse(Call<Word> call, Response<Word> response) {
+                Log.d("TRANSLATOR_", "onResponse: " + response.isSuccessful());
                 if (response.isSuccessful()) {
                     Word word = response.body();
                     word.setText(textToTranslate.toString());
@@ -66,6 +67,7 @@ public class Translator {
 
             @Override
             public void onFailure(Call<Word> call, Throwable t) {
+                Log.d("TRANSLATOR_", "onFailure: " + t.getMessage());
                 callback.translationError(call, t);
             }
         });

@@ -26,6 +26,7 @@ import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
 import com.stiletto.tr.core.TranslationCallback;
 import com.stiletto.tr.model.word.Dictionary;
+import com.stiletto.tr.model.word.DictionaryItem;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translator;
@@ -142,7 +143,7 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
     }
 
-    private void setUpDictionary(List<Dictionary.Item> dictionary) {
+    private void setUpDictionary(List<DictionaryItem> dictionary) {
         RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

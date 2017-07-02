@@ -20,6 +20,7 @@ import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.model.test.TestLearning;
 import com.stiletto.tr.model.test.TestVariant;
 import com.stiletto.tr.model.word.Dictionary;
+import com.stiletto.tr.model.word.DictionaryItem;
 import com.stiletto.tr.model.word.Translation;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.translator.yandex.Language;
@@ -77,7 +78,7 @@ public class FragmentTestLearning extends Fragment implements OnListItemClickLis
         Map<String, ArrayList<String>> map = new HashMap<>();
         for (Word word : words) {
             ArrayList<String> translations = new ArrayList<>();
-            for (Dictionary.Item item : word.getDictionaryItems()) {
+            for (DictionaryItem item : word.getDictionaryItems()) {
 
                 for (Translation translation : item.getTranslations()) {
 

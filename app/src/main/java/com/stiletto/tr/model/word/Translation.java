@@ -7,13 +7,18 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
 /**
  * Represents Translation object of Yandex Dictionary Response Model.
  *
  * Created by yana on 11.03.17.
  */
- public class Translation extends Text implements Parcelable {
+ public class Translation extends RealmObject implements Parcelable {
 
+    @SerializedName("text")
+    private String text;
     @SerializedName("pos")
     private String partOfSpeech;
     @SerializedName("gen")
@@ -21,40 +26,19 @@ import java.util.List;
     @SerializedName("num")
     private String number;
     @SerializedName("syn")
-    private Translation[] synonyms;
+    private RealmList<Translation> synonyms;
     @SerializedName("mean")
-    private Text[] meanings;
+    private RealmList<Text> meanings;
     @SerializedName("ex")
-    private List<UsageSample> usageSamples;
+    private RealmList<UsageSample> usageSamples;
 
-    public Translation(String text) {
-        super(text);
-    }
+    public Translation(){}
 
     protected Translation(Parcel in) {
-        super(in);
+        text = in.readString();
         partOfSpeech = in.readString();
         gender = in.readString();
         number = in.readString();
-        synonyms = in.createTypedArray(Translation.CREATOR);
-        meanings = in.createTypedArray(Text.CREATOR);
-        usageSamples = in.createTypedArrayList(UsageSample.CREATOR);
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(partOfSpeech);
-        dest.writeString(gender);
-        dest.writeString(number);
-        dest.writeTypedArray(synonyms, flags);
-        dest.writeTypedArray(meanings, flags);
-        dest.writeTypedList(usageSamples);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<Translation> CREATOR = new Creator<Translation>() {
@@ -68,6 +52,14 @@ import java.util.List;
             return new Translation[size];
         }
     };
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public String getPartOfSpeech() {
         return partOfSpeech;
@@ -93,7 +85,7 @@ import java.util.List;
         this.number = number;
     }
 
-    public Translation[] getSynonyms() {
+    public List<Translation> getSynonyms() {
         return synonyms;
     }
 
@@ -101,10 +93,10 @@ import java.util.List;
 
         StringBuilder builder = new StringBuilder();
         int index = 0;
-        for (Text text: synonyms){
-            builder.append(text.getText());
+        for (Translation translation: synonyms){
+            builder.append(translation.getText());
 
-            if (index++ < synonyms.length-1){
+            if (index++ < synonyms.size()-1){
                 builder.append(", ");
             }
         }
@@ -112,11 +104,7 @@ import java.util.List;
     }
 
 
-    public void setSynonyms(Translation[] synonyms) {
-        this.synonyms = synonyms;
-    }
-
-    public Text[] getMeanings() {
+    public List<Text> getMeanings() {
         return meanings;
     }
 
@@ -127,15 +115,15 @@ import java.util.List;
         for (Text text: meanings){
             builder.append(text.getText());
 
-            if (index++ < meanings.length-1){
+            if (index++ < meanings.size()-1){
                 builder.append(", ");
             }
         }
         return builder.toString();
     }
 
-    public void setMeanings(Text[] meanings) {
-        this.meanings = meanings;
+    public void setMeanings(List<Text> meanings) {
+        this.meanings = (RealmList<Text>) meanings;
     }
 
     public List<UsageSample> getUsageSamples() {
@@ -143,7 +131,7 @@ import java.util.List;
     }
 
     public void setUsageSamples(List<UsageSample> usageSamples) {
-        this.usageSamples = usageSamples;
+        this.usageSamples = (RealmList<UsageSample>) usageSamples;
     }
 
     public boolean isKnownPartOfSpeech(){
@@ -151,14 +139,27 @@ import java.util.List;
     }
 
     public boolean hasMeanings(){
-        return meanings != null && meanings.length > 0;
+        return meanings != null && meanings.size() > 0;
     }
 
     public boolean hasSynonyms(){
-        return synonyms != null && synonyms.length > 0;
+        return synonyms != null && synonyms.size() > 0;
     }
 
     public boolean hasUsageExamples(){
         return usageSamples != null && usageSamples.size() > 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(text);
+        dest.writeString(partOfSpeech);
+        dest.writeString(gender);
+        dest.writeString(number);
     }
 }
