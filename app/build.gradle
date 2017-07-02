@@ -57,11 +57,17 @@ dependencies {
     compile 'com.victor:lib:1.0.4'//?
 
 
+    compile 'org.jetbrains:annotations-java5:15.0'
+    androidTestCompile 'com.android.support:support-annotations:25.0.1'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
         transitive = true;
     }
 
-    compile 'org.jetbrains:annotations-java5:15.0'
 
     compile files('libs/epublib-core-latest.jar') //epub parser
     compile files('libs/slf4j-api-1.7.25.jar') //binder (for epub)
