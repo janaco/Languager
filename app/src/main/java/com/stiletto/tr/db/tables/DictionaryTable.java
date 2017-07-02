@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.stiletto.tr.db.ServiceOpenDB;
-import com.stiletto.tr.model.word.DictionaryItem;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.translator.yandex.Language;
 
@@ -27,6 +26,7 @@ import java.util.Map;
  * Fields:
  * original TEXT
  * data TEXT
+ * translation TEXT
  * book TEXT
  * lang_from VARCHAR(16)
  * lang_to VARCHAR(16)
@@ -42,7 +42,7 @@ public class DictionaryTable extends ServiceOpenDB {
 
     public static void create(SQLiteDatabase database) {
 
-        database.execSQL("CREATE TABLE IF NOT EXISTS dictionary(original TEXT, data TEXT, book TEXT, " + "lang_from VARCHAR(16), lang_to VARCHAR(16))");
+        database.execSQL("CREATE TABLE IF NOT EXISTS dictionary(original TEXT, data TEXT, translation TEXT, book TEXT, " + "lang_from VARCHAR(16), lang_to VARCHAR(16))");
     }
 
     public static String getName() {
@@ -58,44 +58,30 @@ public class DictionaryTable extends ServiceOpenDB {
         return new DictionaryTable(context).getDictionary(languages);
     }
 
-    public static void insert(Context context, List<DictionaryItem> list, DictionaryItem item) {
-
-        String json = new Gson().toJson(list);
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("original", item.getOriginText());
-        contentValues.put("data", json);
-        contentValues.put("lang_from", item.getOriginLanguage().toString());
-        contentValues.put("lang_to", item.getTranslationLanguage().toString());
-        contentValues.put("book", item.getBookId());
-
-        Log.d("DICTIONARY_SAVE", "" + json);
-
-        new DictionaryTable(context).insert(contentValues);
+    public static void insert(Context context, Word word) {
+//
+//        String json = new Gson().toJson(word.getDictionaryItems());
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put("original", word.getText());
+//        contentValues.put("translation", word.g);
+//        contentValues.put("data", json);
+//        contentValues.put("lang_from", item.getOriginLanguage().toString());
+//        contentValues.put("lang_to", item.getTranslationLanguage().toString());
+//        contentValues.put("book", item.getBookId());
+//
+//        Log.d("DICTIONARY_SAVE", "" + json);
+//
+//        new DictionaryTable(context).insert(contentValues);
     }
 
-    public static void remove(Context context, DictionaryItem item){
-        new DictionaryTable(context).remove(item);
-    }
+//    public static void remove(Context context, DictionaryItem item){
+//        new DictionaryTable(context).remove(item);
+//    }
 
     public static Map<String, ArrayList<Word>> getDictionaries(Context context) {
         return new DictionaryTable(context).getDictionaries();
     }
 
-    private void insert(DictionaryItem item) {
-
-        String json = item.getAsJson();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("original", item.getOriginText());
-        contentValues.put("data", json);
-        contentValues.put("lang_from", item.getOriginLanguage().toString());
-        contentValues.put("lang_to", item.getTranslationLanguage().toString());
-        contentValues.put("book", item.getBookId());
-
-        Log.d("DICTIONARY_SAVE", "" + json);
-
-        getDatabase().insert(getName(), null, contentValues);
-
-    }
 
     private void insert(ContentValues contentValues) {
 
@@ -106,7 +92,7 @@ public class DictionaryTable extends ServiceOpenDB {
     private Map<String, ArrayList<Word>> getDictionaries() {
         Map<String, ArrayList<Word>> map = new HashMap<>();
 
-        Cursor cursor = getDatabase().rawQuery("SELECT original,  data, lang_from, lang_to FROM dictionary ORDER BY original", null);
+        Cursor cursor = getDatabase().rawQuery("SELECT original,  data, translation, lang_from, lang_to FROM dictionary ORDER BY original", null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -114,30 +100,35 @@ public class DictionaryTable extends ServiceOpenDB {
                 String origin = cursor.getString(cursor.getColumnIndex("original"));
                 String langFromCode = cursor.getString(cursor.getColumnIndex("lang_from"));
                 String langToCode = cursor.getString(cursor.getColumnIndex("lang_to"));
+                String tranlation = cursor.getString(cursor.getColumnIndex("translation"));
 
-                ArrayList<DictionaryItem> items = new ArrayList<>();
-                Gson gson = new Gson();
-                JsonParser jsonParser = new JsonParser();
-                JsonArray jsonArray = (JsonArray) jsonParser.parse(data);
+//                ArrayList<DictionaryItem> items = new ArrayList<>();
+//                Gson gson = new Gson();
+//                JsonParser jsonParser = new JsonParser();
+//                JsonArray jsonArray = (JsonArray) jsonParser.parse(data);
+//
+//                DictionaryItem item;
+//
+//                for (int i = 0; i < jsonArray.size(); i++) {
+//                    item = gson.fromJson(jsonArray.get(i), DictionaryItem.class);
+//                    item.setMainTranslation(tranlation);
+//                    items.add(item);
+//                }
+//
+//                Language originLanguage = Language.getLanguage(langFromCode);
+//                Language translationLanguage = Language.getLanguage(langToCode);
+//                Word word = new Word(origin, originLanguage, items, translationLanguage);
 
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    items.add(gson.fromJson(jsonArray.get(i), DictionaryItem.class));
-                }
-
-                Language originLanguage = Language.getLanguage(langFromCode);
-                Language translationLanguage = Language.getLanguage(langToCode);
-                Word word = new Word(origin, originLanguage, items, translationLanguage);
-
-                String key = originLanguage.name();
-                ArrayList<Word> list;
-
-                if (map.containsKey(key)){
-                    list = map.get(key);
-                }else {
-                    list = new ArrayList<>();
-                }
-                list.add(word);
-                map.put(key, list);
+//                String key = originLanguage.name();
+//                ArrayList<Word> list;
+//
+//                if (map.containsKey(key)){
+//                    list = map.get(key);
+//                }else {
+//                    list = new ArrayList<>();
+//                }
+//                list.add(word);
+//                map.put(key, list);
 
             } while (cursor.moveToNext());
         }
@@ -163,13 +154,13 @@ public class DictionaryTable extends ServiceOpenDB {
                 JsonParser jsonParser = new JsonParser();
                 JsonArray jsonArray = (JsonArray) jsonParser.parse(data);
 
-                ArrayList<DictionaryItem> items = new ArrayList<>();
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    items.add(gson.fromJson(jsonArray.get(i), DictionaryItem.class));
-                }
-
-                Word word = new Word(origin, languages[0], items, languages[1]);
-                list.add(word);
+//                ArrayList<DictionaryItem> items = new ArrayList<>();
+//                for (int i = 0; i < jsonArray.size(); i++) {
+//                    items.add(gson.fromJson(jsonArray.get(i), DictionaryItem.class));
+//                }
+//
+//                Word word = new Word(origin, languages[0], items, languages[1]);
+//                list.add(word);
 
 
             } while (cursor.moveToNext());
@@ -178,10 +169,10 @@ public class DictionaryTable extends ServiceOpenDB {
 
         return list;
     }
-
-    private void remove(DictionaryItem item) {
-        getDatabase().delete(getName(), "original LIKE('" + item.getOriginText() + "')", null);
-    }
+//
+//    private void remove(DictionaryItem item) {
+//        getDatabase().delete(getName(), "original LIKE('" + item.getOriginText() + "')", null);
+//    }
 
     private void clean(){
         getDatabase().delete(getName(), null, null);

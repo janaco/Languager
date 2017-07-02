@@ -4,37 +4,61 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
 import com.stiletto.tr.translator.yandex.Language;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**Data model to represent word or phrase with its translations.
+/**
+ * Data model to represent word or phrase with its translations.
  * Used with dictionary (DictionaryFragment)
- *
+ * <p>
  * Created by yana on 12.03.17.
  */
 
-public class Word implements Comparable<Word>, Parcelable{
+public class Word implements Comparable<Word>, Parcelable {
 
-    private String text;
+    private String original;
+    @SerializedName("text")
+    private String[] translations;
+    private Dictionary dictionary;
+
     private String bookId;
+
     private Language originLanguage;
     private Language translationLanguage;
-    private ArrayList<DictionaryItem> dictionaryItems;
+
     private String status = "Unknown";
 
-    public Word(String text, Language originLanguage, ArrayList<DictionaryItem> dictionaryItems, Language translationLanguage) {
-        this.text = text;
-        this.originLanguage = originLanguage;
-        this.dictionaryItems = dictionaryItems;
-        this.translationLanguage = translationLanguage;
+    public Word(){}
+
+    public Word(String text,  String []translations, Language[]languages) {
+        this.original = text;
+        this.originLanguage = languages[0];
+        this.translationLanguage = languages[1];
+        this.translations = translations;
     }
 
     protected Word(Parcel in) {
-        text = in.readString();
+        original = in.readString();
+        translations = in.createStringArray();
+        dictionary = in.readParcelable(Dictionary.class.getClassLoader());
         bookId = in.readString();
-        dictionaryItems = in.createTypedArrayList(DictionaryItem.CREATOR);
         status = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(original);
+        dest.writeStringArray(translations);
+        dest.writeParcelable(dictionary, flags);
+        dest.writeString(bookId);
+        dest.writeString(status);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Word> CREATOR = new Creator<Word>() {
@@ -49,12 +73,35 @@ public class Word implements Comparable<Word>, Parcelable{
         }
     };
 
+    public String getTranslationsAsString() {
+
+        StringBuilder builder = new StringBuilder();
+
+        if (translations != null) {
+            for (String text : translations) {
+                builder.append(text).append(", ");
+            }
+        }else if (dictionary.getItems() != null){
+
+            for (Dictionary.Item item : dictionary.getItems()){
+                builder.append(item.getTranslations().get(0).getText()).append(", ");
+            }
+        }
+
+        return builder.length() > 0 ? builder.delete(builder.length() - 2, builder.length()).toString()
+                : builder.toString();
+    }
+
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
+
     public String getText() {
-        return text;
+        return original;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.original = text;
     }
 
     public String getStatus() {
@@ -89,13 +136,10 @@ public class Word implements Comparable<Word>, Parcelable{
         this.translationLanguage = translationLanguage;
     }
 
-    public ArrayList<DictionaryItem> getDictionaryItems() {
-        return dictionaryItems;
+    public List<Dictionary.Item> getDictionaryItems() {
+        return dictionary.getItems();
     }
 
-    public void setDictionaryItems(ArrayList<DictionaryItem> dictionaryItems) {
-        this.dictionaryItems = dictionaryItems;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -115,16 +159,4 @@ public class Word implements Comparable<Word>, Parcelable{
         return getText().compareToIgnoreCase(word.getText());
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(text);
-        parcel.writeString(bookId);
-        parcel.writeTypedList(dictionaryItems);
-        parcel.writeString(status);
-    }
 }

@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by yana on 11.03.17.
  */
 
-public class Text implements Parcelable {
+ class Text implements Parcelable {
 
     @SerializedName("text")
     private String text;

@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Dictionary;
 import com.stiletto.tr.model.word.Word;
 
 import java.util.ArrayList;
@@ -66,10 +66,9 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         final Word word = list.get(position);
-        final ArrayList<DictionaryItem> items = word.getDictionaryItems();
 
         final String origin = word.getText();
-        String translation = " - " + DictionaryItem.getTranslation(items);
+        String translation = " - " + word.getTranslationsAsString();
 
         SpannableString text = new SpannableString(origin + translation);
 

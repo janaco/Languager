@@ -21,7 +21,7 @@ import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
-import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.PagesParserCallback;
 import com.stiletto.tr.readers.task.BaseParser;
@@ -212,9 +212,9 @@ public class PageViewerFragment extends Fragment
     }
 
     @Override
-    public void newTranslation(CharSequence originText, DictionaryItem item) {
+    public void newTranslation(Word word) {
 
-        bookDictionaryAdapter.addTranslation(item);
+        bookDictionaryAdapter.addTranslation(word);
         itemDictionaryAlert.setVisibility(View.GONE);
 
     }

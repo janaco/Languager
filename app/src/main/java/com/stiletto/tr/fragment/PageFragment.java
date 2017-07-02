@@ -25,11 +25,10 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.ActionModeCallback;
 import com.stiletto.tr.core.TranslationCallback;
-import com.stiletto.tr.db.tables.DictionaryTable;
-import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Dictionary;
+import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.translator.yandex.Translator;
-import com.stiletto.tr.translator.yandex.TranslatorCallback;
 import com.stiletto.tr.utils.ReaderPrefs;
 import com.stiletto.tr.view.Fragment;
 import com.stiletto.tr.view.PopupFragment;
@@ -45,7 +44,7 @@ import retrofit2.Response;
 
 /**
  * Single book page content is displayed there.
- *
+ * <p>
  * Created by yana on 01.01.17.
  */
 
@@ -143,7 +142,7 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
     }
 
-    private void setUpDictionary(List<DictionaryItem> dictionary) {
+    private void setUpDictionary(List<Dictionary.Item> dictionary) {
         RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -159,61 +158,61 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
         textOrigin.setTextColor(Color.WHITE);
         textOrigin.setText(text);
         translate(text);
-        if (text.toString().split(" ").length < 3) {
-            lookup(text);
-        }
     }
 
     /**
      * Request translation in Yandex Translator API.
      *
-     * @param word - word or phrase to translate.
+     * @param original - word or phrase to translate.
      */
-    private void translate(final CharSequence word) {
-        Translator.translate(word, primaryLanguage, translationLangusage, new TranslatorCallback() {
-            @Override
-            public void translationSuccess(List<DictionaryItem> items) {
+    private void translate(final CharSequence original) {
+        Translator.translate(original, new Language[]{primaryLanguage, translationLangusage},
+                new Translator.Callback<Word>() {
+                    @Override
+                    public void translationSuccess(Word word) {
 
-                if (popView == null) {
-                    showPopup();
-                }
-
-                DictionaryItem item = items.get(0);
-                String translations = item.getTranslationsAsString();
+                        if (popView == null) {
+                            showPopup();
+                        }
 
 
-                popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
+                        popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
 
-                TextView textView = (TextView) popView.findViewById(R.id.item_translation);
+                        TextView textView = (TextView) popView.findViewById(R.id.item_translation);
 
-                String primary = word + "\n";
-                primary = primary.toUpperCase(Locale.getDefault());
+                        String primary = original + "\n";
+                        primary = primary.toUpperCase(Locale.getDefault());
 
-                SpannableString text = new SpannableString(primary + translations);
-                text.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                text.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        SpannableString text = new SpannableString(primary + word.getTranslationsAsString());
+                        text.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                text.setSpan(new RelativeSizeSpan(0.85f), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                text.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
-                        primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new RelativeSizeSpan(0.85f), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
+                                primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                textView.setText(text);
+                        textView.setText(text);
 
-                translationCallback.newTranslation(word, item);
+                        if (text.toString().split(" ").length < 3) {
+                            lookup(word);
+                        } else {
+                            translationCallback.newTranslation(word);
+                        }
 
-            }
 
-            @Override
-            public void translationFailure(Call call, Response response) {
+                    }
 
-            }
+                    @Override
+                    public void translationFailure(Call call, Response response) {
 
-            @Override
-            public void translationError(Call call, Throwable error) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void translationError(Call call, Throwable error) {
+
+                    }
+                });
 
 
     }
@@ -221,36 +220,35 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
     /**
      * Request translation from Yandex Dictionary.
-     *
-     * @param word - word to translate
      */
-    private void lookup(final CharSequence word) {
-        Translator.getDictionary(word, primaryLanguage, translationLangusage, new TranslatorCallback() {
-            @Override
-            public void translationSuccess(List<DictionaryItem> items) {
+    private void lookup(final Word word) {
+        Translator.getDictionary(word.getText(), new Language[]{primaryLanguage, translationLangusage},
+                new Translator.Callback<Dictionary>() {
+                    @Override
+                    public void translationSuccess(Dictionary dictionary) {
 
-                if (popView == null) {
-                    showPopup();
-                }
+                        if (popView == null) {
+                            showPopup();
+                        }
 
-                setUpDictionary(items);
-                DictionaryItem dictionaryItem = new DictionaryItem(word.toString());
-                dictionaryItem.setOriginLanguage(primaryLanguage);
-                dictionaryItem.setTranslationLanguage(translationLangusage);
-                DictionaryTable.insert(getContext(), items, dictionaryItem);
+                        setUpDictionary(dictionary.getItems());
+//                DictionaryTable.insert(getContext(), items, item);
 
-            }
+                        word.setDictionary(dictionary);
+                        translationCallback.newTranslation(word);
 
-            @Override
-            public void translationFailure(Call call, Response response) {
+                    }
 
-            }
+                    @Override
+                    public void translationFailure(Call call, Response response) {
 
-            @Override
-            public void translationError(Call call, Throwable error) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void translationError(Call call, Throwable error) {
+
+                    }
+                });
 
     }
 

@@ -13,7 +13,6 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.DictionaryItemListener;
 import com.stiletto.tr.db.tables.DictionaryTable;
-import com.stiletto.tr.model.word.DictionaryItem;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.view.Fragment;
 
@@ -77,7 +76,7 @@ public class WordDetailsFragment extends Fragment {
 
     @OnClick(R.id.item_remove)
     void onRemoveClick() {
-        DictionaryTable.remove(getContext(), new DictionaryItem(word.getText()));
+//        DictionaryTable.remove(getContext(), new DictionaryItem(word.getText()));
         listener.onDictionaryItemRemoved(position);
         getActivity().onBackPressed();
     }

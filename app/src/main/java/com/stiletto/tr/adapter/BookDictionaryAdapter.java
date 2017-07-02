@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Dictionary;
+import com.stiletto.tr.model.word.Word;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class BookDictionaryAdapter extends RecyclerView.Adapter<BookDictionaryAdapter.ViewHolder> {
 
-    private List<DictionaryItem> list;
+    private List<Dictionary.Item> list;
 
     public BookDictionaryAdapter() {
         this.list = new ArrayList<>();
@@ -39,15 +40,15 @@ public class BookDictionaryAdapter extends RecyclerView.Adapter<BookDictionaryAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        DictionaryItem item = list.get(position);
+        Dictionary.Item item = list.get(position);
 
         holder.itemOrigin.setText(item.getOriginText());
         holder.itemTranslated.setText(item.getTranslationsAsString());
 
     }
 
-    public void addTranslation(DictionaryItem translation){
-        list.add(translation);
+    public void addTranslation(Word word){
+        list.addAll(word.getDictionaryItems());
         notifyDataSetChanged();
     }
 

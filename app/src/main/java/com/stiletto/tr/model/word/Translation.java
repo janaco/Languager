@@ -12,8 +12,7 @@ import java.util.List;
  *
  * Created by yana on 11.03.17.
  */
-
-public class Translation extends Text implements Parcelable {
+ public class Translation extends Text implements Parcelable {
 
     @SerializedName("pos")
     private String partOfSpeech;

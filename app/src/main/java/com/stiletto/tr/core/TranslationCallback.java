@@ -1,6 +1,6 @@
 package com.stiletto.tr.core;
 
-import com.stiletto.tr.model.word.DictionaryItem;
+import com.stiletto.tr.model.word.Word;
 
 /**
  * Created by yana on 26.02.17.
@@ -8,5 +8,5 @@ import com.stiletto.tr.model.word.DictionaryItem;
 
 public interface TranslationCallback {
 
-    void newTranslation(CharSequence originText, DictionaryItem item);
+    void newTranslation(Word word);
 }
