@@ -1,5 +1,6 @@
 package com.stiletto.tr.model.word;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -70,7 +71,7 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
 
         if (translations != null) {
             for (RealmString text : translations) {
-                builder.append(text.getContent()).append(", ");
+                builder.append(text.value).append(", ");
             }
         }else if (dictionary.getItems() != null){
 
@@ -150,10 +151,11 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         return getText().compareToIgnoreCase(word.getText());
     }
 
-    public void insert(){
+    public void insert(Context context){
+        Realm.init(context);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Word word = realm.copyToRealm(this);
+        realm.copyToRealm(this);
         realm.commitTransaction();
     }
 

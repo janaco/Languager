@@ -11,16 +11,16 @@ import io.realm.RealmObject;
 
 public class RealmString extends RealmObject implements Parcelable{
 
-    private String content;
+    public String value;
 
     public RealmString(){}
 
     public RealmString(String content){
-        this.content = content;
+        this.value = content;
     }
 
     protected RealmString(Parcel in) {
-        content = in.readString();
+        value = in.readString();
     }
 
     public static final Creator<RealmString> CREATOR = new Creator<RealmString>() {
@@ -35,13 +35,9 @@ public class RealmString extends RealmObject implements Parcelable{
         }
     };
 
-    public String getContent() {
-        return content;
-    }
-
     @Override
     public String toString() {
-        return content;
+        return value;
     }
 
     public static RealmString[] convert(String []text){
@@ -61,6 +57,6 @@ public class RealmString extends RealmObject implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(content);
+        dest.writeString(value);
     }
 }

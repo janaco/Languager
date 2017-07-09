@@ -2,13 +2,19 @@ package com.stiletto.tr.translator.yandex;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.stiletto.tr.model.word.Dictionary;
+import com.stiletto.tr.model.word.RealmString;
 import com.stiletto.tr.model.word.Word;
+import com.stiletto.tr.translator.yandex.utils.RealmStringListTypeAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.realm.RealmList;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -111,10 +117,16 @@ public class Translator {
     }
 
     private static Retrofit getRetrofit(String baseUrl) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(new TypeToken<RealmList<RealmString>>() {
+                        }.getType(),
+                        RealmStringListTypeAdapter.INSTANCE)
+                .create();
+
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(getClient())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
     }
