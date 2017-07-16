@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.model.word.WordInfo;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.zip.Inflater;
 public class DictionariesAdapter extends RecyclerView.Adapter<DictionariesAdapter.ViewHolder> {
 
     private List<WordInfo> list;
+    private OnListItemClickListener<WordInfo> onListItemClickListener;
 
     public DictionariesAdapter(List<WordInfo> list) {
         this.list = list;
@@ -30,17 +32,27 @@ public class DictionariesAdapter extends RecyclerView.Adapter<DictionariesAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        WordInfo info = list.get(position);
+        final WordInfo info = list.get(position);
 
         holder.viewName.setText(info.getOriginLanguage() + " - " + info.getTranslationLanguage());
+        holder.viewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onListItemClickListener.onListItemClick(info, position);
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void setOnListItemClickListener(OnListItemClickListener<WordInfo> onListItemClickListener) {
+        this.onListItemClickListener = onListItemClickListener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

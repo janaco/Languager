@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionariesAdapter;
+import com.stiletto.tr.core.OnListItemClickListener;
+import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.word.WordInfo;
 import com.stiletto.tr.view.Fragment;
 
@@ -28,7 +30,7 @@ import io.realm.Sort;
  * Created by yana on 21.05.17.
  */
 
-public class DictionariesFragment extends Fragment {
+public class DictionariesFragment extends Fragment implements OnListItemClickListener<WordInfo>{
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -62,9 +64,23 @@ public class DictionariesFragment extends Fragment {
         RealmResults<WordInfo> results = query.distinct("originLanguage", "translationLanguage");
         adapter = new DictionariesAdapter(
                 results.sort("originLanguage", Sort.ASCENDING, "translationLanguage", Sort.ASCENDING));
+        adapter.setOnListItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
         Log.d("REALM_DB", "results: " + results.size());
+    }
+
+    @Override
+    public void onListItemClick(WordInfo item, int position) {
+        DictionaryFragment fragment = new DictionaryFragment();
+
+        Bundle args = new Bundle();
+        args.putString("primary", item.getOriginLanguage());
+        args.putString("translation", item.getTranslationLanguage());
+
+        fragment.setArguments(args);
+
+        NavigationManager.addFragment(getActivity(), fragment);
     }
 
     @OnClick(R.id.item_back)
