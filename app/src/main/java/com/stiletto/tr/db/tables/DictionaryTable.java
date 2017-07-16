@@ -78,10 +78,10 @@ public class DictionaryTable extends ServiceOpenDB {
 //        new DictionaryTable(context).remove(item);
 //    }
 
-    public static Map<String, ArrayList<Word>> getDictionaries(Context context) {
-        return new DictionaryTable(context).getDictionaries();
-    }
-
+//    public static Map<String, ArrayList<Word>> getDictionaries(Context context) {
+//        return new DictionaryTable(context).getDictionaries();
+//    }
+//
 
     private void insert(ContentValues contentValues) {
 

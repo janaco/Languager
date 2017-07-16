@@ -2,27 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorLightPrimary"
     android:clickable="true"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar_dictionary" />
 
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/title_strip"
-            style="@style/PagerTabTitleText"
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_gravity="top"
-            android:background="@color/colorAccent"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp" />
+            android:id="@+id/recycler_view"
+            android:layout_marginTop="10dp"
+            tools:listitem="@layout/item_language"
+            android:layout_height="match_parent"/>
 
-    </android.support.v4.view.ViewPager>
+    </RelativeLayout>
 </LinearLayout>

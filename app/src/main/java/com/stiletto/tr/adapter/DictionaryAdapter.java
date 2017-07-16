@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.model.word.Dictionary;
 import com.stiletto.tr.model.word.DictionaryItem;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(parent.getContext(),
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dictionary, null, false));
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_word, null, false));
     }
 
     @Override

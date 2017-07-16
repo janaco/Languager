@@ -28,29 +28,34 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
     @SerializedName("text")
     private RealmList<RealmString> translations;
     private Dictionary dictionary;
+    private WordInfo info;
 
-    private String bookId;
 
-    private String originLanguage;
-    private String translationLanguage;
+    public Word() {
+    }
 
-    private String status = "Unknown";
-
-    public Word(){}
-
-    public Word(String text,  String[] translations, Language[]languages) {
+    public Word(String text, String[] translations, Language[] languages) {
         this.original = text;
-        this.originLanguage = languages[0].toString();
-        this.translationLanguage = languages[1].toString();
+        this.info = new WordInfo(languages);
         this.translations = new RealmList<>(RealmString.convert(translations));
     }
 
     protected Word(Parcel in) {
         original = in.readString();
-        bookId = in.readString();
-        originLanguage = in.readString();
-        translationLanguage = in.readString();
-        status = in.readString();
+        dictionary = in.readParcelable(Dictionary.class.getClassLoader());
+        info = in.readParcelable(WordInfo.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(original);
+        dest.writeParcelable(dictionary, flags);
+        dest.writeParcelable(info, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Word> CREATOR = new Creator<Word>() {
@@ -73,9 +78,9 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
             for (RealmString text : translations) {
                 builder.append(text.value).append(", ");
             }
-        }else if (dictionary.getItems() != null){
+        } else if (dictionary.getItems() != null) {
 
-            for (DictionaryItem item : dictionary.getItems()){
+            for (DictionaryItem item : dictionary.getItems()) {
                 builder.append(item.getTranslations().get(0).getText()).append(", ");
             }
         }
@@ -96,36 +101,44 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         this.original = text;
     }
 
+    public String getOriginLanguage() {
+        return info.getOriginLanguage();
+    }
+
+    public String getTranslationLanguage() {
+        return info.getTranslationLanguage();
+    }
+
     public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getBookId() {
-        return bookId;
+        return info.getStatus();
     }
 
     public void setBookId(String bookId) {
-        this.bookId = bookId;
-    }
-
-    public Language getOriginLanguage() {
-        return Language.getLanguage(originLanguage);
+        if (info == null) {
+            info = new WordInfo();
+        }
+        info.setBookId(bookId);
     }
 
     public void setOriginLanguage(Language originLanguage) {
-        this.originLanguage = originLanguage.toString();
-    }
-
-    public Language getTranslationLanguage() {
-        return Language.getLanguage(translationLanguage);
+        if (info == null) {
+            info = new WordInfo();
+        }
+        info.setOriginLanguage(originLanguage);
     }
 
     public void setTranslationLanguage(Language translationLanguage) {
-        this.translationLanguage = translationLanguage.toString();
+        if (info == null) {
+            info = new WordInfo();
+        }
+        info.setTranslationLanguage(translationLanguage);
+    }
+
+    public void setStatus(String status) {
+        if (info == null) {
+            info = new WordInfo();
+        }
+        info.setStatus(status);
     }
 
     public List<DictionaryItem> getDictionaryItems() {
@@ -151,7 +164,7 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         return getText().compareToIgnoreCase(word.getText());
     }
 
-    public void insert(Context context){
+    public void insert(Context context) {
         Realm.init(context);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
@@ -159,17 +172,4 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         realm.commitTransaction();
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(original);
-        dest.writeString(bookId);
-        dest.writeString(originLanguage);
-        dest.writeString(translationLanguage);
-        dest.writeString(status);
-    }
 }

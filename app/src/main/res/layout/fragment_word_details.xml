@@ -27,7 +27,7 @@
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tool:listitem="@layout/item_dictionary" />
+                    tool:listitem="@layout/item_word" />
             </LinearLayout>
 
 
