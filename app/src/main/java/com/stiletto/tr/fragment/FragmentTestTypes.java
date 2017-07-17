@@ -54,6 +54,7 @@ public class FragmentTestTypes extends Fragment implements OnListItemClickListen
                 break;
 
             case GENERAL:
+                NavigationManager.addFragment(getActivity(), FragmentGeneralTest.getInstance(getArguments()));
                 break;
 
             case ON_TIME:

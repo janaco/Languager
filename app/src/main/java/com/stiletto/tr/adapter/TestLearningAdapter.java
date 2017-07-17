@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.softes.flippy.FlipView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.core.OnListItemClickListener;
-import com.stiletto.tr.model.test.TestVariant;
+import com.stiletto.tr.model.test.ABCTest;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ import java.util.List;
 
 public class TestLearningAdapter extends RecyclerView.Adapter<TestLearningAdapter.ViewHolder> {
 
-    private List<TestVariant> tests;
+    private List<ABCTest.Variant> tests;
     private int colorWrong;
     private int colorCorrect;
     private int colorBase;
-    private OnListItemClickListener<TestVariant> onListItemClickListener;
+    private OnListItemClickListener<ABCTest.Variant> onListItemClickListener;
 
     public TestLearningAdapter(Context context) {
         colorWrong = ContextCompat.getColor(context, R.color.red_400);
@@ -42,17 +42,17 @@ public class TestLearningAdapter extends RecyclerView.Adapter<TestLearningAdapte
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_learning, null, false));
     }
 
-    public void setOnListItemClickListener(OnListItemClickListener<TestVariant> onListItemClickListener) {
+    public void setOnListItemClickListener(OnListItemClickListener<ABCTest.Variant> onListItemClickListener) {
         this.onListItemClickListener = onListItemClickListener;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        final TestVariant variant = tests.get(position);
+        final ABCTest.Variant variant = tests.get(position);
 
-        holder.textFront.setText(variant.getProposedVariant());
-        holder.textBack.setText(variant.getCorrectMeaning());
+        holder.textFront.setText(variant.getText());
+        holder.textBack.setText(variant.getAnswer());
 
         if (holder.flipView.isFlipped()){
             holder.flipView.toggleView();
@@ -88,10 +88,16 @@ public class TestLearningAdapter extends RecyclerView.Adapter<TestLearningAdapte
 
     @Override
     public int getItemCount() {
-        return tests.size();
+        try {
+            return tests.size();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
-    public void setTests(List<TestVariant> tests) {
+    public void setTests(List<ABCTest.Variant> tests) {
         this.tests = tests;
         notifyDataSetChanged();
     }
