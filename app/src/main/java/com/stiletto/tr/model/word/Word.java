@@ -172,4 +172,14 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         realm.commitTransaction();
     }
 
+    public void delete(){
+        Realm.getDefaultInstance().executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Word.this.deleteFromRealm();
+            }
+        });
+    }
+
+
 }

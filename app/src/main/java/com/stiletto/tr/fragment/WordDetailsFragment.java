@@ -19,6 +19,9 @@ import com.stiletto.tr.view.Fragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * Translation, usage examples and any additional information about certain word
@@ -38,16 +41,18 @@ public class WordDetailsFragment extends Fragment {
     @Bind(R.id.item_lang)
     TextView itemLanguages;
 
-    private Word word;
+    private String text;
     private DictionaryItemListener listener;
     private int position;
+
+    private Word word;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        word = getArguments().getParcelable("word");
+        text = getArguments().getString("word");
         position = getArguments().getInt("position");
     }
 
@@ -65,7 +70,13 @@ public class WordDetailsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String languages = word.getOriginLanguage().toString() + "-" + word.getTranslationLanguage().toString();
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery<Word> query = realm.where(Word.class).equalTo("original", text);
+        RealmResults<Word> results = query.findAllAsync();
+        results.load();
+
+        word = results.first();
+        String languages = word.getOriginLanguage() + "-" + word.getTranslationLanguage();
         itemLanguages.setText(languages);
         itemTitle.setText(word.getText());
         itemSubtitle.setVisibility(View.VISIBLE);
@@ -76,7 +87,8 @@ public class WordDetailsFragment extends Fragment {
 
     @OnClick(R.id.item_remove)
     void onRemoveClick() {
-//        DictionaryTable.remove(getContext(), new DictionaryItem(word.getText()));
+
+        word.delete();
         listener.onDictionaryItemRemoved(position);
         getActivity().onBackPressed();
     }
@@ -93,7 +105,7 @@ public class WordDetailsFragment extends Fragment {
     public static WordDetailsFragment getInstance(Word word, int position, DictionaryItemListener listener) {
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable("word", word);
+        bundle.putString("word", word.getText());
         bundle.putInt("position", position);
 
         WordDetailsFragment fragment = new WordDetailsFragment();
