@@ -6,5 +6,5 @@ package com.stiletto.tr.emums;
 
 public enum Status {
 
-    //TODO: word statuses (UNKNOWN, LEARNING, LEARNED...)
+    UNKNOWN, KNOWN, APPROVED
 }

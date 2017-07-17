@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.DictionaryItemListener;
-import com.stiletto.tr.db.tables.DictionaryTable;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.view.Fragment;
 

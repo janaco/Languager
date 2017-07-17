@@ -1,42 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@color/white"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.7">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Test"
-            android:id="@+id/header"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_22"
-            android:layout_centerInParent="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAllCaps="true"
-            android:gravity="center"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.3">
-
-        <android.support.v7.widget.RecyclerView
+        <LinearLayout
+            android:layout_weight="0.1"
             android:layout_width="match_parent"
-            android:id="@+id/recycler_view"
-            tools:listitem="@layout/item_test_learning"
-            android:layout_height="290dp"/>
-    </RelativeLayout>
+            android:weightSum="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/item_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center|bottom"
+                android:padding="15dp"
+                android:text="Text"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_36"
+                android:textStyle="bold" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/item_transcription"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:text="[transcription]"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_18"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/item_translation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center|top"
+                android:padding="15dp"
+                android:text="Translation"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_24"
+                android:textStyle="italic|bold" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.9">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_centerInParent="true" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prev"
+                    android:padding="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/item_prev"/>
+
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:padding="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next"
+                    android:id="@+id/item_next"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
