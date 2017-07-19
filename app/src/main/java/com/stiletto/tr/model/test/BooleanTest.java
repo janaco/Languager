@@ -4,33 +4,26 @@ package com.stiletto.tr.model.test;
  * Created by yana on 17.07.17.
  */
 
-public class BooleanTest {
+public class BooleanTest extends Test<String>{
 
-    private String text;
-    private String answer;
     private String correctAnswer;
-    private boolean correct;
+    private boolean approvable;
 
-    public BooleanTest(String text, String answer, String correctAnswer, boolean answerTrue) {
-        this.text = text;
-        this.answer = answer;
+    public BooleanTest(String text, String answer, String correctAnswer, boolean aprovable) {
+        super(text, answer);
         this.correctAnswer = correctAnswer;
-        this.correct = answerTrue;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getAnswer() {
-        return answer;
+        this.approvable = aprovable;
     }
 
     public String getCorrectAnswer() {
         return correctAnswer;
     }
 
-    public boolean isCorrect() {
-        return correct;
+    public boolean isApprovable() {
+        return approvable;
+    }
+
+    public boolean isAnswerCorrect(boolean approved) {
+        return (approvable && approved) || (!approvable && !approved);
     }
 }

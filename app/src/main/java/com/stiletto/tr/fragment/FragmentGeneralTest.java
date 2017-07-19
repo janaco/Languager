@@ -1,15 +1,11 @@
 package com.stiletto.tr.fragment;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.adapter.TestLearningAdapter;
 import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.model.test.ABCTest;
 import com.stiletto.tr.model.test.BooleanTest;
@@ -176,7 +171,7 @@ public class FragmentGeneralTest extends Fragment implements OnListItemClickList
         final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.rectangle_rounded);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable.setTint(test.isCorrect() ?
+            drawable.setTint(test.isApprovable() ?
                     ContextCompat.getColor(getContext(), R.color.green_500) :
                     ContextCompat.getColor(getContext(), R.color.red_500));
         }
@@ -205,7 +200,7 @@ public class FragmentGeneralTest extends Fragment implements OnListItemClickList
         final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.rectangle_rounded);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable.setTint(test.isCorrect() ?
+            drawable.setTint(test.isApprovable() ?
                     ContextCompat.getColor(getContext(), R.color.red_500) :
                     ContextCompat.getColor(getContext(), R.color.green_500));
         }

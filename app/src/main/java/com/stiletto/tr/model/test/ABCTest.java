@@ -6,31 +6,15 @@ import java.util.List;
  * Created by yana on 17.07.17.
  */
 
-public class ABCTest {
+public class ABCTest extends Test<List<ABCTest.Variant>>{
 
-    private String text;
-    private boolean passed;
-    private List<Variant> variants;
 
     public ABCTest(String text, List<Variant> variants) {
-        this.text = text;
-        this.variants = variants;
+        super(text, variants);
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public boolean isPassed() {
-        return passed;
-    }
-
-    public List<Variant> getVariants() {
-        return variants;
-    }
-
-    public void setPassed(boolean passed) {
-        this.passed = passed;
+    public boolean isAnswerCorrect(Variant variant){
+        return variant.isCorrect();
     }
 
     public static class Variant{
