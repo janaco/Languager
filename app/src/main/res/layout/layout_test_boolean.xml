@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/white"
+    android:id="@+id/view_boolean_test"
+    android:visibility="gone"
     android:orientation="vertical">
 
 
@@ -14,7 +15,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_text"
+            android:id="@+id/item_task_boolean"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -34,7 +35,7 @@
             android:textSize="@dimen/text_16"/>
 
         <TextView
-            android:id="@+id/item_answer"
+            android:id="@+id/item_answer_boolean"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

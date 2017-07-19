@@ -15,6 +15,15 @@ public abstract class Test<Answer> {
         this.answer = answer;
     }
 
+    @Override
+    public String toString() {
+        return "Test{" +
+                "task='" + task + '\'' +
+                ", answer=" + answer +
+                ", passed=" + passed +
+                '}';
+    }
+
     public boolean isPassed() {
         return passed;
     }

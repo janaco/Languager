@@ -14,22 +14,30 @@ import java.util.Random;
 
 public abstract class TestBuilder {
 
-    private List<Test> tests;
+    private List<Test> tests = new ArrayList<>();
     private int index;
 
     public void create(List<Word> words) {
-
-        tests = new ArrayList<>();
 
         for (Word word : words) {
             tests.add(createTest(word, words, words.size()));
         }
     }
 
+    public void create(List<Word> words, Word word) {
+        tests.add(createTest(word, words, words.size()));
+    }
+
     protected abstract Test createTest(Word word, List<Word> words, int limit);
+
+    public abstract boolean showNext();
 
     public Test getNext() {
         return tests.get(index++);
+    }
+
+    public Test getCurrentTest() {
+        return tests.get(index);
     }
 
     public boolean hasNext() {
@@ -39,6 +47,7 @@ public abstract class TestBuilder {
     /**
      * Test task should be written on native language and translation
      * or answers variants should be on unknown(learning) language.
+     *
      * @return
      */
     protected boolean nativeLanguageTask() {

@@ -22,7 +22,7 @@ import java.util.List;
  * Created by yana on 27.05.17.
  */
 
-public class TestLearningAdapter extends RecyclerView.Adapter<TestLearningAdapter.ViewHolder> {
+public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHolder> {
 
     private List<ABCTest.Variant> tests;
     private int colorWrong;
@@ -30,7 +30,7 @@ public class TestLearningAdapter extends RecyclerView.Adapter<TestLearningAdapte
     private int colorBase;
     private OnListItemClickListener<ABCTest.Variant> onListItemClickListener;
 
-    public TestLearningAdapter(Context context) {
+    public ABCTestAdapter(Context context) {
         colorWrong = ContextCompat.getColor(context, R.color.red_400);
         colorCorrect = ContextCompat.getColor(context, R.color.green_400);
         colorBase = ContextCompat.getColor(context, R.color.colorPrimaryDark);

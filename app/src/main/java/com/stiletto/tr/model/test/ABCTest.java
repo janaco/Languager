@@ -29,6 +29,15 @@ public class ABCTest extends Test<List<ABCTest.Variant>>{
             this.correct = correct;
         }
 
+        @Override
+        public String toString() {
+            return "\nVariant{" +
+                    "text='" + text + '\'' +
+                    ", answer='" + answer + '\'' +
+                    ", correct=" + correct +
+                    '}';
+        }
+
         public String getText() {
             return text;
         }
