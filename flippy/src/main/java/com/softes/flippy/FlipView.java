@@ -98,32 +98,27 @@ public class FlipView extends FrameLayout
     public void reset() {
         isFlipped = false;
         animator.setDirection(Direction.DOWN);
-//        direction = Direction.DOWN;
         frontView.setVisibility(View.VISIBLE);
         backView.setVisibility(View.GONE);
     }
 
     public void toggleUp() {
         animator.setDirection(Direction.UP);
-//        direction = Direction.UP;
         startAnimation();
     }
 
     public void toggleDown() {
         animator.setDirection(Direction.DOWN);
-//        direction = Direction.DOWN;
         startAnimation();
     }
 
     public void toggleLeft() {
         animator.setDirection(Direction.LEFT);
-//        direction = Direction.LEFT;
         startAnimation();
     }
 
     public void toggleRight() {
         animator.setDirection(Direction.RIGHT);
-//        direction = Direction.RIGHT;
         startAnimation();
     }
 
@@ -148,10 +143,6 @@ public class FlipView extends FrameLayout
         if (listener != null) {
             listener.onFlipEnd(this);
         }
-//        if (direction == Direction.UP) direction = Direction.DOWN;
-//        if (direction == Direction.DOWN) direction = Direction.UP;
-//        if (direction == Direction.LEFT) direction = Direction.RIGHT;
-//        if (direction == Direction.RIGHT) direction = Direction.LEFT;
 
         if (animator.getDirection() == Direction.UP) animator.setDirection(Direction.DOWN);
         if (animator.getDirection() == Direction.DOWN) animator.setDirection(Direction.UP);

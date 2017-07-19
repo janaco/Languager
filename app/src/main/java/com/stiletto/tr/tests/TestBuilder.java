@@ -15,7 +15,7 @@ import java.util.Random;
 public abstract class TestBuilder {
 
     private List<Test> tests = new ArrayList<>();
-    private int index;
+    private int index = -1;
 
     public void create(List<Word> words) {
 
@@ -33,7 +33,7 @@ public abstract class TestBuilder {
     public abstract boolean showNext();
 
     public Test getNext() {
-        return tests.get(index++);
+        return tests.get(++index);
     }
 
     public Test getCurrentTest() {
@@ -41,7 +41,7 @@ public abstract class TestBuilder {
     }
 
     public boolean hasNext() {
-        return index < tests.size();
+        return index < tests.size()-1;
     }
 
     /**

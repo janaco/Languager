@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -101,11 +102,12 @@ public class BooleanTestManager extends TestBuilder {
 
         final BooleanTest test = (BooleanTest) getCurrentTest();
         test.setPassed(test.isApprovable());
+        Log.d("TESTS_", "APPROVE.test: " + test);
 
         final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.rectangle_rounded);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable.setTint(test.isApprovable() ?
+            drawable.setTint(test.isPassed() ?
                     ContextCompat.getColor(context, R.color.green_500) :
                     ContextCompat.getColor(context, R.color.red_500));
         }
@@ -125,12 +127,14 @@ public class BooleanTestManager extends TestBuilder {
         final BooleanTest test = (BooleanTest) getCurrentTest();
         test.setPassed(!test.isApprovable());
 
+        Log.d("TESTS_", "REJECT.test: " + test);
+
         final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.rectangle_rounded);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             drawable.setTint(test.isPassed() ?
-                    ContextCompat.getColor(context, R.color.red_500) :
-                    ContextCompat.getColor(context, R.color.green_500));
+                    ContextCompat.getColor(context, R.color.green_500) :
+                    ContextCompat.getColor(context, R.color.red_500));
         }
 
         btnReject.setBackground(drawable);

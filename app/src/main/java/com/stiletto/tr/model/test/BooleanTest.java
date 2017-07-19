@@ -15,6 +15,15 @@ public class BooleanTest extends Test<String>{
         this.approvable = aprovable;
     }
 
+    @Override
+    public String toString() {
+        return "BooleanTest{" +
+                "correctAnswer='" + correctAnswer + '\'' +
+                ", approvable=" + approvable +
+                ", " + super.toString() +
+                '}';
+    }
+
     public String getCorrectAnswer() {
         return correctAnswer;
     }

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.model.test.ABCTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ import java.util.List;
 
 public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHolder> {
 
-    private List<ABCTest.Variant> tests;
+    private List<ABCTest.Variant> tests = new ArrayList<>();
     private int colorWrong;
     private int colorCorrect;
     private int colorBase;
@@ -51,9 +53,11 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
 
         final ABCTest.Variant variant = tests.get(position);
 
+        holder.flipView.reset();
         holder.textFront.setText(variant.getText());
         holder.textBack.setText(variant.getAnswer());
 
+        Log.d("TESTS_", variant.getText() + ": isFlipped: " + holder.flipView.isFlipped());
         if (holder.flipView.isFlipped()){
             holder.flipView.toggleView();
         }
@@ -98,7 +102,8 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
     }
 
     public void setTests(List<ABCTest.Variant> tests) {
-        this.tests = tests;
+        this.tests.clear();
+        this.tests.addAll(tests);
         notifyDataSetChanged();
     }
 

@@ -65,12 +65,11 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
 
     @Override
     public boolean showNext() {
-        Log.d("TESTS_", "CHOOSE.hasNext: " + hasNext());
         if (hasNext()){
             ABCTest test = (ABCTest) getNext();
-            Log.d("TESTS_", "CHOOSE.next: " + test);
             viewTask.setText(test.getTask());
             adapter.setTests(test.getAnswer());
+            recyclerView.setAdapter(adapter);
             testsListener.onNextTest(test, TaskType.CHOOSE);
             return true;
         }

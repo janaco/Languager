@@ -122,7 +122,6 @@ public class TestsManager implements TestsListener {
     }
 
     private boolean showNextTest(TaskType taskType) {
-        Log.d("TESTS_", "show next: " + taskType);
         switch (taskType) {
 
             case CHOOSE:
@@ -132,7 +131,7 @@ public class TestsManager implements TestsListener {
                 return booleanTestManager.showNext();
 
             case WRITING:
-                return booleanTestManager.showNext();
+                return writingTestManager.showNext();
 
             default:
                 return false;
