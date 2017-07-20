@@ -52,7 +52,7 @@ public class BooleanTestManager extends TestBuilder {
     }
 
     @Override
-    protected Test createTest(Word word, List<Word> words, int limit) {
+    protected Test createTest(Word word, List<Word> words) {
 
         String task;
         String answer;
@@ -62,16 +62,18 @@ public class BooleanTestManager extends TestBuilder {
         if (nativeLanguageTask()) {
             task = word.getTranslationsAsString();
             correctAnswer = word.getText();
-            answer = createAnswerOnNativeLanguageTest(words, word, approvableTest, limit);
+            answer = createAnswerOnNativeLanguageTest(words, word, approvableTest, words.size());
 
         } else {
             task = word.getText();
             correctAnswer = word.getTranslationsAsString();
-            answer = createAnswerOnLearningLanguageTest(words, word, approvableTest, limit);
+            answer = createAnswerOnLearningLanguageTest(words, word, approvableTest, words.size());
         }
 
 
-        return new BooleanTest(task, answer, correctAnswer, approvableTest);
+        return new BooleanTest(
+                new Test.MetaData(word.getText(), word.getOriginLanguage(), word.getTranslationLanguage()),
+                task, answer, correctAnswer, approvableTest);
 
     }
 
@@ -116,7 +118,7 @@ public class BooleanTestManager extends TestBuilder {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                testsListener.onTextIsDone(TaskType.BOOLEAN, test.isPassed());
+                testsListener.onTextIsDone(test);
             }
         }, 500);
     }
@@ -142,7 +144,7 @@ public class BooleanTestManager extends TestBuilder {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-              testsListener.onTextIsDone(TaskType.BOOLEAN, test.isPassed());
+              testsListener.onTextIsDone(test);
             }
         }, 500);
     }

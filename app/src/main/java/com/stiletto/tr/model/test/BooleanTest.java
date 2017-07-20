@@ -1,5 +1,7 @@
 package com.stiletto.tr.model.test;
 
+import com.stiletto.tr.emums.TaskType;
+
 /**
  * Created by yana on 17.07.17.
  */
@@ -9,8 +11,8 @@ public class BooleanTest extends Test<String>{
     private String correctAnswer;
     private boolean approvable;
 
-    public BooleanTest(String text, String answer, String correctAnswer, boolean aprovable) {
-        super(text, answer);
+    public BooleanTest(MetaData metaData, String text, String answer, String correctAnswer, boolean aprovable) {
+        super(metaData, text, answer, TaskType.BOOLEAN);
         this.correctAnswer = correctAnswer;
         this.approvable = aprovable;
     }

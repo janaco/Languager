@@ -3,6 +3,7 @@ package com.stiletto.tr.model.word;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.translator.yandex.Language;
 
 import io.realm.RealmObject;
@@ -18,7 +19,8 @@ public class WordInfo extends RealmObject implements Parcelable{
     private String originLanguage;
     private String translationLanguage;
 
-    private String status = "Unknown";
+    private int passedTestsCount;
+    private String status = Status.UNKNOWN.name();
 
     public WordInfo(){}
 
@@ -46,6 +48,14 @@ public class WordInfo extends RealmObject implements Parcelable{
         }
     };
 
+    public int getPassedTestsCount() {
+        return passedTestsCount;
+    }
+
+    public void setPassedTestsCount(int passedTestsCount) {
+        this.passedTestsCount = passedTestsCount;
+    }
+
     public String getBookId() {
         return bookId;
     }
@@ -70,8 +80,8 @@ public class WordInfo extends RealmObject implements Parcelable{
         this.translationLanguage = translationLanguage.toString();
     }
 
-    public String getStatus() {
-        return status;
+    public Status getStatus() {
+        return Status.valueOf(status);
     }
 
     public void setStatus(String status) {

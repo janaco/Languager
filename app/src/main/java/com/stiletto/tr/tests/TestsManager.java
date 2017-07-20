@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.emums.TaskType;
 import com.stiletto.tr.model.test.Test;
 import com.stiletto.tr.model.word.Word;
@@ -14,6 +15,7 @@ import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 /**
  * Created by yana on 19.07.17.
@@ -84,7 +86,9 @@ public class TestsManager implements TestsListener {
     }
 
     public void start() {
-        showNextTest(getNextTaskType());
+        if (taskTypes.length > 0) {
+            showNextTest(getNextTaskType());
+        }
     }
 
     @Override
@@ -112,13 +116,39 @@ public class TestsManager implements TestsListener {
     }
 
     @Override
-    public void onTextIsDone(TaskType taskType, boolean passed) {
+    public void onTextIsDone(Test test) {
 
-        TaskType nextTask = getNextTaskType();
-        while (!showNextTest(nextTask)){
-            onTasksIsDone(nextTask);
-            nextTask = getNextTaskType();
+        if (test.isPassed()) {
+            increaseLearningProgress(test);
         }
+
+        if (taskTypes.length > 0) {
+            TaskType nextTask = getNextTaskType();
+            while (!showNextTest(nextTask)) {
+                onTasksIsDone(nextTask);
+                if (taskTypes.length > 0) {
+                    nextTask = getNextTaskType();
+                }
+            }
+        }
+    }
+
+    private void increaseLearningProgress(Test test) {
+
+        Word word = Realm.getDefaultInstance().where(Word.class)
+                .equalTo("original", test.getMetaData().getWordKey())
+                .equalTo("info.originLanguage", test.getMetaData().getLangPrimary())
+                .equalTo("info.translationLanguage", test.getMetaData().getLangTranslation())
+                .findFirst();
+        int passedTests = word.getPassedTestsCount() + 1;
+
+        Realm realm =Realm.getDefaultInstance();
+        realm.beginTransaction();
+        word.setPassedTestsCount(passedTests);
+        word.setStatus(passedTests <= 3 ? Status.UNKNOWN.name() : Status.KNOWN.name());
+        realm.copyToRealmOrUpdate(word);
+        realm.commitTransaction();
+
     }
 
     private boolean showNextTest(TaskType taskType) {
@@ -139,15 +169,17 @@ public class TestsManager implements TestsListener {
     }
 
     private void onTasksIsDone(TaskType taskType) {
-        TaskType[] tasks = new TaskType[taskTypes.length - 1];
-        int index = 0;
-        for (TaskType type : taskTypes) {
-            if (type != taskType) {
-                tasks[index++] = type;
+        if (taskTypes.length > 0) {
+            TaskType[] tasks = new TaskType[taskTypes.length - 1];
+            int index = 0;
+            for (TaskType type : taskTypes) {
+                if (type != taskType) {
+                    tasks[index++] = type;
+                }
             }
-        }
 
-        taskTypes = tasks;
+            taskTypes = tasks;
+        }
     }
 
     private TaskType getNextTaskType() {

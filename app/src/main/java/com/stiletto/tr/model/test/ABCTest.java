@@ -1,5 +1,7 @@
 package com.stiletto.tr.model.test;
 
+import com.stiletto.tr.emums.TaskType;
+
 import java.util.List;
 
 /**
@@ -9,8 +11,8 @@ import java.util.List;
 public class ABCTest extends Test<List<ABCTest.Variant>>{
 
 
-    public ABCTest(String text, List<Variant> variants) {
-        super(text, variants);
+    public ABCTest(MetaData metaData, String text, List<Variant> variants) {
+        super(metaData, text, variants, TaskType.CHOOSE);
     }
 
     public boolean isAnswerCorrect(Variant variant){

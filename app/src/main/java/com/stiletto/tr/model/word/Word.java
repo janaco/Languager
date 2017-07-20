@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.translator.yandex.Language;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class Word extends RealmObject implements Comparable<Word>, Parcelable {
 
+    @PrimaryKey
     private String original;
     @SerializedName("text")
     private RealmList<RealmString> translations;
@@ -70,6 +72,14 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         }
     };
 
+    public int getPassedTestsCount() {
+        return info.getPassedTestsCount();
+    }
+
+    public void setPassedTestsCount(int passedTestsCount) {
+        info.setPassedTestsCount(passedTestsCount);
+    }
+
     public String getTranslationsAsString() {
 
         StringBuilder builder = new StringBuilder();
@@ -109,7 +119,7 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         return info.getTranslationLanguage();
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return info.getStatus();
     }
 
@@ -172,11 +182,27 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         realm.commitTransaction();
     }
 
-    public void delete(){
+    public void delete() {
         Realm.getDefaultInstance().executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 Word.this.deleteFromRealm();
+            }
+        });
+    }
+
+    public void increaseLearningProgress() {
+
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                int passedTests = info.getPassedTestsCount() + 1;
+
+                info.setPassedTestsCount(passedTests);
+                info.setStatus(passedTests <= 3 ? Status.UNKNOWN.name() : Status.KNOWN.name());
+
+                realm.copyToRealmOrUpdate(Word.this);
             }
         });
     }

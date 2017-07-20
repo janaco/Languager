@@ -20,15 +20,15 @@ public abstract class TestBuilder {
     public void create(List<Word> words) {
 
         for (Word word : words) {
-            tests.add(createTest(word, words, words.size()));
+            tests.add(createTest(word, words));
         }
     }
 
     public void create(List<Word> words, Word word) {
-        tests.add(createTest(word, words, words.size()));
+        tests.add(createTest(word, words));
     }
 
-    protected abstract Test createTest(Word word, List<Word> words, int limit);
+    protected abstract Test createTest(Word word, List<Word> words);
 
     public abstract boolean showNext();
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.emums.TaskType;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.tests.TestsManager;
@@ -50,7 +51,7 @@ public class FragmentGeneralTest extends Fragment{
         RealmQuery<Word> query = realm.where(Word.class)
                 .equalTo("info.originLanguage", langPrimary)
                 .equalTo("info.translationLanguage", langTranslation)
-                .equalTo("info.status", "Unknown");
+                .equalTo("info.status", Status.UNKNOWN.name());
 
         RealmResults<Word> results = query.findAllAsync();
         results.load();

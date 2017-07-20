@@ -2,6 +2,7 @@ package com.stiletto.tr.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionaryAdapter;
 import com.stiletto.tr.core.DictionaryItemListener;
+import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.view.Fragment;
 
@@ -78,6 +80,10 @@ public class WordDetailsFragment extends Fragment {
         String languages = word.getOriginLanguage() + "-" + word.getTranslationLanguage();
         itemLanguages.setText(languages);
         itemTitle.setText(word.getText());
+        Status status = word.getStatus();
+
+        itemSubtitle.setText(status.name());
+        itemSubtitle.setTextColor(ContextCompat.getColor(getContext(), status.getColor()));
         itemSubtitle.setVisibility(View.VISIBLE);
 
         DictionaryAdapter adapter = new DictionaryAdapter(word.getDictionaryItems());

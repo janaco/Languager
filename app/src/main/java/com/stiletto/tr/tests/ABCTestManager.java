@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
  * Created by yana on 18.07.17.
  */
 
-public class ABCTestManager extends TestBuilder implements OnListItemClickListener<ABCTest.Variant>{
+public class ABCTestManager extends TestBuilder implements OnListItemClickListener<ABCTest.Variant> {
 
     @Bind(R.id.task_abc)
     TextView viewTask;
@@ -37,11 +37,11 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
     private ABCTestAdapter adapter;
     private TestsListener testsListener;
 
-    public static ABCTestManager init(View view, TestsListener testsListener){
+    public static ABCTestManager init(View view, TestsListener testsListener) {
         return new ABCTestManager(view.getContext(), view, testsListener);
     }
 
-    private ABCTestManager(Context context, View view, TestsListener testsListener){
+    private ABCTestManager(Context context, View view, TestsListener testsListener) {
         ButterKnife.bind(this, view);
 
         this.testsListener = testsListener;
@@ -54,18 +54,18 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
     }
 
     @Override
-    protected ABCTest createTest(Word word, List<Word> words, int limit) {
+    protected ABCTest createTest(Word word, List<Word> words) {
 
         if (nativeLanguageTask()) {
-            return createNativeLanguageTest(words, word, limit);
+            return createNativeLanguageTest(words, word);
         }
 
-        return createLearningLanguageTest(words, word, limit);
+        return createLearningLanguageTest(words, word);
     }
 
     @Override
     public boolean showNext() {
-        if (hasNext()){
+        if (hasNext()) {
             ABCTest test = (ABCTest) getNext();
             viewTask.setText(test.getTask());
             adapter.setTests(test.getAnswer());
@@ -82,24 +82,23 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
         final ABCTest test = (ABCTest) getCurrentTest();
         test.setPassed(item.isCorrect());
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    testsListener.onTextIsDone(TaskType.CHOOSE, test.isPassed());
-                }
-            }, 500);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                testsListener.onTextIsDone(test);
+            }
+        }, 500);
     }
 
 
-
-    private ABCTest createNativeLanguageTest(List<Word> words, Word word, int limit) {
+    private ABCTest createNativeLanguageTest(List<Word> words, Word word) {
         List<ABCTest.Variant> variants = new ArrayList<>();
 
         int count = 0;
 
         while (count < 3) {
 
-            int i = new Random().nextInt(limit);
+            int i = new Random().nextInt(words.size());
             Word w = words.get(i);
             ABCTest.Variant variant = new ABCTest.Variant(w.getText(), w.getTranslationsAsString(), false);
             if (!variants.contains(variant)) {
@@ -110,17 +109,18 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
 
         variants.add(new Random().nextInt(4), new ABCTest.Variant(word.getText(), word.getTranslationsAsString(), true));
 
-        return new ABCTest(word.getTranslationsAsString(), variants);
+        return new ABCTest(new Test.MetaData(word.getText(), word.getOriginLanguage(), word.getTranslationLanguage()),
+                word.getTranslationsAsString(), variants);
     }
 
-    private ABCTest createLearningLanguageTest(List<Word> words, Word word, int limit) {
+    private ABCTest createLearningLanguageTest(List<Word> words, Word word) {
         List<ABCTest.Variant> variants = new ArrayList<>();
 
         int count = 0;
 
         while (count < 3) {
 
-            int i = new Random().nextInt(limit);
+            int i = new Random().nextInt(words.size());
             Word w = words.get(i);
             ABCTest.Variant variant = new ABCTest.Variant(w.getTranslationsAsString(), w.getText(), false);
             if (!variants.contains(variant)) {
@@ -131,7 +131,9 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
 
         variants.add(new Random().nextInt(4), new ABCTest.Variant(word.getTranslationsAsString(), word.getText(), true));
 
-        return new ABCTest(word.getText(), variants);
+        return new ABCTest(
+                new Test.MetaData(word.getText(), word.getOriginLanguage(), word.getTranslationLanguage()),
+                word.getText(), variants);
     }
 
 

@@ -1,5 +1,7 @@
 package com.stiletto.tr.model.test;
 
+import com.stiletto.tr.emums.TaskType;
+
 /**
  * Created by yana on 18.07.17.
  */
@@ -9,10 +11,14 @@ public abstract class Test<Answer> {
     private String task;
     private Answer answer;
     private boolean passed;
+    private MetaData metaData;
+    private TaskType taskType;
 
-    public Test(String task, Answer answer) {
+    public Test(MetaData metaData, String task, Answer answer, TaskType taskType) {
         this.task = task;
         this.answer = answer;
+        this.metaData = metaData;
+        this.taskType = taskType;
     }
 
     @Override
@@ -22,6 +28,14 @@ public abstract class Test<Answer> {
                 ", answer=" + answer +
                 ", passed=" + passed +
                 '}';
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
     }
 
     public boolean isPassed() {
@@ -46,5 +60,30 @@ public abstract class Test<Answer> {
 
     public void setAnswer(Answer answer) {
         this.answer = answer;
+    }
+
+    public static class MetaData{
+
+        private String wordKey;
+        private String langPrimary;
+        private String langTranslation;
+
+        public MetaData(String wordKey, String langPrimary, String langTranslation) {
+            this.wordKey = wordKey;
+            this.langPrimary = langPrimary;
+            this.langTranslation = langTranslation;
+        }
+
+        public String getWordKey() {
+            return wordKey;
+        }
+
+        public String getLangPrimary() {
+            return langPrimary;
+        }
+
+        public String getLangTranslation() {
+            return langTranslation;
+        }
     }
 }

@@ -13,5 +13,5 @@ public interface TestsListener {
 
     void onNextTest(Test test, TaskType taskType);
 
-    void onTextIsDone(TaskType taskType, boolean passed);
+    void onTextIsDone(Test test);
 }

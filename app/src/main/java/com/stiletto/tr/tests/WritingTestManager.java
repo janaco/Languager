@@ -49,13 +49,17 @@ public class WritingTestManager extends TestBuilder {
     }
 
     @Override
-    protected Test createTest(Word word, List<Word> words, int limit) {
+    protected Test createTest(Word word, List<Word> words) {
 
         if (nativeLanguageTask()) {
-            return new WritingTest(word.getTranslationsAsString(), word.getText());
+            return new WritingTest(
+                    new Test.MetaData(word.getText(), word.getOriginLanguage(), word.getTranslationLanguage()),
+                    word.getTranslationsAsString(), word.getText());
         }
 
-        return new WritingTest(word.getText(), word.getTranslationsAsString());
+        return new WritingTest(
+                new Test.MetaData(word.getText(), word.getOriginLanguage(), word.getTranslationLanguage()),
+                word.getText(), word.getTranslationsAsString());
     }
 
 
@@ -99,7 +103,7 @@ public class WritingTestManager extends TestBuilder {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                testsListener.onTextIsDone(TaskType.WRITING, test.isPassed());
+                testsListener.onTextIsDone(test);
             }
         }, 500);
 
