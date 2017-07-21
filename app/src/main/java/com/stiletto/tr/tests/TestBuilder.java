@@ -5,6 +5,7 @@ import com.stiletto.tr.model.test.Test;
 import com.stiletto.tr.model.word.Word;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -28,6 +29,9 @@ public abstract class TestBuilder {
         tests.add(createTest(word, words));
     }
 
+    public void shuffle(){
+        Collections.shuffle(tests, new Random(tests.size()));
+    }
     protected abstract Test createTest(Word word, List<Word> words);
 
     public abstract boolean showNext();

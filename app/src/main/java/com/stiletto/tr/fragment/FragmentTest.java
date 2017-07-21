@@ -7,27 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.emums.TaskType;
-import com.stiletto.tr.model.word.Word;
+import com.stiletto.tr.emums.TestType;
 import com.stiletto.tr.tests.TestsManager;
 import com.stiletto.tr.view.Fragment;
-
-import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by yana on 17.07.17.
  */
 
-public class FragmentGeneralTest extends Fragment{
+public class FragmentTest extends Fragment{
 
     private String langPrimary;
     private String langTranslation;
 
     private TestsManager testsManager;
+    private TestType testType;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +30,7 @@ public class FragmentGeneralTest extends Fragment{
 
         langPrimary = getArguments().getString("primary");
         langTranslation = getArguments().getString("translation");
+        testType = TestType.valueOf(getArguments().getString("test"));
     }
 
     @Nullable
@@ -47,26 +43,20 @@ public class FragmentGeneralTest extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Realm realm = Realm.getDefaultInstance();
-        RealmQuery<Word> query = realm.where(Word.class)
-                .equalTo("info.originLanguage", langPrimary)
-                .equalTo("info.translationLanguage", langTranslation)
-                .equalTo("info.status", Status.UNKNOWN.name());
-
-        RealmResults<Word> results = query.findAllAsync();
-        results.load();
-
         testsManager = new TestsManager(view);
-        testsManager.initTests(TaskType.values());
-        testsManager.createTests(results);
+        testsManager.setTestType(testType);
+        testsManager.setTasks(TaskType.values());
+        testsManager.setLanguages(langPrimary, langTranslation);
+        testsManager.loadTests();
         testsManager.start();
     }
 
 
+    public static FragmentTest getInstance(Bundle args, TestType testType) {
 
-    public static FragmentGeneralTest getInstance(Bundle args) {
+        args.putString("test", testType.name());
 
-        FragmentGeneralTest fragment = new FragmentGeneralTest();
+        FragmentTest fragment = new FragmentTest();
         fragment.setArguments(args);
 
         return fragment;
