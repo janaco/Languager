@@ -47,6 +47,8 @@ public class TestsManager implements TestsListener {
     private BooleanTestManager booleanTestManager;
     private WritingTestManager writingTestManager;
 
+    private TestProgressMonitor progressMonitor;
+
     private TaskType[] taskTypes;
     private TestType testType;
 
@@ -180,6 +182,13 @@ public class TestsManager implements TestsListener {
 
 
     public void start() {
+        if (progressMonitor == null){
+            progressMonitor = new TestProgressMonitor();
+        }
+
+        progressMonitor.reset();
+        progressMonitor.setTestData(getTestsCount());
+
         shuffleTests();
         if (taskTypes.length <= 0 || !showNextTest(getNextTaskType())) {
             viewTestABC.setVisibility(View.GONE);
@@ -187,6 +196,37 @@ public class TestsManager implements TestsListener {
             viewWritingTest.setVisibility(View.GONE);
             viewCurtain.setVisibility(View.VISIBLE);
             itemAlert.setText("There are no test. You have already learned all words.");
+        }
+    }
+
+    private int getTestsCount(){
+
+        switch (testType){
+
+            case QUICK:
+                return testsAmount;
+
+            default:
+                int count = 0;
+
+                for (TaskType taskType: taskTypes) {
+                    switch (taskType) {
+
+                        case BOOLEAN:
+                            count += booleanTestManager.getTasksCount();
+                            break;
+
+                        case WRITING:
+                            count += writingTestManager.getTasksCount();
+                            break;
+
+                        case CHOOSE:
+                            count += abcTestManager.getTasksCount();
+                            break;
+                    }
+                }
+                return count;
+
         }
     }
 
@@ -220,17 +260,11 @@ public class TestsManager implements TestsListener {
     @Override
     public void onTextIsDone(Test test) {
 
-        if (test.isPassed()) {
-            increaseLearningProgress(test);
-        }
+        progressMonitor.onTaskDoneSuccessfully(test);
         testIndex++;
 
         if (testIndex >= testsAmount && testType == TestType.QUICK) {
-            viewTestABC.setVisibility(View.GONE);
-            viewWritingTest.setVisibility(View.GONE);
-            viewTestBoolean.setVisibility(View.GONE);
-            viewCurtain.setVisibility(View.VISIBLE);
-            itemAlert.setText("Test is finished.");
+            onTestFinished();
             btnAgain.setVisibility(View.VISIBLE);
             return;
         }
@@ -242,34 +276,23 @@ public class TestsManager implements TestsListener {
                 if (taskTypes.length > 0) {
                     nextTask = getNextTaskType();
                 } else {
-                    viewTestABC.setVisibility(View.GONE);
-                    viewWritingTest.setVisibility(View.GONE);
-                    viewTestBoolean.setVisibility(View.GONE);
-                    viewCurtain.setVisibility(View.VISIBLE);
-                    itemAlert.setText("Test is finished.");
-                    btnAgain.setVisibility(View.GONE);
+                   onTestFinished();
                 }
             }
         }
     }
 
-    private void increaseLearningProgress(Test test) {
+    private void onTestFinished(){
+        viewTestABC.setVisibility(View.GONE);
+        viewWritingTest.setVisibility(View.GONE);
+        viewTestBoolean.setVisibility(View.GONE);
+        viewCurtain.setVisibility(View.VISIBLE);
+        btnAgain.setVisibility(View.GONE);
+        itemAlert.setText("Test is finished.");
 
-        Word word = Realm.getDefaultInstance().where(Word.class)
-                .equalTo("original", test.getMetaData().getWordKey())
-                .equalTo("info.originLanguage", test.getMetaData().getLangPrimary())
-                .equalTo("info.translationLanguage", test.getMetaData().getLangTranslation())
-                .findFirst();
-        int passedTests = word.getPassedTestsCount() + 1;
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        word.setPassedTestsCount(passedTests);
-        word.setStatus(passedTests <= 3 ? Status.UNKNOWN.name() : Status.KNOWN.name());
-        realm.copyToRealmOrUpdate(word);
-        realm.commitTransaction();
-
+        progressMonitor.saveResults(viewTestABC.getContext());
     }
+
 
     private boolean showNextTest(TaskType taskType) {
         switch (taskType) {

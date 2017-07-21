@@ -44,6 +44,10 @@ public abstract class TestBuilder {
         return tests.get(index);
     }
 
+    public int getTasksCount(){
+        return tests.size();
+    }
+
     public boolean hasNext() {
         return index < tests.size()-1;
     }
