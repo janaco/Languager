@@ -125,7 +125,8 @@ public class BookSetupFragment extends Fragment implements DialogListener {
 
     @OnClick(R.id.btn_read)
     void read() {
-       book.setLanguages(languagePrimary, languageTranslation);
+        book.setOriginLanguage(languagePrimary);
+        book.setTranslationLanguage(languageTranslation);
         FragmentActivity activity = getActivity();
 
         NavigationManager.removeFragment(activity, this);

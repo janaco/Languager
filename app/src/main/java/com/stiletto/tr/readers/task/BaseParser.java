@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
 
+import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.pagination.Pagination;
 import com.stiletto.tr.readers.EPUBReader;
@@ -19,7 +20,7 @@ import java.io.File;
  * Created by yana on 21.05.17.
  */
 
-public class BaseParser extends AsyncTask<Book, Void, Pagination> {
+public class BaseParser extends AsyncTask<String, Void, Pagination> {
 
     private Context context;
 
@@ -36,9 +37,9 @@ public class BaseParser extends AsyncTask<Book, Void, Pagination> {
     }
 
     @Override
-    protected Pagination doInBackground(Book... books) {
+    protected Pagination doInBackground(String... args) {
 
-        return new Pagination(getBookContent(books[0]), ReaderPrefs.getPreferences(context));
+        return new Pagination(getBookContent(args[0]), ReaderPrefs.getPreferences(context));
     }
 
     @Override
@@ -48,25 +49,22 @@ public class BaseParser extends AsyncTask<Book, Void, Pagination> {
     }
 
 
-    private static CharSequence getBookContent(Book book) {
+    private static CharSequence getBookContent(String path) {
 
-        File file = new File(book.getPath());
+        File file = new File(path);
 
-        switch (book.getFileType()) {
+        if (path.endsWith(FileType.PDF.getExtension())) {
+            return PDFReader.parseAsText(file.getPath());
 
-            case PDF:
-                return PDFReader.parseAsText(file.getPath());
+        } else if (path.endsWith(FileType.EPUB.getExtension())) {
+            return EPUBReader.parseAsText(file);
 
-            case EPUB:
-                return EPUBReader.parseAsText(file);
+        } else if (path.endsWith(FileType.FB2.getExtension())) {
+            return XMLReader.parseAsText(file);
 
-            case FB2:
-                return XMLReader.parseAsText(file);
-
-            case TXT:
-                return TxtReader.parseAsText(file);
+        } else if (path.endsWith(FileType.TXT.getExtension())) {
+            return TxtReader.parseAsText(file);
         }
-
 
         return "";
     }

@@ -207,6 +207,7 @@ public class PageViewerFragment extends Fragment
     @Override
     public void newTranslation(Word word) {
 
+        word.setBookId(book.getPath());
         word.insert(getContext());
         bookDictionaryAdapter.addTranslation(word);
         itemDictionaryAlert.setVisibility(View.GONE);
@@ -216,11 +217,11 @@ public class PageViewerFragment extends Fragment
     private void setUpPages() {
 
         if (book.getFileType() == FileType.PDF) {
-            new PDFParser(getContext()).parserCallback(this).execute(book);
+            new PDFParser(getContext()).parserCallback(this).execute(book.getPath());
             return;
         }
 
-        new BaseParser(getContext()).pagesParserCallback(this).execute(book);
+        new BaseParser(getContext()).pagesParserCallback(this).execute(book.getPath());
 
     }
 

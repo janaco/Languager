@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.stiletto.tr.R;
+import com.stiletto.tr.charts.ColumnsChart;
 import com.stiletto.tr.charts.GeneralLearningProgressChart;
 import com.stiletto.tr.charts.Period;
 import com.stiletto.tr.charts.PieChart;
@@ -43,6 +44,7 @@ public class FragmentStatistics extends Fragment implements RadioGroup.OnChecked
 
     private GeneralLearningProgressChart generalLearningProgress;
     private PieChart pieChart;
+    private ColumnsChart columnsChart;
     private List<Result> testResults;
 
     @Nullable
@@ -54,6 +56,7 @@ public class FragmentStatistics extends Fragment implements RadioGroup.OnChecked
 
         generalLearningProgress = GeneralLearningProgressChart.init(lineChartView);
         pieChart = PieChart.init(pieChartView);
+        columnsChart = ColumnsChart.init(columnChartView);
 
         return view;
     }
@@ -65,6 +68,7 @@ public class FragmentStatistics extends Fragment implements RadioGroup.OnChecked
         testResults = getTestResults();
 
         onCheckedChanged(radioGroup, radioGroup.getCheckedRadioButtonId());
+        columnsChart.showChart();
     }
 
     @Override

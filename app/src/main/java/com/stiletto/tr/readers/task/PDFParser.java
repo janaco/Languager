@@ -16,7 +16,7 @@ import java.io.IOException;
  * Created by yana on 21.05.17.
  */
 
-public class PDFParser extends AsyncTask<Book, Void, Pagination> {
+public class PDFParser extends AsyncTask<String, Void, Pagination> {
 
     private Context context;
 
@@ -33,12 +33,11 @@ public class PDFParser extends AsyncTask<Book, Void, Pagination> {
     }
 
     @Override
-    protected Pagination doInBackground(Book... books) {
+    protected Pagination doInBackground(String... args) {
 
-        Book book = books[0];
         Pagination pagination = new Pagination(ReaderPrefs.getPreferences(context));
 
-        String filePath = book.getPath();
+        String filePath = args[0];
 
         try {
             PdfReader reader = new PdfReader(filePath);

@@ -135,7 +135,6 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
     public void setTranslationLanguage(Language translationLanguage) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        deleteFromRealm();
         this.translationLanguage = translationLanguage.name();
         realm.copyToRealmOrUpdate(this);
         realm.commitTransaction();
@@ -148,7 +147,6 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
     public void setOriginLanguage(Language originLanguage) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        deleteFromRealm();
         this.originLanguage = originLanguage.name();
         realm.copyToRealmOrUpdate(this);
         realm.commitTransaction();
@@ -205,14 +203,6 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
         realm.commitTransaction();
     }
 
-    public void setLanguages(Language languagePrimary, Language languageTranslation) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        setOriginLanguage(languagePrimary);
-        setTranslationLanguage(languageTranslation);
-        realm.copyToRealmOrUpdate(this);
-        realm.commitTransaction();
-    }
 
     public void setBookmark(int bookmark, int pagesCount){
         Realm realm = Realm.getDefaultInstance();

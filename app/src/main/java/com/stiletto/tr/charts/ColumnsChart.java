@@ -1,9 +1,19 @@
 package com.stiletto.tr.charts;
 
+import android.util.Log;
+
+import com.stiletto.tr.emums.Status;
+import com.stiletto.tr.model.Book;
+import com.stiletto.tr.model.word.Word;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
@@ -18,36 +28,45 @@ public class ColumnsChart {
 
     private ColumnChartView columnChartView;
 
+    private ColumnsChart(ColumnChartView columnChartView){
+        this.columnChartView = columnChartView;
+    }
 
-    private void generateData() {
-        generateSubcolumnsData();
+    public static ColumnsChart init(ColumnChartView columnChartView){
+        return new ColumnsChart(columnChartView);
+    }
+
+    public void showChart() {
+        drawChart(getValues());
     }
 
 
-    private void generateDefaultData() {
-        int numSubcolumns = 1;
-        int numColumns = 8;
-        // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
+    private void drawChart(List<Value> values) {
+        int index = 0;
+
+        List<AxisValue> axisValues = new ArrayList<AxisValue>();
         List<Column> columns = new ArrayList<Column>();
-        List<SubcolumnValue> values;
-        for (int i = 0; i < numColumns; ++i) {
+        for (Value value: values){
+            List<SubcolumnValue> subcolumns = new ArrayList<>();
+            subcolumns.add(new SubcolumnValue(value.words, ChartUtils.pickColor()));
+            subcolumns.add(new SubcolumnValue(value.unknownWords, ChartUtils.pickColor()));
 
-            values = new ArrayList<SubcolumnValue>();
-            for (int j = 0; j < numSubcolumns; ++j) {
-                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
-            }
-
-            Column column = new Column(values);
-            column.setHasLabels(true);
+            Log.d("COLUMN_", "book: " + value.book + ", words: " + value.words + ", unknown: " + value.unknownWords);
+            Column column = new Column(subcolumns);
+            column.setHasLabelsOnlyForSelected(true);
             columns.add(column);
+
+            axisValues.add(new AxisValue(index++).setLabel(value.book));
         }
 
-        ColumnChartData data = new ColumnChartData(columns);
+        ColumnChartData columnData = new ColumnChartData(columns);
 
-        data.setAxisXBottom(null);
-        data.setAxisYLeft(null);
+        columnData.setAxisXBottom(new Axis(axisValues).setHasLines(false));
+        columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
 
-        columnChartView.setColumnChartData(data);
+        columnChartView.setColumnChartData(columnData);
+        columnChartView.setValueSelectionEnabled(true);
+        columnChartView.setZoomType(ZoomType.HORIZONTAL);
 
     }
 
@@ -57,7 +76,6 @@ public class ColumnsChart {
     private void generateSubcolumnsData() {
         int numSubcolumns = 3;
         int numColumns = 3;
-
 
 
         List<Column> columns = new ArrayList<>();
@@ -92,6 +110,47 @@ public class ColumnsChart {
             for (SubcolumnValue value : column.getValues()) {
                 value.setTarget((float) Math.random() * 100);
             }
+        }
+    }
+
+    private List<Value> getValues() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Book> books = realm
+                .where(Book.class).findAllSorted("name");
+        books.load();
+
+        List<Value> items = new ArrayList<>();
+
+        for (Book book : books) {
+            int wordsCount = (int) realm.where(Word.class)
+                    .equalTo("info.bookId", book.getPath())
+                    .count();
+
+            Log.d("COLUMN_VALUE", "book: " + book.getName() + ", words: " + wordsCount);
+
+            if (wordsCount > 0) {
+                int unknownWordsCount = (int) realm.where(Word.class)
+                        .equalTo("info.bookId", book.getPath())
+                        .equalTo("info.status", Status.UNKNOWN.name())
+                        .count();
+
+                items.add(new Value(book.getName(), wordsCount, unknownWordsCount));
+            }
+        }
+
+        return items;
+    }
+
+    private static class Value {
+
+        final String book;
+        final int words;
+        final int unknownWords;
+
+        public Value(String book, int words, int unknownWords) {
+            this.book = book;
+            this.words = words;
+            this.unknownWords = unknownWords;
         }
     }
 }
