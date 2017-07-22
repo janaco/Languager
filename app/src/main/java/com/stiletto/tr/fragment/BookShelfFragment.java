@@ -239,12 +239,11 @@ public class BookShelfFragment extends Fragment
 
     @OnClick(R.id.item_statistics)
     void onStatisticsClick() {
-        Toast.makeText(getContext(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+        NavigationManager.addFragment(getActivity(), new FragmentStatistics());
     }
 
     @OnClick(R.id.item_exams)
     void onExamsClick() {
-//        Toast.makeText(getContext(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
         NavigationManager.addFragment(getActivity(), new FragmentTests());
     }
 

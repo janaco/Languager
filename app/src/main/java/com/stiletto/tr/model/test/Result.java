@@ -2,6 +2,10 @@ package com.stiletto.tr.model.test;
 
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 
@@ -64,6 +68,11 @@ public class Result extends RealmObject {
 
     public void setPassed(boolean passed) {
         this.passed = passed;
+    }
+
+    public String getDate(){
+        return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date(timestamp));
+
     }
 
     public void insert(Context context) {

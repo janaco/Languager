@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="General progress"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/chart_2"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="15dp" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:id="@+id/radio_group"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/button_days"
+            android:layout_weight="0.33"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Day"
+            android:checked="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent"
+            android:padding="5dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="italic"
+            />
+
+        <RadioButton
+            android:id="@+id/button_months"
+            android:layout_weight="0.33"
+            android:checked="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent"
+            android:padding="5dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="italic"
+            android:text="Month" />
+
+        <RadioButton
+            android:checked="false"
+            android:id="@+id/button_year"
+            android:layout_weight="0.33"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent"
+            android:padding="5dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="italic"
+            android:text="Year" />
+    </RadioGroup>
+
+</LinearLayout>
