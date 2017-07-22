@@ -31,7 +31,6 @@ import com.stiletto.tr.adapter.AutocompleteAdapter;
 import com.stiletto.tr.adapter.BooksAdapter;
 import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.core.FileSeekerCallback;
-import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.utils.FileSeeker;
@@ -42,6 +41,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * There list of all books is displayed.
@@ -106,7 +108,16 @@ public class BookShelfFragment extends Fragment
         //select and display books that are already available in db.
         //it is too long to search for them in file system
         //(search in file system will be performed but in background mode)
-        BooksTable.getBooksAsynchronously(getContext(), this);
+        Realm realm= Realm.getDefaultInstance();
+        RealmQuery<Book> query = realm.where(Book.class);
+        RealmResults<Book> results = query.findAllSortedAsync("name");
+        results.load();
+
+        for (Book book: results){
+            adapter.add(book);
+            autocompeteAdapter.add(book.getName());
+        }
+        afterBookSearchResults(results, true);
     }
 
     @Override
@@ -125,7 +136,9 @@ public class BookShelfFragment extends Fragment
             FileSeeker.getBooks(this);
         } else {
             //Search in file system is finished. So, we need to update our records in database.
-            BooksTable.setBooksList(getContext(), books);
+            for (Book book: books){
+                book.insert();
+            }
         }
     }
 

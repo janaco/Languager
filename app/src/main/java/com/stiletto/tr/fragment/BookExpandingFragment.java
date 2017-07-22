@@ -8,7 +8,6 @@ import com.softes.cardviewer.ExpandableCard;
 import com.stiletto.tr.R;
 import com.stiletto.tr.core.BookItemListener;
 import com.stiletto.tr.core.RenameModeCallback;
-import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.model.Book;
 
 import java.io.File;
@@ -77,11 +76,7 @@ public class BookExpandingFragment extends ExpandableCard implements RenameModeC
 
         File newFile = new File(newPath);
         if (file.renameTo(newFile)){
-
-            book.setPath(newPath);
-            book.setName(newName);
-
-            BooksTable.rename(getContext(), book, path);
+            book.rename(newName, newPath);
             bookItemListener.rename(book, position);
         }else {
             Toast.makeText(getContext(), getString(R.string.failed_to_remove_book), Toast.LENGTH_SHORT).show();

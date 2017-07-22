@@ -17,6 +17,8 @@ import com.stiletto.tr.fragment.BookShelfFragment;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.utils.ReaderPrefs;
 
+import io.realm.Realm;
+
 /**
  * Created by yana on 30.12.16.
  */
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         ReaderPrefs.getPreferences(this);
         requestPermissions();
 
+        Realm.init(this);
         NavigationManager.replaceFragment(this, new BookShelfFragment());
 
     }

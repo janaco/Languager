@@ -17,7 +17,6 @@ import com.stiletto.tr.adapter.BookDictionaryAdapter;
 import com.stiletto.tr.adapter.PagerAdapter;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
 import com.stiletto.tr.core.TranslationCallback;
-import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
 import com.stiletto.tr.emums.FileType;
 import com.stiletto.tr.model.Book;
@@ -155,15 +154,13 @@ public class PageViewerFragment extends Fragment
         pageNumber.setText(textProgress);
 
         int bookmark = viewPager.getCurrentItem();
-        book.setBookmark(bookmark);
-        BooksTable.setBookmark(getContext(), bookmark, pagination.getPagesCount(), book.getPath());
-
+        book.setBookmark(bookmark, pagination.getPagesCount());
     }
 
     @Override
     public void onDestroy() {
         if (pagination !=null) {
-            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
+            book.setBookmark(viewPager.getCurrentItem(), pagination.getPagesCount());
         }
         super.onDestroy();
 
@@ -179,9 +176,7 @@ public class PageViewerFragment extends Fragment
             itemPages.setText(textProgress);
             pageNumber.setText(textProgress);
 
-            book.setBookmark(viewPager.getCurrentItem());
-            BooksTable.setBookmark(getContext(), viewPager.getCurrentItem(), pagination.getPagesCount(), book.getPath());
-
+            book.setBookmark(viewPager.getCurrentItem(), pagination.getPagesCount());
         }
     }
 
@@ -193,7 +188,6 @@ public class PageViewerFragment extends Fragment
                 String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
                 itemLanguageFrom.setText(displayLanguage);
                 book.setOriginLanguage(language);
-                BooksTable.setOriginLanguage(getContext(), language, book.getPath());
             }
         });
     }
@@ -206,7 +200,6 @@ public class PageViewerFragment extends Fragment
                 String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
                 itemLanguageTo.setText(displayLanguage);
                 book.setTranslationLanguage(language);
-                BooksTable.setTranslationLanguage(getContext(), language, book.getPath());
             }
         });
     }

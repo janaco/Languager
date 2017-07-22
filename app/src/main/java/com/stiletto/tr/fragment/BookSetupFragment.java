@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.stiletto.tr.R;
 import com.stiletto.tr.core.DialogListener;
 import com.stiletto.tr.core.OnLanguageSelectedListener;
-import com.stiletto.tr.db.tables.BooksTable;
 import com.stiletto.tr.dialog.ChooseLanguageDialog;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.Book;
@@ -126,11 +125,7 @@ public class BookSetupFragment extends Fragment implements DialogListener {
 
     @OnClick(R.id.btn_read)
     void read() {
-        book.setOriginLanguage(languagePrimary);
-        book.setTranslationLanguage(languageTranslation);
-
-        BooksTable.setLanguages(getContext(), new Language[]{languagePrimary, languageTranslation}, book.getPath());
-
+       book.setLanguages(languagePrimary, languageTranslation);
         FragmentActivity activity = getActivity();
 
         NavigationManager.removeFragment(activity, this);

@@ -11,21 +11,26 @@ import com.stiletto.tr.translator.yandex.Language;
 import java.io.File;
 import java.util.Objects;
 
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Data model to represent book item.
  * <p>
  * Created by yana on 03.01.17.
  */
 
-public class Book implements Comparable<Book>, Parcelable {
+public class Book extends RealmObject implements Comparable<Book>, Parcelable {
 
+    @PrimaryKey
     private String path;
     private String name;
-    private FileType fileType;
+    private String fileType;
     private long size;
 
-    private Language originLanguage;
-    private Language translationLanguage;
+    private String originLanguage;
+    private String translationLanguage;
 
     private int bookmark;
     private int pages;
@@ -33,7 +38,7 @@ public class Book implements Comparable<Book>, Parcelable {
     public Book(String path, String name, long size) {
         this.path = path;
         this.name = name.contains(".") ? name.substring(0, name.lastIndexOf(".")) : name;
-        this.fileType = name.contains(".") ? FileType.getType(name.substring(name.lastIndexOf(".")).toLowerCase()) : FileType.UNKNOWN;
+        this.fileType = name.contains(".") ? FileType.getType(name.substring(name.lastIndexOf(".")).toLowerCase()).name() : FileType.UNKNOWN.name();
         this.size = size;
     }
 
@@ -41,6 +46,7 @@ public class Book implements Comparable<Book>, Parcelable {
         this(file.getPath(), file.getName(), file.length());
     }
 
+    public Book(){}
 
     protected Book(Parcel in) {
         path = in.readString();
@@ -81,13 +87,13 @@ public class Book implements Comparable<Book>, Parcelable {
         return "Book{" + "\n" +
                 "path='" + path + '\'' + "\n" +
                 ", name='" + name + '\'' + "\n" +
-                ", fileType=" + fileType.name() + "\n" +
+                ", fileType=" + fileType + "\n" +
                 ", size=" + size + "\n" +
                 '}';
     }
 
     public FileType getFileType() {
-        return fileType;
+        return FileType.valueOf(fileType);
     }
 
     public long getSize() {
@@ -111,7 +117,7 @@ public class Book implements Comparable<Book>, Parcelable {
     }
 
     public Language getTranslationLanguage() {
-        return translationLanguage;
+        return Language.valueOf(translationLanguage);
     }
 
     public boolean hasOriginLanguage() {
@@ -127,15 +133,25 @@ public class Book implements Comparable<Book>, Parcelable {
     }
 
     public void setTranslationLanguage(Language translationLanguage) {
-        this.translationLanguage = translationLanguage;
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        deleteFromRealm();
+        this.translationLanguage = translationLanguage.name();
+        realm.copyToRealmOrUpdate(this);
+        realm.commitTransaction();
     }
 
     public Language getOriginLanguage() {
-        return originLanguage;
+        return Language.valueOf(originLanguage);
     }
 
     public void setOriginLanguage(Language originLanguage) {
-        this.originLanguage = originLanguage;
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        deleteFromRealm();
+        this.originLanguage = originLanguage.name();
+        realm.copyToRealmOrUpdate(this);
+        realm.commitTransaction();
     }
 
 
@@ -170,5 +186,51 @@ public class Book implements Comparable<Book>, Parcelable {
             return Objects.hash(getPath());
         }
         return 45 * path.length() + name.length();
+    }
+
+    public void rename(String name, String path) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        deleteFromRealm();
+        setName(name);
+        setPath(path);
+        realm.copyToRealmOrUpdate(this);
+        realm.commitTransaction();
+    }
+
+    public void remove() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        deleteFromRealm();
+        realm.commitTransaction();
+    }
+
+    public void setLanguages(Language languagePrimary, Language languageTranslation) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        setOriginLanguage(languagePrimary);
+        setTranslationLanguage(languageTranslation);
+        realm.copyToRealmOrUpdate(this);
+        realm.commitTransaction();
+    }
+
+    public void setBookmark(int bookmark, int pagesCount){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        setBookmark(bookmark);
+        setPages(pagesCount);
+        realm.copyToRealmOrUpdate(this);
+        realm.commitTransaction();
+
+    }
+
+
+    public void insert(){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(this);
+        realm.copyToRealmOrUpdate(this);
+        realm.commitTransaction();
+
     }
 }
