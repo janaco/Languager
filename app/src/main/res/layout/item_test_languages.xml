@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/layout_main"
+            android:elevation="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/biege"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:id="@+id/languages"
+                android:text="English - Ukrainian"
+                android:textColor="@color/pine_green"
+                android:textSize="@dimen/text_24"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/words_count"
+                android:padding="3dp"
+                android:text="109 words"
+                android:textColor="@color/pale_brown"
+                android:textSize="@dimen/text_16"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/words_info"
+                android:textSize="@dimen/text_8"
+                android:text="88 learned words\n21 word to learn"
+                android:textColor="@color/pale_sandy_brown" />
+
+
+        </LinearLayout>
+
+        <com.github.chuross.library.ExpandableLayout
+            android:id="@+id/layout_expandable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/item_learn"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/biege"
+                    android:gravity="center_vertical"
+                    android:elevation="1dp"
+                    android:paddingEnd="30dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingStart="30dp"
+                    android:text="@string/learn"
+                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_16"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/item_general_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/biege"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="30dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingStart="30dp"
+                    android:elevation="1dp"
+                    android:text="@string/general_test"
+                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_16"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/item_quick_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/biege"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="30dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:elevation="1dp"
+                    android:paddingStart="30dp"
+                    android:text="@string/quick_test"
+                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_16"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/item_exam"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/biege"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="30dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingStart="30dp"
+                    android:text="@string/exam"
+                    android:elevation="1dp"
+                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_16"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/item_check_skills"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/biege"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="30dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingStart="30dp"
+                    android:elevation="1dp"
+                    android:text="@string/check_skills"
+                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_16"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </com.github.chuross.library.ExpandableLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

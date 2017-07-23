@@ -52,8 +52,11 @@ public class FragmentTest extends Fragment{
     }
 
 
-    public static FragmentTest getInstance(Bundle args, TestType testType) {
+    public static FragmentTest getInstance(String originLanguage, String translationLanguage, TestType testType) {
 
+        Bundle args = new Bundle();
+        args.putString("primary", originLanguage);
+        args.putString("translation", translationLanguage);
         args.putString("test", testType.name());
 
         FragmentTest fragment = new FragmentTest();

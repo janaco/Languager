@@ -12,10 +12,19 @@ import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.DictionariesAdapter;
+import com.stiletto.tr.adapter.TestGroupsAdapter;
 import com.stiletto.tr.core.OnListItemClickListener;
+import com.stiletto.tr.emums.Status;
+import com.stiletto.tr.emums.TestType;
 import com.stiletto.tr.manager.NavigationManager;
+import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.model.word.WordInfo;
+import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.view.Fragment;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,17 +38,17 @@ import io.realm.Sort;
  * Created by yana on 17.07.17.
  */
 
-public class FragmentTests extends Fragment implements OnListItemClickListener<WordInfo> {
+public class FragmentTests extends Fragment implements TestGroupsAdapter.OnItemClickListener {
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    private DictionariesAdapter adapter;
+    private TestGroupsAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dictionaries_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_test_language_groups, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -53,28 +62,51 @@ public class FragmentTests extends Fragment implements OnListItemClickListener<W
         Realm realm = Realm.getDefaultInstance();
         RealmQuery<WordInfo> query = realm.where(WordInfo.class);
         RealmResults<WordInfo> results = query.distinct("originLanguage", "translationLanguage");
-        adapter = new DictionariesAdapter(
-                results.sort("originLanguage", Sort.ASCENDING, "translationLanguage", Sort.ASCENDING));
-        adapter.setOnListItemClickListener(this);
+
+
+        List<TestGroupsAdapter.Item> items = new ArrayList<>();
+        for (WordInfo info : results) {
+            String originLanguage = new Locale(info.getOriginLanguage()).getDisplayLanguage();
+            String translationLanguage = new Locale(info.getTranslationLanguage()).getDisplayLanguage();
+
+            int wordsCount = (int) Realm.getDefaultInstance()
+                    .where(Word.class)
+                    .equalTo("info.originLanguage", info.getOriginLanguage())
+                    .equalTo("info.translationLanguage", info.getTranslationLanguage())
+                    .count();
+
+            int unknownWordsCount = (int) Realm.getDefaultInstance()
+                    .where(Word.class)
+                    .equalTo("info.originLanguage", info.getOriginLanguage())
+                    .equalTo("info.translationLanguage", info.getTranslationLanguage())
+                    .equalTo("info.status", Status.UNKNOWN.name())
+                    .count();
+
+            items.add(new TestGroupsAdapter.Item(originLanguage, translationLanguage, wordsCount, unknownWordsCount));
+        }
+
+
+        adapter = new TestGroupsAdapter(items);
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
     }
 
     @Override
-    public void onListItemClick(WordInfo item, int position) {
-        FragmentTestTypes fragment = new FragmentTestTypes();
+    public void onItemClick(String originLanguage, String translationLanguage, TestType testType) {
 
-        Bundle args = new Bundle();
-        args.putString("primary", item.getOriginLanguage());
-        args.putString("translation", item.getTranslationLanguage());
+        if (testType == TestType.LEARNING) {
+            NavigationManager.addFragment(getActivity(), FragmentTestLearning.getInstance(originLanguage, translationLanguage));
+            return;
+        }
 
-        fragment.setArguments(args);
+        NavigationManager.addFragment(getActivity(), FragmentTest.getInstance(originLanguage, translationLanguage, testType));
 
-        NavigationManager.addFragment(getActivity(), fragment);
-    }
+}
+
 
     @OnClick(R.id.item_back)
-    void onBackPressed(){
+    void onBackPressed() {
         getActivity().onBackPressed();
     }
 }

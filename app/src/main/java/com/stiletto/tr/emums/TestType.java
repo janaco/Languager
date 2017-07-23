@@ -6,5 +6,5 @@ package com.stiletto.tr.emums;
 
 public enum TestType {
 
-    LEARNING, GENERAL, QUICK, ON_TIME, EXAM
+    LEARNING, GENERAL, QUICK, EXAM, CHECK_SKILLS
 }

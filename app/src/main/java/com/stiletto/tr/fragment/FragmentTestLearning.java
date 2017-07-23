@@ -109,9 +109,14 @@ public class FragmentTestLearning extends Fragment {
         }
     }
 
-    public static FragmentTestLearning getInstance(Bundle args) {
+    public static FragmentTestLearning getInstance(String originLanguage, String translationLanguage) {
 
         FragmentTestLearning fragment = new FragmentTestLearning();
+
+        Bundle args = new Bundle();
+        args.putString("primary", originLanguage);
+        args.putString("translation", translationLanguage);
+
         fragment.setArguments(args);
 
         return fragment;

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="learn">Learn words</string>
+    <string name="general_test">General test</string>
+    <string name="quick_test">Quick test</string>
+    <string name="exam">Take an exam</string>
+    <string name="check_skills">Check skills</string>
+
     <string name="scan_files">Scan files…</string>
     <string name="loading">Loading…</string>
 
