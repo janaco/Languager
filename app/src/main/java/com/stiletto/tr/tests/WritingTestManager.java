@@ -1,12 +1,14 @@
 package com.stiletto.tr.tests;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
@@ -28,12 +30,12 @@ import butterknife.OnClick;
 
 public class WritingTestManager extends TestBuilder {
 
-    @Bind(R.id.item_task_writing)
+    @Bind(R.id.writing_text)
     TextView viewTask;
-    @Bind(R.id.item_answer_writing)
+    @Bind(R.id.writing_answer)
     EditText viewAnswer;
-    @Bind(R.id.item_next)
-    TextView btnNext;
+    @Bind(R.id.check)
+    ImageView btnNext;
 
     private Context context;
     private TestsListener testsListener;
@@ -71,12 +73,7 @@ public class WritingTestManager extends TestBuilder {
             viewTask.setText(test.getTask());
             viewAnswer.setText("");
 
-            final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.rectangle_rounded);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable.setTint(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-            }
-            btnNext.setBackground(drawable);
+            btnNext.setBackgroundColor(Color.TRANSPARENT);
             testsListener.onNextTest(test, TaskType.WRITING);
 
             return true;
@@ -85,20 +82,17 @@ public class WritingTestManager extends TestBuilder {
         return false;
     }
 
-    @OnClick(R.id.item_next)
+    @OnClick(R.id.check)
     void onNextClick() {
         final WritingTest test = (WritingTest) getCurrentTest();
         String userAnswer = viewAnswer.getText().toString();
         test.setPassed(test.isAnswerCorrect(userAnswer));
 
-        final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.rectangle_rounded);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable.setTint(test.isPassed() ?
+        int color = test.isPassed() ?
                     ContextCompat.getColor(context, R.color.green_500) :
-                    ContextCompat.getColor(context, R.color.red_500));
-        }
-        btnNext.setBackground(drawable);
+                    ContextCompat.getColor(context, R.color.red_500);
+
+        btnNext.setBackgroundColor(color);
 
         new Handler().postDelayed(new Runnable() {
             @Override

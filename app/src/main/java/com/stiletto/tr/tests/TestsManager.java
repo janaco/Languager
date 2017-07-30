@@ -30,11 +30,11 @@ import io.realm.RealmResults;
 
 public class TestsManager implements TestsListener {
 
-    @Bind(R.id.view_abc_test)
+    @Bind(R.id.layout_test_abc)
     View viewTestABC;
-    @Bind(R.id.view_boolean_test)
+    @Bind(R.id.layout_test_boolean)
     View viewTestBoolean;
-    @Bind(R.id.view_writing_test)
+    @Bind(R.id.layout_writing)
     View viewWritingTest;
     @Bind(R.id.view_curtain)
     View viewCurtain;

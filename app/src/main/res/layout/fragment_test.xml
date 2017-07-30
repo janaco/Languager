@@ -129,6 +129,8 @@
 
                 <include layout="@layout/layout_test_boolean"/>
 
+                <include layout="@layout/layout_test_writting"/>
+
             </RelativeLayout>
 
 

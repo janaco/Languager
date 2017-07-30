@@ -29,13 +29,13 @@ import butterknife.OnClick;
 public class BooleanTestManager extends TestBuilder {
 
 
-    @Bind(R.id.item_task_boolean)
+    @Bind(R.id.boolean_text)
     TextView viewTask;
-    @Bind(R.id.item_answer_boolean)
+    @Bind(R.id.boolean_answer)
     TextView viewAnswer;
-    @Bind(R.id.item_approve)
+    @Bind(R.id.approve)
     TextView btnApprove;
-    @Bind(R.id.item_reject)
+    @Bind(R.id.reject)
     TextView btnReject;
 
     private Context context;
@@ -85,13 +85,8 @@ public class BooleanTestManager extends TestBuilder {
             viewTask.setText(test.getTask());
             viewAnswer.setText(test.getAnswer());
 
-            final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.rectangle_rounded);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable.setTint(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-            }
-            btnApprove.setBackground(drawable);
-            btnReject.setBackground(drawable);
+            btnApprove.setBackgroundColor(ContextCompat.getColor(context, R.color.verdigris));
+            btnReject.setBackgroundColor(ContextCompat.getColor(context, R.color.tea_rose));
             testsListener.onNextTest(test, TaskType.BOOLEAN);
 
             return true;
@@ -99,21 +94,19 @@ public class BooleanTestManager extends TestBuilder {
         return false;
     }
 
-    @OnClick(R.id.item_approve)
+    @OnClick(R.id.approve)
     void onApproveClick() {
 
         final BooleanTest test = (BooleanTest) getCurrentTest();
         test.setPassed(test.isApprovable());
         Log.d("TESTS_", "APPROVE.test: " + test);
 
-        final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.rectangle_rounded);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable.setTint(test.isPassed() ?
+        int color = test.isPassed() ?
                     ContextCompat.getColor(context, R.color.green_500) :
-                    ContextCompat.getColor(context, R.color.red_500));
-        }
-        btnApprove.setBackground(drawable);
+                    ContextCompat.getColor(context, R.color.red_500);
+
+        btnApprove.setBackgroundColor(color);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -123,7 +116,7 @@ public class BooleanTestManager extends TestBuilder {
         }, 500);
     }
 
-    @OnClick(R.id.item_reject)
+    @OnClick(R.id.reject)
     void onRejectClick() {
 
         final BooleanTest test = (BooleanTest) getCurrentTest();
@@ -131,15 +124,11 @@ public class BooleanTestManager extends TestBuilder {
 
         Log.d("TESTS_", "REJECT.test: " + test);
 
-        final Drawable drawable = ContextCompat.getDrawable(context, R.drawable.rectangle_rounded);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable.setTint(test.isPassed() ?
+        int color = test.isPassed() ?
                     ContextCompat.getColor(context, R.color.green_500) :
-                    ContextCompat.getColor(context, R.color.red_500));
-        }
+                    ContextCompat.getColor(context, R.color.red_500);
 
-        btnReject.setBackground(drawable);
+        btnReject.setBackgroundColor(color);
 
         new Handler().postDelayed(new Runnable() {
             @Override

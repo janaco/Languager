@@ -33,9 +33,9 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
     private OnListItemClickListener<ABCTest.Variant> onListItemClickListener;
 
     public ABCTestAdapter(Context context) {
-        colorWrong = ContextCompat.getColor(context, R.color.red_400);
-        colorCorrect = ContextCompat.getColor(context, R.color.green_400);
-        colorBase = ContextCompat.getColor(context, R.color.colorPrimaryDark);
+        colorWrong = ContextCompat.getColor(context, R.color.tea_rose);
+        colorCorrect = ContextCompat.getColor(context, R.color.verdigris);
+        colorBase = ContextCompat.getColor(context, R.color.pale_brown);
 
     }
 
@@ -57,20 +57,12 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
         holder.textFront.setText(variant.getText());
         holder.textBack.setText(variant.getAnswer());
 
-        Log.d("TESTS_", variant.getText() + ": isFlipped: " + holder.flipView.isFlipped());
         if (holder.flipView.isFlipped()){
             holder.flipView.toggleView();
         }
-        Drawable backDrawable = ContextCompat.getDrawable(holder.textBack.getContext(), R.drawable.rectangle_rounded);
-        Drawable frontDrawable = ContextCompat.getDrawable(holder.textBack.getContext(), R.drawable.rectangle_rounded);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            frontDrawable.setTint(colorBase);
-            backDrawable.setTint(variant.isCorrect() ? colorCorrect : colorWrong);
-        }
-
-        holder.textBack.setBackground(backDrawable);
-        holder.textFront.setBackground(frontDrawable);
+        holder.textBack.setBackgroundColor(variant.isCorrect() ? colorCorrect : colorWrong);
+        holder.textFront.setBackgroundColor(colorBase);
 
         holder.flipView.setAnimationListener(new Animation.AnimationListener() {
             @Override

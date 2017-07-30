@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 
 public class ABCTestManager extends TestBuilder implements OnListItemClickListener<ABCTest.Variant> {
 
-    @Bind(R.id.task_abc)
+    @Bind(R.id.abc_text)
     TextView viewTask;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
