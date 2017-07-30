@@ -6,15 +6,23 @@
     android:layout_marginTop="10dp"
     android:orientation="vertical">
 
+
     <TextView
         android:id="@+id/text_front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/rectangle_rounded"
+        android:background="@color/pale_brown"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingRight="20dp"
+        android:drawablePadding="10dp"
         android:gravity="center"
-        android:text="Front"
-        android:textColor="@color/white"
+        android:text="Пример"
+        android:textColor="@color/biege"
         android:textSize="@dimen/text_16" />
+
+
 
 </RelativeLayout>

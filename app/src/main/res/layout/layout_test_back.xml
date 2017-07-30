@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/background_base_3"
         android:gravity="center"
+        android:background="@color/verdigris"
         android:text="Back"
         android:textColor="@color/white"
         android:textSize="@dimen/text_16" />

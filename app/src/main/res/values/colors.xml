@@ -27,7 +27,7 @@
 
     <color name="red_500">#f44336</color>
     <color name="red_400">#EF5350</color>
-    <color name="green_500"> #4caf50</color>
+    <color name="green_500">#4caf50</color>
     <color name="green_400">#66BB6A</color>
     <color name="yellow_500">#ffeb3b</color>
 
@@ -80,5 +80,6 @@
     <color name="pale_brown">#705f57</color>
     <color name="pine_green">#4d8680</color>
     <color name="pang">#abdcd7</color>
-
+    <color name="tea_rose">#ed7d74</color>
+    <color name="verdigris">#43b3ae</color>
 </resources>

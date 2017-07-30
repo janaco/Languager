@@ -41,7 +41,7 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_learning, null, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_abc, null, false));
     }
 
     public void setOnListItemClickListener(OnListItemClickListener<ABCTest.Variant> onListItemClickListener) {
