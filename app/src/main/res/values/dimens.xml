@@ -13,6 +13,7 @@
     <dimen name="text_22">22sp</dimen>
     <dimen name="text_24">24sp</dimen>
     <dimen name="text_26">26sp</dimen>
+    <dimen name="text_28">28sp</dimen>
     <dimen name="text_36">36sp</dimen>
 
     <dimen name="index_bar_view_text_size">12sp</dimen>

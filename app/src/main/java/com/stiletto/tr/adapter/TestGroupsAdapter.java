@@ -14,6 +14,7 @@ import com.stiletto.tr.emums.TestType;
 import com.stiletto.tr.model.word.WordInfo;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by yana on 23.07.17.
@@ -37,8 +38,10 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Item item = list.get(position);
+        String originLanguage = new Locale(item.langOrigin).getDisplayLanguage();
+        String translationLanguage = new Locale(item.langTranslation).getDisplayLanguage();
 
-        holder.viewLanguages.setText(item.langOrigin + " - " + item.langTranslation);
+        holder.viewLanguages.setText(originLanguage + " - " + translationLanguage);
         holder.viewWordsCount.setText(item.wordsCount + " words");
 
         if (item.wordsCount == item.unknownWordsCount) {

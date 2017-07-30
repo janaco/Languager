@@ -66,8 +66,6 @@ public class FragmentTests extends Fragment implements TestGroupsAdapter.OnItemC
 
         List<TestGroupsAdapter.Item> items = new ArrayList<>();
         for (WordInfo info : results) {
-            String originLanguage = new Locale(info.getOriginLanguage()).getDisplayLanguage();
-            String translationLanguage = new Locale(info.getTranslationLanguage()).getDisplayLanguage();
 
             int wordsCount = (int) Realm.getDefaultInstance()
                     .where(Word.class)
@@ -82,7 +80,7 @@ public class FragmentTests extends Fragment implements TestGroupsAdapter.OnItemC
                     .equalTo("info.status", Status.UNKNOWN.name())
                     .count();
 
-            items.add(new TestGroupsAdapter.Item(originLanguage, translationLanguage, wordsCount, unknownWordsCount));
+            items.add(new TestGroupsAdapter.Item(info.getOriginLanguage(), info.getTranslationLanguage(), wordsCount, unknownWordsCount));
         }
 
 

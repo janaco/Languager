@@ -2,90 +2,241 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/zinnwaldite"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingEnd="30dp"
+    android:clickable="true"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingStart="30dp">
 
-    <LinearLayout
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_above="@+id/source"
+    android:layout_marginTop="50dp"
+    android:layout_marginBottom="30dp"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="30dp"
+        android:id="@+id/bottom_panel"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="30dp"
+        android:background="@color/pale_sandy_brown"
+        android:elevation="1dp"
+        android:gravity="bottom">
+
+        <ImageView
+            android:id="@+id/prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:padding="5dp"
+            android:src="@drawable/chevron_left" />
+
+        <ImageView
+            android:id="@+id/pauseplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"
+            android:padding="5dp"
+            android:src="@drawable/pause"
+            android:tag="pause" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="2dp"
+            android:text="2/14"
+            android:textColor="@color/biege"
+            android:textSize="@dimen/text_10" />
+
+        <TextView
+            android:id="@+id/count_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="5dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"
+            android:text="2/14"
+            android:textColor="@color/biege"
+            android:textSize="@dimen/text_16" />
+
+        <ImageView
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="5dp"
+            android:src="@drawable/chevron_right" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/bottom_panel"
+        android:background="@color/biege"
+        android:elevation="1dp"
+        android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_weight="0.1"
+        <RelativeLayout
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:weightSum="1"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/languages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:paddingStart="20dp"
+                android:paddingLeft="20dp"
+                android:paddingEnd="20dp"
+                android:paddingRight="20dp"
+                android:text="English - Russian"
+                android:textColor="@color/pale_sandy_brown" />
+
+            <ImageView
+                android:id="@+id/close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingRight="20dp"
+                android:src="@drawable/window_close" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingTop="40dp"
+            android:paddingLeft="20dp"
+            android:paddingStart="20dp"
+            android:paddingRight="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="40dp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/item_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center|bottom"
-                android:padding="15dp"
-                android:text="Text"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/text_36"
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:gravity="center"
+                android:text="Example"
+                android:textColor="@color/pine_green"
+                android:textSize="@dimen/text_28"
                 android:textStyle="bold" />
 
+
+                <TextView
+                    android:id="@+id/transcription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:text="[ɪɡˈzæmpl]"
+                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_14"
+                    android:typeface="monospace" />
+
+
+
             <TextView
-                android:id="@+id/item_transcription"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
+                android:id="@+id/translation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="[transcription]"
-                android:textColor="@color/colorPrimary"
+                android:text="пример, образец, экземпляр, \nурок, служить примером"
+                android:textColor="@color/pale_brown"
                 android:textSize="@dimen/text_18"
-                android:typeface="monospace" />
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/item_translation"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center|top"
-                android:padding="15dp"
-                android:text="Translation"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/text_24"
-                android:textStyle="italic|bold" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.9">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_centerInParent="true" android:layout_height="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Prev"
-                    android:padding="15dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:id="@+id/item_prev"/>
 
-                <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:padding="15dp"
+                <ImageView
+                    android:id="@+id/google_translate"
                     android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_height="wrap_content"
-                    android:text="Next"
-                    android:id="@+id/item_next"/>
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/google_translate" />
+
+                <ImageView
+                    android:id="@+id/speetch"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/volume" />
 
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
-    </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
+    <TextView
+        android:id="@+id/source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Powered by Yandex.Translate"
+        android:textColor="@color/pale_brown" />
+
 
 </RelativeLayout>
