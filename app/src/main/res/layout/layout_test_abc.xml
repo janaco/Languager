@@ -4,6 +4,7 @@
     android:id="@+id/layout_test_abc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     android:gravity="center"
     android:orientation="vertical">
 
