@@ -1,54 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_writing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/view_writing_test"
+    android:layout_centerInParent="true"
+    android:gravity="center"
     android:visibility="gone"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/item_task_writing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_marginBottom="@dimen/text_20"
+        android:padding="10dp"
+        android:text="Text"
+        android:textColor="@color/pine_green"
+        android:textSize="@dimen/text_28"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/item_task_writing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/text_20"
-            android:padding="10dp"
-            android:text="Text"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_26"
-            android:textStyle="bold" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/zinnwaldite"
+        android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/item_answer_writing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/item_task_writing"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/answer"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="20dp"
+            android:layout_toLeftOf="@+id/check"
+            android:layout_toStartOf="@+id/check"
+            android:background="@null"
             android:gravity="center"
-            android:padding="10dp"
             android:hint="Type translation there"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold" />
+            android:padding="10dp"
+            android:textColor="@color/pale_brown"
+            android:textColorHint="@color/pale_sandy_brown"
+            android:textSize="@dimen/text_16" />
 
-        <TextView
-            android:id="@+id/item_next"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/item_answer_writing"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/rectangle_rounded"
-            android:gravity="center"
-            android:text="Check it"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_18"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:src="@drawable/chevron_right_brown" />
 
     </RelativeLayout>
 
-</RelativeLayout>
+
+</LinearLayout>
