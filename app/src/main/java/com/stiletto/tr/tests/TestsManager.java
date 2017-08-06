@@ -106,7 +106,9 @@ public class TestsManager implements TestsListener {
     public void loadTests() {
         RealmQuery<Word> query = selectWordsQuery();
         RealmResults<Word> results = query.findAllAsync();
-        results.load();
+
+        while (!results.load()) {
+        }
         words = new ArrayList<>();
 
         for (Word word : results) {
@@ -140,6 +142,7 @@ public class TestsManager implements TestsListener {
 
     public void createTests() {
 
+        int index = 1;
         for (Word word : words) {
 
             for (TaskType taskType : taskTypes) {

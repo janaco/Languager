@@ -4,27 +4,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.adapter.DictionariesAdapter;
 import com.stiletto.tr.adapter.TestGroupsAdapter;
-import com.stiletto.tr.core.OnListItemClickListener;
 import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.emums.TestType;
 import com.stiletto.tr.manager.NavigationManager;
 import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.model.word.WordInfo;
-import com.stiletto.tr.translator.yandex.Language;
 import com.stiletto.tr.view.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,7 +26,6 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * Created by yana on 17.07.17.

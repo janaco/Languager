@@ -13,6 +13,7 @@ import com.stiletto.tr.R;
 import com.stiletto.tr.emums.TaskType;
 import com.stiletto.tr.model.test.BooleanTest;
 import com.stiletto.tr.model.test.Test;
+import com.stiletto.tr.model.word.RealmString;
 import com.stiletto.tr.model.word.Word;
 
 import java.util.List;
@@ -58,15 +59,16 @@ public class BooleanTestManager extends TestBuilder {
         String answer;
         String correctAnswer;
         boolean approvableTest = approvable();
+        List<RealmString> translations = word.getTranslations();
 
         if (nativeLanguageTask()) {
-            task = word.getTranslationsAsString();
+            task = translations.get(new Random().nextInt(translations.size())).value;
             correctAnswer = word.getText();
             answer = createAnswerOnNativeLanguageTest(words, word, approvableTest, words.size());
 
         } else {
             task = word.getText();
-            correctAnswer = word.getTranslationsAsString();
+            correctAnswer = translations.get(new Random().nextInt(translations.size())).value;
             answer = createAnswerOnLearningLanguageTest(words, word, approvableTest, words.size());
         }
 
@@ -103,8 +105,8 @@ public class BooleanTestManager extends TestBuilder {
 
 
         int color = test.isPassed() ?
-                    ContextCompat.getColor(context, R.color.green_500) :
-                    ContextCompat.getColor(context, R.color.red_500);
+                    ContextCompat.getColor(context, R.color.verdigris) :
+                    ContextCompat.getColor(context, R.color.tea_rose);
 
         btnApprove.setBackgroundColor(color);
 
@@ -122,11 +124,9 @@ public class BooleanTestManager extends TestBuilder {
         final BooleanTest test = (BooleanTest) getCurrentTest();
         test.setPassed(!test.isApprovable());
 
-        Log.d("TESTS_", "REJECT.test: " + test);
-
         int color = test.isPassed() ?
-                    ContextCompat.getColor(context, R.color.green_500) :
-                    ContextCompat.getColor(context, R.color.red_500);
+                    ContextCompat.getColor(context, R.color.verdigris) :
+                    ContextCompat.getColor(context, R.color.tea_rose);
 
         btnReject.setBackgroundColor(color);
 

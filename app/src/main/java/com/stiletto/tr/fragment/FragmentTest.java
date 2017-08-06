@@ -2,6 +2,7 @@ package com.stiletto.tr.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class FragmentTest extends Fragment{
         langPrimary = getArguments().getString("primary");
         langTranslation = getArguments().getString("translation");
         testType = TestType.valueOf(getArguments().getString("test"));
+
     }
 
     @Nullable

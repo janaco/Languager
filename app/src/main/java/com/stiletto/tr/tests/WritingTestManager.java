@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
@@ -34,8 +35,8 @@ public class WritingTestManager extends TestBuilder {
     TextView viewTask;
     @Bind(R.id.writing_answer)
     EditText viewAnswer;
-    @Bind(R.id.check)
-    ImageView btnNext;
+    @Bind(R.id.layout_writing_answer)
+    RelativeLayout layoutAnswer;
 
     private Context context;
     private TestsListener testsListener;
@@ -73,7 +74,7 @@ public class WritingTestManager extends TestBuilder {
             viewTask.setText(test.getTask());
             viewAnswer.setText("");
 
-            btnNext.setBackgroundColor(Color.TRANSPARENT);
+            layoutAnswer.setBackgroundColor(ContextCompat.getColor(context, R.color.zinnwaldite));
             testsListener.onNextTest(test, TaskType.WRITING);
 
             return true;
@@ -85,14 +86,14 @@ public class WritingTestManager extends TestBuilder {
     @OnClick(R.id.check)
     void onNextClick() {
         final WritingTest test = (WritingTest) getCurrentTest();
-        String userAnswer = viewAnswer.getText().toString();
+        String userAnswer = viewAnswer.getText().toString().trim();
         test.setPassed(test.isAnswerCorrect(userAnswer));
 
         int color = test.isPassed() ?
-                    ContextCompat.getColor(context, R.color.green_500) :
-                    ContextCompat.getColor(context, R.color.red_500);
+                    ContextCompat.getColor(context, R.color.verdigris) :
+                    ContextCompat.getColor(context, R.color.tea_rose);
 
-        btnNext.setBackgroundColor(color);
+        layoutAnswer.setBackgroundColor(color);
 
         new Handler().postDelayed(new Runnable() {
             @Override

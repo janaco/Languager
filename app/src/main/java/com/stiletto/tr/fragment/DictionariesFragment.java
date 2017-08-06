@@ -2,7 +2,6 @@ package com.stiletto.tr.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,11 +11,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stiletto.tr.R;
-import com.stiletto.tr.adapter.DictionariesAdapter;
+import com.stiletto.tr.adapter.DictionariesListAdapter;
+import com.stiletto.tr.adapter.TestGroupsAdapter;
 import com.stiletto.tr.core.OnListItemClickListener;
+import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.manager.NavigationManager;
+import com.stiletto.tr.model.word.Word;
 import com.stiletto.tr.model.word.WordInfo;
 import com.stiletto.tr.view.Fragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,15 +35,13 @@ import io.realm.Sort;
  * Created by yana on 21.05.17.
  */
 
-public class DictionariesFragment extends Fragment implements OnListItemClickListener<WordInfo>{
+public class DictionariesFragment extends Fragment implements DictionariesListAdapter.OnItemClickListener {
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    @Bind(R.id.title)
-    TextView itemTitle;
 
-    private DictionariesAdapter adapter;
+    private DictionariesListAdapter adapter;
 
     @Nullable
     @Override
@@ -46,24 +49,40 @@ public class DictionariesFragment extends Fragment implements OnListItemClickLis
         View view = inflater.inflate(R.layout.fragment_dictionaries_list, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        itemTitle.setText("My dictionary");
 
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        Map<String, ArrayList<Word>> dictionaries = DictionaryTable.getDictionaries(getContext());
-//        adapter = new DictionariesPagerAdapter(getChildFragmentManager(), dictionaries);
-//        viewPager.setAdapter(adapter);
-//        viewPager.setCurrentItem(0);
 
         Realm.init(getContext());
         Realm realm = Realm.getDefaultInstance();
         RealmQuery<WordInfo> query = realm.where(WordInfo.class);
-        RealmResults<WordInfo> results = query.distinct("originLanguage", "translationLanguage");
-        adapter = new DictionariesAdapter(
-                results.sort("originLanguage", Sort.ASCENDING, "translationLanguage", Sort.ASCENDING));
+        RealmResults<WordInfo> results =
+                query.distinct("originLanguage", "translationLanguage")
+                        .sort("originLanguage", Sort.ASCENDING, "translationLanguage", Sort.ASCENDING);
+
+        List<DictionariesListAdapter.Item> items = new ArrayList<>();
+        for (WordInfo info : results) {
+
+            int wordsCount = (int) Realm.getDefaultInstance()
+                    .where(Word.class)
+                    .equalTo("info.originLanguage", info.getOriginLanguage())
+                    .equalTo("info.translationLanguage", info.getTranslationLanguage())
+                    .count();
+
+            int unknownWordsCount = (int) Realm.getDefaultInstance()
+                    .where(Word.class)
+                    .equalTo("info.originLanguage", info.getOriginLanguage())
+                    .equalTo("info.translationLanguage", info.getTranslationLanguage())
+                    .equalTo("info.status", Status.UNKNOWN.name())
+                    .count();
+
+            items.add(new DictionariesListAdapter.Item(info.getOriginLanguage(), info.getTranslationLanguage(), wordsCount, unknownWordsCount));
+        }
+
+        adapter = new DictionariesListAdapter(items);
         adapter.setOnListItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
@@ -71,25 +90,31 @@ public class DictionariesFragment extends Fragment implements OnListItemClickLis
     }
 
     @Override
-    public void onListItemClick(WordInfo item, int position) {
+    public void onListItemClick(DictionariesListAdapter.Item item, int position) {
         DictionaryFragment fragment = new DictionaryFragment();
 
         Bundle args = new Bundle();
-        args.putString("primary", item.getOriginLanguage());
-        args.putString("translation", item.getTranslationLanguage());
+        args.putString("primary", item.langOrigin);
+        args.putString("translation", item.langTranslation);
 
         fragment.setArguments(args);
 
         NavigationManager.addFragment(getActivity(), fragment);
+
     }
 
-    @OnClick(R.id.item_back)
-    void onBackPressed(){
+    @Override
+    public void onItemMenuClick(DictionariesListAdapter.Item item, int position) {
+
+    }
+
+
+    @OnClick(R.id.close)
+    void onBackPressed() {
         getActivity().onBackPressed();
     }
 
-    @OnClick(R.id.item_clean)
-    void onCleanAllClick(){
+    void onCleanAllClick() {
 //        DictionaryTable.clean(getContext());
 //        Map<String, ArrayList<Word>> dictionaries = DictionaryTable.getDictionaries(getContext());
 //        adapter = new DictionariesPagerAdapter(getActivity().getSupportFragmentManager(), dictionaries);

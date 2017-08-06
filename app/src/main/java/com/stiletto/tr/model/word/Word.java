@@ -80,6 +80,10 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         info.setPassedTestsCount(passedTestsCount);
     }
 
+    public RealmList<RealmString> getTranslations() {
+        return translations;
+    }
+
     public String getTranslationsAsString() {
 
         StringBuilder builder = new StringBuilder();
@@ -183,7 +187,7 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
     }
 
     public void delete() {
-        Realm.getDefaultInstance().executeTransactionAsync(new Realm.Transaction() {
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 Word.this.deleteFromRealm();

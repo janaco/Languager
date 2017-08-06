@@ -3,11 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorLightPrimary"
+    android:background="@color/zinnwaldite"
+    android:padding="15dp"
     android:clickable="true"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_dictionary" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/close"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/window_close"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dictionaries"
+            android:layout_centerInParent="true"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textColor="@color/pale_sandy_brown"
+            android:textSize="@dimen/text_16"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,7 +41,7 @@
             android:layout_width="match_parent"
             android:id="@+id/recycler_view"
             android:layout_marginTop="10dp"
-            tools:listitem="@layout/item_language"
+            tools:listitem="@layout/item_dictionary"
             android:layout_height="match_parent"/>
 
     </RelativeLayout>

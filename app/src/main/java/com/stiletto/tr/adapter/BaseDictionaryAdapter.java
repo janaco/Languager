@@ -19,6 +19,7 @@ import com.stiletto.tr.model.word.Dictionary;
 import com.stiletto.tr.model.word.Word;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,12 +35,12 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
     }
 
     //    private List<DictionaryItem> list;
-    private List<Word> list;
+    private List<Word> list = new ArrayList<>();
     private OnItemClickListener onListItemClickListener;
 
 
     public BaseDictionaryAdapter(List<Word> list) {
-        this.list = list;
+        this.list = new ArrayList<>(list);
 
         HashMap<String, Integer> map =new HashMap<>();
         int index = 0;

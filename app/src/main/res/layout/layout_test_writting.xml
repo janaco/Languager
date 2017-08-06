@@ -23,6 +23,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:id="@+id/layout_writing_answer"
         android:background="@color/zinnwaldite"
         android:orientation="horizontal">
 
