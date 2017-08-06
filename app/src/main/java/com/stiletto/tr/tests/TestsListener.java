@@ -14,4 +14,7 @@ public interface TestsListener {
     void onNextTest(Test test, TaskType taskType);
 
     void onTextIsDone(Test test);
+
+    void skipTest();
 }
+

@@ -1,6 +1,7 @@
 package com.softes.bottomsheetpanel;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -18,8 +19,6 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.view.ViewHelper;
 
 /**
  * Created by yana on 26.02.17.
@@ -194,7 +193,8 @@ public class BottomSheetPanel extends FrameLayout {
 
         if (isPanelShowing) {
             View mPanel = findViewWithTag(TAG_PANEL);
-            float currentY = ViewHelper.getY(mPanel);
+//            float currentY = ViewHelper.getY(mPanel);
+            float currentY = mPanel.getY();
             if (currentY < (measureHeight - panelHeight) ||
                     currentY < (measureHeight - panelHeight + moveDistanceToTrigger)) {
                 ObjectAnimator.ofFloat(mPanel, "y", currentY, measureHeight - panelHeight)
@@ -236,7 +236,8 @@ public class BottomSheetPanel extends FrameLayout {
             }
 
             if (darkFrameLayout != null && isFade) {
-                float currentY = ViewHelper.getY(touchingView);
+//                float currentY = ViewHelper.getY(touchingView);
+                float currentY = touchingView.getY();
                 if (currentY > measureHeight - panelHeight &&
                         currentY < measureHeight - titleHeightNoDisplay) {
                     darkFrameLayout.fade(
@@ -246,7 +247,8 @@ public class BottomSheetPanel extends FrameLayout {
             if (!boundary) {
                 touchingView.offsetTopAndBottom((int) deltaY);
             } else {
-                float touchingViewY = ViewHelper.getY(touchingView);
+//                float touchingViewY = ViewHelper.getY(touchingView);
+                float touchingViewY = touchingView.getY();
                 if (touchingViewY + deltaY <= measureHeight - panelHeight) {
                     touchingView.offsetTopAndBottom((int) (measureHeight - panelHeight - touchingViewY));
                 } else if (touchingViewY + deltaY >= measureHeight - titleHeightNoDisplay) {
@@ -283,15 +285,19 @@ public class BottomSheetPanel extends FrameLayout {
         }
         final View mPanel = findViewWithTag(TAG_PANEL);
         final int t = (int) (measureHeight - titleHeightNoDisplay);
+//        ValueAnimator animator = ValueAnimator.ofFloat(
+//                ViewHelper.getY(mPanel), measureHeight - titleHeightNoDisplay);
         ValueAnimator animator = ValueAnimator.ofFloat(
-                ViewHelper.getY(mPanel), measureHeight - titleHeightNoDisplay);
+                mPanel.getY(), measureHeight - titleHeightNoDisplay);
         animator.setInterpolator(closeAnimationInterpolator);
         animator.setTarget(mPanel);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-                ViewHelper.setY(mPanel, value);
+//                ViewHelper.setY(mPanel, value);
+                mPanel.setY(value);
+//                ViewHelper.setY(mPanel, value);
                 if (darkFrameLayout != null && isFade && value < t) {
                     darkFrameLayout.fade((int) ((1 - value / t) * FadingLayout.MAX_ALPHA));
                 }
@@ -332,7 +338,8 @@ public class BottomSheetPanel extends FrameLayout {
             darkFrameLayout.fade(true);
         }
         final View mPanel = findViewWithTag(TAG_PANEL);
-        ValueAnimator animator = ValueAnimator.ofFloat(ViewHelper.getY(mPanel), measureHeight - panelHeight)
+//        ValueAnimator animator = ValueAnimator.ofFloat(ViewHelper.getY(mPanel), measureHeight - panelHeight)
+        ValueAnimator animator = ValueAnimator.ofFloat(mPanel.getY(), measureHeight - panelHeight)
                 .setDuration(animationDuration);
         animator.setTarget(mPanel);
         animator.setInterpolator(openAnimationInterpolator);
@@ -340,7 +347,8 @@ public class BottomSheetPanel extends FrameLayout {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-                ViewHelper.setY(mPanel, value);
+//                ViewHelper.setY(mPanel, value);
+                mPanel.setY(value);
                 if (darkFrameLayout != null && isFade
                         && darkFrameLayout.getCurrentAlpha() != FadingLayout.MAX_ALPHA) {
                     darkFrameLayout.fade(

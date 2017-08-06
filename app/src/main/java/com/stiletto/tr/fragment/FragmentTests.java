@@ -103,7 +103,7 @@ public class FragmentTests extends Fragment implements TestGroupsAdapter.OnItemC
 }
 
 
-    @OnClick(R.id.item_back)
+    @OnClick(R.id.close)
     void onBackPressed() {
         getActivity().onBackPressed();
     }

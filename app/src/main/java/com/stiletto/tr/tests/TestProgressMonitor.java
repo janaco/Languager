@@ -51,6 +51,10 @@ public class TestProgressMonitor {
     }
 
 
+    public int getNumberOfTasks() {
+        return numberOfTasks;
+    }
+
     private void increaseLearningProgress(Test test) {
 
         Word word = Realm.getDefaultInstance().where(Word.class)

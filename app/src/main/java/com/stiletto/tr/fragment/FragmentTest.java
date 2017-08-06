@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.emums.TaskType;
@@ -12,17 +13,27 @@ import com.stiletto.tr.emums.TestType;
 import com.stiletto.tr.tests.TestsManager;
 import com.stiletto.tr.view.Fragment;
 
+import java.util.Locale;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by yana on 17.07.17.
  */
 
 public class FragmentTest extends Fragment{
 
+    @Bind(R.id.languages)
+    TextView viewLanguages;
+
     private String langPrimary;
     private String langTranslation;
 
     private TestsManager testsManager;
     private TestType testType;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,7 +47,14 @@ public class FragmentTest extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_test, container, false);
+        View view =  inflater.inflate(R.layout.fragment_test, container, false);
+        ButterKnife.bind(this, view);
+
+        String languages = new Locale(langPrimary).getDisplayLanguage() + " - "
+                + new Locale(langTranslation).getDisplayLanguage();
+        viewLanguages.setText(languages);
+
+        return view;
     }
 
     @Override
@@ -51,6 +69,10 @@ public class FragmentTest extends Fragment{
         testsManager.start();
     }
 
+    @OnClick(R.id.close)
+    void onCloseWindowClick(){
+        getActivity().onBackPressed();
+    }
 
     public static FragmentTest getInstance(String originLanguage, String translationLanguage, TestType testType) {
 

@@ -43,6 +43,9 @@ public class TestsManager implements TestsListener {
     @Bind(R.id.btn_again)
     TextView btnAgain;
 
+    @Bind(R.id.count)
+    TextView viewCount;
+
     private ABCTestManager abcTestManager;
     private BooleanTestManager booleanTestManager;
     private WritingTestManager writingTestManager;
@@ -66,8 +69,13 @@ public class TestsManager implements TestsListener {
 
     @OnClick(R.id.btn_again)
     void tryAgain() {
-        testIndex=0;
+        testIndex = 0;
         start();
+    }
+
+    @OnClick(R.id.skip)
+    void onSkipClick() {
+        skipTest();
     }
 
     public void setTestType(TestType testType) {
@@ -182,7 +190,7 @@ public class TestsManager implements TestsListener {
 
 
     public void start() {
-        if (progressMonitor == null){
+        if (progressMonitor == null) {
             progressMonitor = new TestProgressMonitor();
         }
 
@@ -199,9 +207,9 @@ public class TestsManager implements TestsListener {
         }
     }
 
-    private int getTestsCount(){
+    private int getTestsCount() {
 
-        switch (testType){
+        switch (testType) {
 
             case QUICK:
                 return testsAmount;
@@ -209,7 +217,7 @@ public class TestsManager implements TestsListener {
             default:
                 int count = 0;
 
-                for (TaskType taskType: taskTypes) {
+                for (TaskType taskType : taskTypes) {
                     switch (taskType) {
 
                         case BOOLEAN:
@@ -232,6 +240,8 @@ public class TestsManager implements TestsListener {
 
     @Override
     public void onNextTest(Test test, TaskType taskType) {
+
+        viewCount.setText(testIndex + 1 + "/" + progressMonitor.getNumberOfTasks());
 
         switch (taskType) {
             case CHOOSE:
@@ -276,13 +286,29 @@ public class TestsManager implements TestsListener {
                 if (taskTypes.length > 0) {
                     nextTask = getNextTaskType();
                 } else {
-                   onTestFinished();
+                    onTestFinished();
                 }
             }
         }
     }
 
-    private void onTestFinished(){
+    @Override
+    public void skipTest() {
+        testIndex++;
+        if (taskTypes.length > 0) {
+            TaskType nextTask = getNextTaskType();
+            while (!showNextTest(nextTask)) {
+                onTasksIsDone(nextTask);
+                if (taskTypes.length > 0) {
+                    nextTask = getNextTaskType();
+                } else {
+                    onTestFinished();
+                }
+            }
+        }
+    }
+
+    private void onTestFinished() {
         viewTestABC.setVisibility(View.GONE);
         viewWritingTest.setVisibility(View.GONE);
         viewTestBoolean.setVisibility(View.GONE);
