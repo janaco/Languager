@@ -2,26 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/zinnwaldite"
+    android:orientation="vertical"
+    android:padding="15dp">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?android:actionBarSize">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/close"
+            android:layout_toStartOf="@+id/close"
+            android:padding="15dp"
+            android:src="@drawable/share" />
+
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="15dp"
+            android:src="@drawable/window_close" />
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/share"
+            android:layout_toStartOf="@+id/share"
+            android:gravity="center"
+            android:text="My progress"
+            android:textAllCaps="true"
+            android:textColor="@color/pale_sandy_brown"
+            android:textSize="@dimen/text_16"
+            android:textStyle="bold" />
 
-            <include layout="@layout/layout_general_progress" />
+    </RelativeLayout>
 
-            <include layout="@layout/layout_pie_chart"/>
 
-            <include layout="@layout/layout_columns_chart" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/biege"
+        android:orientation="vertical"
+        android:padding="15dp">
 
-        </LinearLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    </ScrollView>
+
+    </RelativeLayout>
+
 
 </LinearLayout>

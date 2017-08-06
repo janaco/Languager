@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <lecho.lib.hellocharts.view.PieChartView
+        android:id="@+id/chart_pie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/passed"
+        android:layout_weight="0.25" />
+
+
+    <TextView
+        android:id="@+id/passed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/failed"
+        android:drawableLeft="@drawable/rectangle_green"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/rectangle_green"
+        android:padding="5dp"
+        android:text="Passed"
+        android:textColor="@color/verdigris" />
+
+
+    <TextView
+        android:id="@+id/failed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/radio_group"
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@drawable/rectangle_red"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/rectangle_red"
+        android:padding="5dp"
+        android:text="Failed"
+        android:textColor="@color/tea_rose" />
+
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/button_days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.33"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Day"
+            android:textColor="@color/biege"
+            android:textStyle="italic" />
+
+        <RadioButton
+            android:id="@+id/button_months"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.33"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent"
+            android:checked="false"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Month"
+            android:textColor="@color/biege"
+            android:textStyle="italic" />
+
+        <RadioButton
+            android:id="@+id/button_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.33"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent"
+            android:checked="false"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Year"
+            android:textColor="@color/biege"
+            android:textStyle="italic" />
+    </RadioGroup>
+
+</RelativeLayout>

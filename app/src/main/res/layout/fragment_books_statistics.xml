@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <lecho.lib.hellocharts.view.ColumnChartView
+            android:id="@+id/columns_chart"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_above="@+id/all_words"
+            android:layout_marginBottom="30dp"
+            android:layout_height="match_parent" >
+        </lecho.lib.hellocharts.view.ColumnChartView>
+
+        <TextView
+            android:id="@+id/all_words"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/unknown"
+            android:drawableLeft="@drawable/rectangle_brown"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/rectangle_brown"
+            android:padding="5dp"
+            android:text="All words"
+            android:textColor="@color/pale_sandy_brown" />
+
+
+        <TextView
+            android:id="@+id/unknown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/rectangle_red"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/rectangle_red"
+            android:padding="5dp"
+            android:text="Unknown words"
+            android:textColor="@color/tea_rose" />
+
+</RelativeLayout>

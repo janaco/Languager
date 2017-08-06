@@ -1,6 +1,8 @@
 package com.stiletto.tr.charts;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.model.test.Result;
@@ -66,7 +68,7 @@ public class GeneralLearningProgressChart {
     private void drawChart(List<PointValue> points, List<AxisValue> xLegendValues) {
 
         Line line = new Line(points);
-        line.setColor(ChartUtils.COLOR_GREEN);
+        line.setColor(ContextCompat.getColor(lineChartView.getContext(), R.color.pale_brown));
         line.setCubic(true);
         line.setHasLabels(true);
 
@@ -77,11 +79,18 @@ public class GeneralLearningProgressChart {
 
         Axis axisX = new Axis(xLegendValues);
         axisX.setHasLines(false);
+        axisX.setTextColor(ContextCompat.getColor(lineChartView.getContext(), R.color.pale_sandy_brown));
         lineData.setAxisXBottom(axisX);
 
+        Axis axisY = new Axis();
+        axisY.setHasLines(true);
+        axisY.setHasSeparationLine(false);
+        axisY.setHasTiltedLabels(false);
+        axisY.setTextColor(Color.TRANSPARENT);
+        lineData.setAxisYLeft(axisY);
 
         lineData.setValueLabelBackgroundEnabled(false);
-        lineData.setValueLabelsTextColor(ContextCompat.getColor(lineChartView.getContext(), R.color.green_400));
+        lineData.setValueLabelsTextColor(ContextCompat.getColor(lineChartView.getContext(), R.color.pale_sandy_brown));
 
         lineChartView.setLineChartData(lineData);
         lineChartView.setViewportCalculationEnabled(false);
@@ -92,7 +101,7 @@ public class GeneralLearningProgressChart {
         lineChartView.setMaximumViewport(maxViewport);
 
         lineChartView.setScrollEnabled(true);
-        lineChartView.setZoomType(ZoomType.HORIZONTAL);
+        lineChartView.setZoomType(ZoomType.HORIZONTAL_AND_VERTICAL);
         lineChartView.cancelDataAnimation();
         lineChartView.startDataAnimation(300);
     }
@@ -104,6 +113,8 @@ public class GeneralLearningProgressChart {
             Result result = results.get(i);
             values.add(new PointValue(i, result.getPercentage()));
             axisValues.add(new AxisValue(i).setLabel(result.getDate()));
+
+            Log.d("STATISTICS_", result.getPercentage() + ", i=" + i + ", " + result.getDate());
         }
     }
 

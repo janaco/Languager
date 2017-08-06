@@ -1,6 +1,8 @@
 package com.stiletto.tr.model.test;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +15,7 @@ import io.realm.RealmObject;
  * Created by yana on 21.07.17.
  */
 
-public class Result extends RealmObject {
+public class Result extends RealmObject implements Parcelable {
 
     private long timestamp;
     private int percentage;
@@ -29,6 +31,26 @@ public class Result extends RealmObject {
         this.percentage = percentage;
         this.passed = passed;
     }
+
+    protected Result(Parcel in) {
+        timestamp = in.readLong();
+        percentage = in.readInt();
+        tasksCount = in.readInt();
+        type = in.readString();
+        passed = in.readByte() != 0;
+    }
+
+    public static final Creator<Result> CREATOR = new Creator<Result>() {
+        @Override
+        public Result createFromParcel(Parcel in) {
+            return new Result(in);
+        }
+
+        @Override
+        public Result[] newArray(int size) {
+            return new Result[size];
+        }
+    };
 
     public long getTimestamp() {
         return timestamp;
@@ -71,7 +93,7 @@ public class Result extends RealmObject {
     }
 
     public String getDate(){
-        return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date(timestamp));
+        return new SimpleDateFormat("dd MMM", Locale.getDefault()).format(new Date(timestamp));
 
     }
 
@@ -83,4 +105,17 @@ public class Result extends RealmObject {
         realm.commitTransaction();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(timestamp);
+        dest.writeInt(percentage);
+        dest.writeInt(tasksCount);
+        dest.writeString(type);
+        dest.writeByte((byte) (passed ? 1 : 0));
+    }
 }

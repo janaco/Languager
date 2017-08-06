@@ -2,8 +2,10 @@ package com.stiletto.tr.charts;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.stiletto.tr.R;
 import com.stiletto.tr.model.test.Result;
 
 import java.util.ArrayList;
@@ -53,7 +55,6 @@ public class PieChart {
         }
 
         float successPercent = getSuccessPercent(getTestResults(calendar.getTimeInMillis()));
-        Log.d("PIE_CHART", "successPercent: " + successPercent );
         drawChart(successPercent);
     }
 
@@ -72,8 +73,8 @@ public class PieChart {
 
         List<SliceValue> values = new ArrayList<>();
 
-        values.add(new SliceValue(successPercent, Color.GREEN));
-        values.add(new SliceValue(failedPercent, Color.RED));
+        values.add(new SliceValue(successPercent, ContextCompat.getColor(pieChartView.getContext(), R.color.verdigris)));
+        values.add(new SliceValue(failedPercent, ContextCompat.getColor(pieChartView.getContext(), R.color.tea_rose)));
 
 
         PieChartData data = new PieChartData(values);

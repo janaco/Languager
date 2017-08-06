@@ -1,7 +1,10 @@
 package com.stiletto.tr.charts;
 
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.stiletto.tr.R;
 import com.stiletto.tr.emums.Status;
 import com.stiletto.tr.model.Book;
 import com.stiletto.tr.model.word.Word;
@@ -27,12 +30,17 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 public class ColumnsChart {
 
     private ColumnChartView columnChartView;
+    private int colorGeneral;
+    private int colorUnknown;
 
-    private ColumnsChart(ColumnChartView columnChartView){
+
+    private ColumnsChart(ColumnChartView columnChartView) {
         this.columnChartView = columnChartView;
+        colorGeneral = ContextCompat.getColor(columnChartView.getContext(), R.color.pale_sandy_brown);
+        colorUnknown = ContextCompat.getColor(columnChartView.getContext(), R.color.tea_rose);
     }
 
-    public static ColumnsChart init(ColumnChartView columnChartView){
+    public static ColumnsChart init(ColumnChartView columnChartView) {
         return new ColumnsChart(columnChartView);
     }
 
@@ -44,14 +52,14 @@ public class ColumnsChart {
     private void drawChart(List<Value> values) {
         int index = 0;
 
+
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         List<Column> columns = new ArrayList<Column>();
-        for (Value value: values){
+        for (Value value : values) {
             List<SubcolumnValue> subcolumns = new ArrayList<>();
-            subcolumns.add(new SubcolumnValue(value.words, ChartUtils.pickColor()));
-            subcolumns.add(new SubcolumnValue(value.unknownWords, ChartUtils.pickColor()));
+            subcolumns.add(new SubcolumnValue(value.words, colorGeneral));
+            subcolumns.add(new SubcolumnValue(value.unknownWords, colorUnknown));
 
-            Log.d("COLUMN_", "book: " + value.book + ", words: " + value.words + ", unknown: " + value.unknownWords);
             Column column = new Column(subcolumns);
             column.setHasLabelsOnlyForSelected(true);
             columns.add(column);
@@ -62,11 +70,16 @@ public class ColumnsChart {
         ColumnChartData columnData = new ColumnChartData(columns);
 
         columnData.setAxisXBottom(new Axis(axisValues).setHasLines(false));
-        columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
+
+        Axis axisY = new Axis();
+        axisY.setHasLines(true);
+        axisY.setTextColor(Color.TRANSPARENT);
+        columnData.setAxisYLeft(axisY);
+
 
         columnChartView.setColumnChartData(columnData);
         columnChartView.setValueSelectionEnabled(true);
-        columnChartView.setZoomType(ZoomType.HORIZONTAL);
+        columnChartView.setZoomType(ZoomType.HORIZONTAL_AND_VERTICAL);
 
     }
 
