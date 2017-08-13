@@ -51,7 +51,7 @@ public class FragmentTop extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top, container, false);
         ButterKnife.bind(this, view);
-        layoutCover.setBackgroundResource(getCover());
+//        layoutCover.setBackgroundResource(getCover());
         itemName.setText(book.getName());
         itemExtention.setText(book.getFileType().name());
         return view;

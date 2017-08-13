@@ -39,6 +39,11 @@ public class DictionariesFragment extends Fragment implements DictionariesListAd
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
+    @Bind(R.id.view_empty)
+    View viewEmty;
+    @Bind(R.id.alert)
+    TextView viewAlert;
+
 
 
     private DictionariesListAdapter adapter;
@@ -82,11 +87,18 @@ public class DictionariesFragment extends Fragment implements DictionariesListAd
             items.add(new DictionariesListAdapter.Item(info.getOriginLanguage(), info.getTranslationLanguage(), wordsCount, unknownWordsCount));
         }
 
+        if (items.size() == 0) {
+            viewEmty.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            viewAlert.setText(R.string.no_items_yet);
+            return;
+        }
+
         adapter = new DictionariesListAdapter(items);
         adapter.setOnListItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
-        Log.d("REALM_DB", "results: " + results.size());
+
     }
 
     @Override

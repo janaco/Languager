@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.StatisticsPagerAdapter;
@@ -31,6 +32,10 @@ public class FragmentStatistics extends Fragment {
 
     @Bind(R.id.view_pager)
     ViewPager viewPager;
+    @Bind(R.id.view_empty)
+    View viewEmpty;
+    @Bind(R.id.alert)
+    TextView viewAlert;
 
     private StatisticsPagerAdapter adapter;
 
@@ -48,6 +53,13 @@ public class FragmentStatistics extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ArrayList<Result> testResults = getTestResults();
+
+        if (testResults.size() == 0){
+            viewEmpty.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.GONE);
+            viewAlert.setText(R.string.no_learning_progress);
+            return;
+        }
 
         Bundle args = new Bundle();
         args.putParcelableArrayList("results", testResults);

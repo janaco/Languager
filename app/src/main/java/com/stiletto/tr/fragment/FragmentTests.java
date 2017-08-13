@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.stiletto.tr.R;
 import com.stiletto.tr.adapter.TestGroupsAdapter;
@@ -35,6 +36,10 @@ public class FragmentTests extends Fragment implements TestGroupsAdapter.OnItemC
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
+    @Bind(R.id.view_empty)
+    View viewEmpty;
+    @Bind(R.id.alert)
+    TextView viewAlert;
 
     private TestGroupsAdapter adapter;
 
@@ -76,6 +81,12 @@ public class FragmentTests extends Fragment implements TestGroupsAdapter.OnItemC
             items.add(new TestGroupsAdapter.Item(info.getOriginLanguage(), info.getTranslationLanguage(), wordsCount, unknownWordsCount));
         }
 
+        if (items.size() == 0){
+            viewEmpty.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            viewAlert.setText(R.string.no_tests_available);
+            return;
+        }
 
         adapter = new TestGroupsAdapter(items);
         adapter.setOnItemClickListener(this);
