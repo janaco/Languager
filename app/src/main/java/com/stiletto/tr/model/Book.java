@@ -10,6 +10,7 @@ import com.stiletto.tr.translator.yandex.Language;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -24,6 +25,7 @@ import io.realm.annotations.PrimaryKey;
 public class Book extends RealmObject implements Comparable<Book>, Parcelable {
 
     @PrimaryKey
+    private String id;
     private String path;
     private String name;
     private String fileType;
@@ -40,27 +42,41 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
         this.name = name.contains(".") ? name.substring(0, name.lastIndexOf(".")) : name;
         this.fileType = name.contains(".") ? FileType.getType(name.substring(name.lastIndexOf(".")).toLowerCase()).name() : FileType.UNKNOWN.name();
         this.size = size;
+        this.id = new Random().nextInt(fileType.length())
+                + fileType.hashCode()
+                + new Random().nextInt(43 + new Random().nextInt(100))
+                + fileType.substring(0, new Random().nextInt(fileType.length()))
+                + size + size * 2 + 37 + new Random().nextInt(150);
     }
 
     public Book(File file) {
         this(file.getPath(), file.getName(), file.length());
     }
 
-    public Book(){}
+    public Book() {
+    }
 
     protected Book(Parcel in) {
+        id = in.readString();
         path = in.readString();
         name = in.readString();
+        fileType = in.readString();
         size = in.readLong();
+        originLanguage = in.readString();
+        translationLanguage = in.readString();
         bookmark = in.readInt();
         pages = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(path);
         dest.writeString(name);
+        dest.writeString(fileType);
         dest.writeLong(size);
+        dest.writeString(originLanguage);
+        dest.writeString(translationLanguage);
         dest.writeInt(bookmark);
         dest.writeInt(pages);
     }
@@ -186,14 +202,16 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
         return 45 * path.length() + name.length();
     }
 
-    public void rename(String name, String path) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        deleteFromRealm();
-        setName(name);
-        setPath(path);
-        realm.copyToRealmOrUpdate(this);
-        realm.commitTransaction();
+    public void rename(final String name, final String path) {
+
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                setName(name);
+                setPath(path);
+                realm.copyToRealmOrUpdate(Book.this);
+            }
+        });
     }
 
     public void remove() {
@@ -204,7 +222,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
     }
 
 
-    public void setBookmark(int bookmark, int pagesCount){
+    public void setBookmark(int bookmark, int pagesCount) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         setBookmark(bookmark);
@@ -215,10 +233,9 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
     }
 
 
-    public void insert(){
+    public void insert() {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(this);
         realm.copyToRealmOrUpdate(this);
         realm.commitTransaction();
 
