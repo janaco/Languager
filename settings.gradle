@@ -1,1 +1,1 @@
-include ':app', ':cardviewer', ':bottomsheetpanel', ':clickabletextview', ':categorizedlistview', ':flippy'
+include ':app', ':cardviewer', ':clickabletextview', ':categorizedlistview', ':flippy', ':slideBottomPanel'

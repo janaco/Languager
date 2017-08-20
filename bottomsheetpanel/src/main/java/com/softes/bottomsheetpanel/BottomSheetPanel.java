@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -26,6 +27,8 @@ import android.widget.ScrollView;
 
 public class BottomSheetPanel extends FrameLayout {
 
+
+    private static final String TAG = BottomSheetPanel.class.getSimpleName();
     private static final int TAG_BACKGROUND = 1;
     private static final int TAG_PANEL = 2;
 
@@ -41,39 +44,41 @@ public class BottomSheetPanel extends FrameLayout {
 
     private static float MAX_CLICK_DISTANCE = 5;
 
-    private float density;
+    private int mChildCount;
+    private float mDensity;
     private boolean isAnimating = false;
     private boolean isPanelShowing = false;
 
     private float xVelocity;
     private float yVelocity;
-    private float touchSlop;
-    private int maxVelocity;
-    private int minVelocity;
-    private VelocityTracker velocityTracker;
+    private float mTouchSlop;
+    private int mMaxVelocity;
+    private int mMinVelocity;
+    private VelocityTracker mVelocityTracker;
 
-    private int measureHeight;
+    private int mMeasureHeight;
     private float firstDownX;
     private float firstDownY;
     private float downY;
     private float deltaY;
-    private long pressStartTime;
+    private long mPressStartTime;
     private boolean isDragging = false;
 
-    private int backgroundId;
-    private float panelHeight;
-    private float titleHeightNoDisplay;
-    private float moveDistanceToTrigger;
-    private int animationDuration;
-    private boolean isFade = true;
-    private boolean boundary = true;
-    private boolean hidePanelTitle = false;
+    private int mBackgroundId;
+    private float mPanelHeight;
+    private float mTitleHeightNoDisplay;
+    private float mMoveDistanceToTrigger;
+    private int mAnimationDuration;
+    private boolean mIsFade = true;
+    private boolean mBoundary = true;
+    private boolean mHidePanelTitle = false;
     private boolean isPanelOnTouch = false;
 
-    private Interpolator openAnimationInterpolator = new AccelerateInterpolator();
-    private Interpolator closeAnimationInterpolator = new AccelerateInterpolator();
+    private Interpolator mOpenAnimationInterpolator = new AccelerateInterpolator();
+    private Interpolator mCloseAnimationInterpolator = new AccelerateInterpolator();
 
-    private FadingLayout darkFrameLayout;
+    private Context mContext;
+    private FadingLayout mDarkFrameLayout;
 
     public BottomSheetPanel(Context context) {
         this(context, null);
@@ -86,23 +91,24 @@ public class BottomSheetPanel extends FrameLayout {
     public BottomSheetPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        density = getResources().getDisplayMetrics().density;
+        mContext = context;
+        mDensity = getResources().getDisplayMetrics().density;
 
-        ViewConfiguration vc = ViewConfiguration.get(context);
-        maxVelocity = vc.getScaledMaximumFlingVelocity();
-        minVelocity = vc.getScaledMinimumFlingVelocity();
-        touchSlop = vc.getScaledTouchSlop();
+        ViewConfiguration vc = ViewConfiguration.get(mContext);
+        mMaxVelocity = vc.getScaledMaximumFlingVelocity();
+        mMinVelocity = vc.getScaledMinimumFlingVelocity();
+        mTouchSlop = vc.getScaledTouchSlop();
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BottomSheetPanel, defStyleAttr, 0);
 
-        backgroundId = a.getResourceId(R.styleable.BottomSheetPanel_sbp_background_layout, DEFAULT_BACKGROUND_ID);
-        panelHeight = a.getDimension(R.styleable.BottomSheetPanel_sbp_panel_height, dp2px(DEFAULT_PANEL_HEIGHT));
-        boundary = a.getBoolean(R.styleable.BottomSheetPanel_sbp_boundary, DEFAULT_BOUNDARY);
-        MAX_CLICK_DISTANCE = titleHeightNoDisplay = a.getDimension(R.styleable.BottomSheetPanel_sbp_title_height_no_display, dp2px(DEFAULT_TITLE_HEIGHT_NO_DISPLAY));
-        moveDistanceToTrigger = a.getDimension(R.styleable.BottomSheetPanel_sbp_move_distance_trigger, dp2px(DEFAULT_MOVE_DISTANCE_TO_TRIGGER));
-        animationDuration = a.getInt(R.styleable.BottomSheetPanel_sbp_animation_duration, DEFAULT_ANIMATION_DURATION);
-        hidePanelTitle = a.getBoolean(R.styleable.BottomSheetPanel_sbp_hide_panel_title, DEFAULT_HIDE_PANEL_TITLE);
-        isFade = a.getBoolean(R.styleable.BottomSheetPanel_sbp_fade, DEFAULT_FADE);
+        mBackgroundId = a.getResourceId(R.styleable.BottomSheetPanel_sbp_background_layout, DEFAULT_BACKGROUND_ID);
+        mPanelHeight = a.getDimension(R.styleable.BottomSheetPanel_sbp_panel_height, dp2px(DEFAULT_PANEL_HEIGHT));
+        mBoundary = a.getBoolean(R.styleable.BottomSheetPanel_sbp_boundary, DEFAULT_BOUNDARY);
+        MAX_CLICK_DISTANCE = mTitleHeightNoDisplay = a.getDimension(R.styleable.BottomSheetPanel_sbp_title_height_no_display,dp2px(DEFAULT_TITLE_HEIGHT_NO_DISPLAY));
+        mMoveDistanceToTrigger = a.getDimension(R.styleable.BottomSheetPanel_sbp_move_distance_trigger, dp2px(DEFAULT_MOVE_DISTANCE_TO_TRIGGER));
+        mAnimationDuration = a.getInt(R.styleable.BottomSheetPanel_sbp_animation_duration, DEFAULT_ANIMATION_DURATION);
+        mHidePanelTitle = a.getBoolean(R.styleable.BottomSheetPanel_sbp_hide_panel_title, DEFAULT_HIDE_PANEL_TITLE);
+        mIsFade = a.getBoolean(R.styleable.BottomSheetPanel_sbp_fade, DEFAULT_FADE);
 
         a.recycle();
 
@@ -112,19 +118,19 @@ public class BottomSheetPanel extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        int mChildCount = getChildCount();
-        int t = (int) (measureHeight - titleHeightNoDisplay);
+        mChildCount = getChildCount();
+        int t = (int) (mMeasureHeight - mTitleHeightNoDisplay);
         for (int i = 0; i < mChildCount; i++) {
             View childView = getChildAt(i);
             if (childView.getTag() == null || (int) childView.getTag() != TAG_BACKGROUND) {
                 childView.layout(0, t, childView.getMeasuredWidth(), childView.getMeasuredHeight() + t);
                 childView.setTag(TAG_PANEL);
-                if (childView instanceof ViewGroup) {
-                    ((ViewGroup)childView).setClipChildren(false);
-                }
-            } else if ((int) childView.getTag() == TAG_BACKGROUND) {
+//                if (childView instanceof ViewGroup) {
+//                    ((ViewGroup)childView).setClipChildren(false);
+//                }
+            } else if (childView.getTag() == TAG_BACKGROUND){
                 childView.layout(0, 0, childView.getMeasuredWidth(), childView.getMeasuredHeight());
-                childView.setPadding(0, 0, 0, (int) titleHeightNoDisplay);
+                childView.setPadding(0, 0, 0, (int)mTitleHeightNoDisplay);
             }
         }
     }
@@ -142,7 +148,7 @@ public class BottomSheetPanel extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        measureHeight = getMeasuredHeight();
+        mMeasureHeight = getMeasuredHeight();
     }
 
     @Override
@@ -161,16 +167,17 @@ public class BottomSheetPanel extends FrameLayout {
                 releaseVelocityTracker();
                 break;
         }
+        Log.d("dispatchTouchEvent", "" + (isConsume || super.dispatchTouchEvent(ev)));
         return isConsume || super.dispatchTouchEvent(ev);
     }
 
     private void initBackgroundView() {
-        if (backgroundId != -1) {
-            darkFrameLayout = new FadingLayout(getContext());
-            darkFrameLayout.addView(LayoutInflater.from(getContext()).inflate(backgroundId, null));
-            darkFrameLayout.setTag(TAG_BACKGROUND);
-            darkFrameLayout.setSlideBottomPanel(this);
-            addView(darkFrameLayout);
+        if (mBackgroundId != -1) {
+            mDarkFrameLayout = new FadingLayout(mContext);
+            mDarkFrameLayout.addView(LayoutInflater.from(mContext).inflate(mBackgroundId, null));
+            mDarkFrameLayout.setTag(TAG_BACKGROUND);
+            mDarkFrameLayout.setSlideBottomPanel(this);
+            addView(mDarkFrameLayout);
         }
     }
 
@@ -178,28 +185,27 @@ public class BottomSheetPanel extends FrameLayout {
         if (!isPanelOnTouch) {
             return;
         }
-        long pressDuration = System.currentTimeMillis() - pressStartTime;
+        long pressDuration = System.currentTimeMillis() - mPressStartTime;
         computeVelocity();
-        if (!isPanelShowing && ((event.getY() - firstDownY) < 0 && (Math.abs(event.getY() - firstDownY) > moveDistanceToTrigger))
-                || (yVelocity < 0 && Math.abs(yVelocity) > Math.abs(xVelocity) && Math.abs(yVelocity) > minVelocity)) {
+        if (!isPanelShowing && ((event.getY() - firstDownY) < 0 && (Math.abs(event.getY() - firstDownY) > mMoveDistanceToTrigger))
+                || (yVelocity < 0 && Math.abs(yVelocity) > Math.abs(xVelocity) && Math.abs(yVelocity) > mMinVelocity)) {
             displayPanel();
         } else if (!isPanelShowing && pressDuration < MAX_CLICK_TIME &&
                 distance(firstDownX, firstDownY, event.getX(), event.getY()) < MAX_CLICK_DISTANCE) {
             displayPanel();
         } else if (!isPanelShowing && isDragging && ((event.getY() - firstDownY > 0) ||
-                Math.abs(event.getY() - firstDownY) < moveDistanceToTrigger)) {
+                Math.abs(event.getY() - firstDownY) < mMoveDistanceToTrigger)){
             hidePanel();
         }
 
         if (isPanelShowing) {
             View mPanel = findViewWithTag(TAG_PANEL);
-//            float currentY = ViewHelper.getY(mPanel);
-            float currentY = mPanel.getY();
-            if (currentY < (measureHeight - panelHeight) ||
-                    currentY < (measureHeight - panelHeight + moveDistanceToTrigger)) {
-                ObjectAnimator.ofFloat(mPanel, "y", currentY, measureHeight - panelHeight)
-                        .setDuration(animationDuration).start();
-            } else if (currentY > measureHeight - panelHeight + moveDistanceToTrigger) {
+            float currentY = ViewHelper.getY(mPanel);
+            if (currentY < (mMeasureHeight - mPanelHeight) ||
+                    currentY < (mMeasureHeight - mPanelHeight + mMoveDistanceToTrigger)) {
+                ObjectAnimator.ofFloat(mPanel, "y", currentY, mMeasureHeight - mPanelHeight)
+                        .setDuration(mAnimationDuration).start();
+            } else if (currentY > mMeasureHeight - mPanelHeight + mMoveDistanceToTrigger){
                 hidePanel();
             }
         }
@@ -220,8 +226,8 @@ public class BottomSheetPanel extends FrameLayout {
         if (Math.abs(xVelocity) > Math.abs(yVelocity)) {
             return;
         }
-        if (!isDragging && Math.abs(event.getY() - firstDownY) > touchSlop
-                && Math.abs(event.getX() - firstDownX) < touchSlop) {
+        if (!isDragging && Math.abs(event.getY() - firstDownY) > mTouchSlop
+                && Math.abs(event.getX() - firstDownX) < mTouchSlop) {
             isDragging = true;
             downY = event.getY();
         }
@@ -231,28 +237,26 @@ public class BottomSheetPanel extends FrameLayout {
 
             View touchingView = findViewWithTag(TAG_PANEL);
 
-            if (hidePanelTitle && isPanelShowing) {
+            if (mHidePanelTitle && isPanelShowing) {
                 hidePanelTitle(touchingView);
             }
 
-            if (darkFrameLayout != null && isFade) {
-//                float currentY = ViewHelper.getY(touchingView);
-                float currentY = touchingView.getY();
-                if (currentY > measureHeight - panelHeight &&
-                        currentY < measureHeight - titleHeightNoDisplay) {
-                    darkFrameLayout.fade(
-                            (int) ((1 - currentY / (measureHeight - titleHeightNoDisplay)) * FadingLayout.MAX_ALPHA));
+            if (mDarkFrameLayout != null && mIsFade) {
+                float currentY = ViewHelper.getY(touchingView);
+                if (currentY > mMeasureHeight - mPanelHeight &&
+                        currentY < mMeasureHeight - mTitleHeightNoDisplay) {
+                    mDarkFrameLayout.fade(
+                            (int) ((1 - currentY / (mMeasureHeight - mTitleHeightNoDisplay)) * FadingLayout.MAX_ALPHA));
                 }
             }
-            if (!boundary) {
+            if (!mBoundary) {
                 touchingView.offsetTopAndBottom((int) deltaY);
             } else {
-//                float touchingViewY = ViewHelper.getY(touchingView);
-                float touchingViewY = touchingView.getY();
-                if (touchingViewY + deltaY <= measureHeight - panelHeight) {
-                    touchingView.offsetTopAndBottom((int) (measureHeight - panelHeight - touchingViewY));
-                } else if (touchingViewY + deltaY >= measureHeight - titleHeightNoDisplay) {
-                    touchingView.offsetTopAndBottom((int) (measureHeight - titleHeightNoDisplay - touchingViewY));
+                float touchingViewY = ViewHelper.getY(touchingView);
+                if (touchingViewY + deltaY <= mMeasureHeight - mPanelHeight) {
+                    touchingView.offsetTopAndBottom((int) (mMeasureHeight - mPanelHeight - touchingViewY));
+                } else if (touchingViewY + deltaY >= mMeasureHeight - mTitleHeightNoDisplay) {
+                    touchingView.offsetTopAndBottom((int) (mMeasureHeight - mTitleHeightNoDisplay - touchingViewY));
                 } else {
                     touchingView.offsetTopAndBottom((int) deltaY);
                 }
@@ -262,17 +266,17 @@ public class BottomSheetPanel extends FrameLayout {
 
     private boolean handleActionDown(MotionEvent event) {
         boolean isConsume = false;
-        pressStartTime = System.currentTimeMillis();
+        mPressStartTime = System.currentTimeMillis();
         firstDownX = event.getX();
         firstDownY = downY = event.getY();
-        if (!isPanelShowing && downY > measureHeight - titleHeightNoDisplay) {
+        if (!isPanelShowing && downY > mMeasureHeight - mTitleHeightNoDisplay) {
             isPanelOnTouch = true;
             isConsume = true;
-        } else if (!isPanelShowing && downY <= measureHeight - titleHeightNoDisplay) {
+        } else if (!isPanelShowing && downY <= mMeasureHeight - mTitleHeightNoDisplay) {
             isPanelOnTouch = false;
-        } else if (isPanelShowing && downY > measureHeight - panelHeight) {
+        } else if (isPanelShowing && downY > mMeasureHeight - mPanelHeight) {
             isPanelOnTouch = true;
-        } else if (isPanelShowing && downY < measureHeight - panelHeight) {
+        } else if (isPanelShowing && downY < mMeasureHeight - mPanelHeight) {
             hidePanel();
             isPanelOnTouch = false;
         }
@@ -284,22 +288,18 @@ public class BottomSheetPanel extends FrameLayout {
             return;
         }
         final View mPanel = findViewWithTag(TAG_PANEL);
-        final int t = (int) (measureHeight - titleHeightNoDisplay);
-//        ValueAnimator animator = ValueAnimator.ofFloat(
-//                ViewHelper.getY(mPanel), measureHeight - titleHeightNoDisplay);
+        final int t = (int)(mMeasureHeight - mTitleHeightNoDisplay);
         ValueAnimator animator = ValueAnimator.ofFloat(
-                mPanel.getY(), measureHeight - titleHeightNoDisplay);
-        animator.setInterpolator(closeAnimationInterpolator);
+                ViewHelper.getY(mPanel), mMeasureHeight - mTitleHeightNoDisplay);
+        animator.setInterpolator(mCloseAnimationInterpolator);
         animator.setTarget(mPanel);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-//                ViewHelper.setY(mPanel, value);
-                mPanel.setY(value);
-//                ViewHelper.setY(mPanel, value);
-                if (darkFrameLayout != null && isFade && value < t) {
-                    darkFrameLayout.fade((int) ((1 - value / t) * FadingLayout.MAX_ALPHA));
+                ViewHelper.setY(mPanel, value);
+                if (mDarkFrameLayout != null && mIsFade && value < t) {
+                    mDarkFrameLayout.fade((int) ((1 - value / t) * FadingLayout.MAX_ALPHA));
                 }
             }
         });
@@ -334,25 +334,23 @@ public class BottomSheetPanel extends FrameLayout {
         if (isPanelShowing || isAnimating) {
             return;
         }
-        if (isFade || darkFrameLayout != null) {
-            darkFrameLayout.fade(true);
+        if (mIsFade || mDarkFrameLayout != null) {
+            mDarkFrameLayout.fade(true);
         }
         final View mPanel = findViewWithTag(TAG_PANEL);
-//        ValueAnimator animator = ValueAnimator.ofFloat(ViewHelper.getY(mPanel), measureHeight - panelHeight)
-        ValueAnimator animator = ValueAnimator.ofFloat(mPanel.getY(), measureHeight - panelHeight)
-                .setDuration(animationDuration);
+        ValueAnimator animator = ValueAnimator.ofFloat(ViewHelper.getY(mPanel), mMeasureHeight - mPanelHeight)
+                .setDuration(mAnimationDuration);
         animator.setTarget(mPanel);
-        animator.setInterpolator(openAnimationInterpolator);
+        animator.setInterpolator(mOpenAnimationInterpolator);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-//                ViewHelper.setY(mPanel, value);
-                mPanel.setY(value);
-                if (darkFrameLayout != null && isFade
-                        && darkFrameLayout.getCurrentAlpha() != FadingLayout.MAX_ALPHA) {
-                    darkFrameLayout.fade(
-                            (int) ((1 - value / (measureHeight - titleHeightNoDisplay)) * FadingLayout.MAX_ALPHA));
+                ViewHelper.setY(mPanel, value);
+                if (mDarkFrameLayout != null && mIsFade
+                        && mDarkFrameLayout.getCurrentAlpha() != FadingLayout.MAX_ALPHA) {
+                    mDarkFrameLayout.fade(
+                            (int) ((1 - value / (mMeasureHeight - mTitleHeightNoDisplay)) * FadingLayout.MAX_ALPHA));
                 }
             }
         });
@@ -382,7 +380,7 @@ public class BottomSheetPanel extends FrameLayout {
     }
 
     private void showPanelTitle(View panel) {
-        if (panel instanceof ViewGroup && hidePanelTitle) {
+        if (panel instanceof ViewGroup && mHidePanelTitle) {
             try {
                 View childView = ((ViewGroup) panel).getChildAt(1);
                 if (childView.getVisibility() != View.VISIBLE) {
@@ -396,7 +394,7 @@ public class BottomSheetPanel extends FrameLayout {
     }
 
     private void hidePanelTitle(View panel) {
-        if (panel instanceof ViewGroup && hidePanelTitle) {
+        if (panel instanceof ViewGroup && mHidePanelTitle) {
             try {
                 ((ViewGroup) panel).getChildAt(1).setVisibility(View.INVISIBLE);
             } catch (NullPointerException e) {
@@ -406,15 +404,15 @@ public class BottomSheetPanel extends FrameLayout {
     }
 
     public void hide() {
-        if (!isPanelShowing) return;
+        if(!isPanelShowing) return;
         hidePanel();
     }
 
     private void computeVelocity() {
         //units是单位表示， 1代表px/毫秒, 1000代表px/秒
-        velocityTracker.computeCurrentVelocity(1000, maxVelocity);
-        xVelocity = velocityTracker.getXVelocity();
-        yVelocity = velocityTracker.getYVelocity();
+        mVelocityTracker.computeCurrentVelocity(1000, mMaxVelocity);
+        xVelocity = mVelocityTracker.getXVelocity();
+        yVelocity = mVelocityTracker.getYVelocity();
     }
 
     private boolean supportScrollInView(int direction) {
@@ -430,7 +428,7 @@ public class BottomSheetPanel extends FrameLayout {
                 if (Build.VERSION.SDK_INT >= 19) {
                     return absListView.canScrollList(direction);
                 } else {
-                    return absListViewCanScrollList(absListView, direction);
+                    return absListViewCanScrollList(absListView,direction);
                 }
             } else if (childView instanceof ScrollView) {
                 ScrollView scrollView = (ScrollView) childView;
@@ -440,7 +438,7 @@ public class BottomSheetPanel extends FrameLayout {
                     return scrollViewCanScrollVertically(scrollView, direction);
                 }
 
-            } else if (childView instanceof ViewGroup) {
+            } else if (childView instanceof ViewGroup){
                 View grandchildView = findTopChildUnder((ViewGroup) childView, firstDownX, firstDownY);
                 if (grandchildView == null) {
                     return false;
@@ -451,7 +449,7 @@ public class BottomSheetPanel extends FrameLayout {
                         if (Build.VERSION.SDK_INT >= 19) {
                             return absListView.canScrollList(direction);
                         } else {
-                            return absListViewCanScrollList(absListView, direction);
+                            return absListViewCanScrollList(absListView,direction);
                         }
                     } else if (grandchildView instanceof ScrollView) {
                         ScrollView scrollView = (ScrollView) grandchildView;
@@ -474,8 +472,8 @@ public class BottomSheetPanel extends FrameLayout {
         for (int i = childCount - 1; i >= 0; i--) {
             final View child = parentView.getChildAt(i);
             if (x >= child.getLeft() && x < child.getRight() &&
-                    y >= child.getTop() + measureHeight - panelHeight &&
-                    y < child.getBottom() + measureHeight - panelHeight) {
+                    y >= child.getTop() + mMeasureHeight - mPanelHeight &&
+                    y < child.getBottom()  + mMeasureHeight - mPanelHeight) {
                 return child;
             }
         }
@@ -483,14 +481,13 @@ public class BottomSheetPanel extends FrameLayout {
     }
 
     /**
-     * Copy From ScrollView (API Level >= 14)
-     *
+     *  Copy From ScrollView (API Level >= 14)
      * @param direction Negative to check scrolling up, positive to check
      *                  scrolling down.
-     * @return true if the scrollView can be scrolled in the specified direction,
-     * false otherwise
+     *   @return true if the scrollView can be scrolled in the specified direction,
+     *         false otherwise
      */
-    private boolean scrollViewCanScrollVertically(ScrollView scrollView, int direction) {
+    private  boolean scrollViewCanScrollVertically(ScrollView scrollView,int direction) {
         final int offset = Math.max(0, scrollView.getScrollY());
         final int range = computeVerticalScrollRange(scrollView) - scrollView.getHeight();
         if (range == 0) return false;
@@ -527,14 +524,13 @@ public class BottomSheetPanel extends FrameLayout {
 
     /**
      * Copy From AbsListView (API Level >= 19)
-     *
      * @param absListView AbsListView
-     * @param direction   Negative to check scrolling up, positive to check
-     *                    scrolling down.
+     * @param direction Negative to check scrolling up, positive to check
+     *                  scrolling down.
      * @return true if the list can be scrolled in the specified direction,
-     * false otherwise
+     *         false otherwise
      */
-    private boolean absListViewCanScrollList(AbsListView absListView, int direction) {
+    private boolean absListViewCanScrollList(AbsListView absListView,int direction) {
         final int childCount = absListView.getChildCount();
         if (childCount == 0) {
             return false;
@@ -551,17 +547,17 @@ public class BottomSheetPanel extends FrameLayout {
     }
 
     private void initVelocityTracker(MotionEvent event) {
-        if (velocityTracker == null) {
-            velocityTracker = VelocityTracker.obtain();
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain();
         }
-        velocityTracker.addMovement(event);
+        mVelocityTracker.addMovement(event);
     }
 
     private void releaseVelocityTracker() {
-        if (velocityTracker != null) {
-            velocityTracker.clear();
-            velocityTracker.recycle();
-            velocityTracker = null;
+        if (mVelocityTracker != null) {
+            mVelocityTracker.clear();
+            mVelocityTracker.recycle();
+            mVelocityTracker = null;
         }
     }
 
@@ -572,11 +568,11 @@ public class BottomSheetPanel extends FrameLayout {
     }
 
     private int px2dp(int pxValue) {
-        return (int) (pxValue / density + 0.5f);
+        return (int) (pxValue / mDensity + 0.5f);
     }
 
     private int dp2px(int dpValue) {
-        return (int) (dpValue * density + 0.5f);
+        return (int) (dpValue * mDensity + 0.5f);
     }
 
     public boolean isPanelShowing() {

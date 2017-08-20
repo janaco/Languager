@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:id="@+id/background"
+        android:alpha="0"
+        android:layout_height="match_parent"
+        android:background="#80000000"/>
+
+    <LinearLayout
+        android:id="@+id/panel_top"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:translationY="-150dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_background"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/languages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/settings"
+                    android:layout_alignTop="@+id/settings"
+                    android:layout_toLeftOf="@+id/settings"
+                    android:layout_toStartOf="@+id/settings"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_12"
+                    tools:text="English - Ukrainian" />
+
+                <ImageView
+                    android:id="@+id/dictionary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/info"
+                    android:layout_toStartOf="@+id/info"
+                    android:padding="5dp"
+                    android:src="@drawable/dictionary" />
+
+
+                <ImageView
+                    android:id="@+id/settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/dictionary"
+                    android:layout_toStartOf="@+id/dictionary"
+                    android:padding="5dp"
+                    android:src="@drawable/settings" />
+
+
+                <ImageView
+                    android:id="@+id/info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/close"
+                    android:layout_toStartOf="@+id/close"
+                    android:padding="5dp"
+                    android:src="@drawable/info" />
+
+                <ImageView
+                    android:id="@id/close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:padding="5dp"
+                    android:src="@drawable/window_close_dark" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingEnd="30dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingStart="30dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/pine_green"
+                android:textSize="@dimen/text_18"
+                android:textStyle="bold"
+                tools:text="Alice in the wonderland" />
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingEnd="30dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingStart="30dp"
+                android:textColor="@color/pale_sandy_brown"
+                android:textSize="@dimen/text_12"
+                tools:text="Levis Carrol" />
+
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/brightness"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:translationY="-20dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/panel_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:translationY="150dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_below="@+id/seekbar_pages"
+            android:layout_width="match_parent"
+            android:background="@drawable/menu_background"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/pale_brown"
+                    android:textStyle="bold"
+                    tools:text="101" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/pale_brown"
+                    android:textStyle="bold"
+                    android:text=" of " />
+
+
+                <TextView
+                    android:id="@+id/pages_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/pale_brown"
+                    android:textStyle="bold"
+                    tools:text="1598" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/items_in_dictionary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textColor="@color/pale_sandy_brown"
+                    tools:text="56 items in dictionary." />
+
+
+                <TextView
+                    android:id="@+id/items_to_learn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="end"
+                    android:textColor="@color/pale_sandy_brown"
+                    tools:text="12 items to learn." />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekbar_pages"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:translationY="20dp"
+            android:layout_marginBottom="10dp" />
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

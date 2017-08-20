@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:id="@+id/root_view"
-    tools:context="com.stiletto.tr.activity.MainActivity">
+    tools:context="com.nandy.reader.activity.MainActivity">
 
     <FrameLayout
         android:layout_width="fill_parent"

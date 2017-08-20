@@ -1,38 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.MainActivity">
+    android:background="@color/white"
+    android:clickable="true"
+    tools:context=".fragment.PageViewerFragment">
 
-    <com.softes.bottomsheetpanel.BottomSheetPanel
-        android:id="@+id/sbv"
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:sbp_background_layout="@layout/layout_pager"
-        app:sbp_hide_panel_title="true"
-        app:sbp_panel_height="370dp"
-        app:sbp_title_height_no_display="15dp">
+        android:background="@color/white" />
 
-        <include layout="@layout/layout_page_control" />
+    <include layout="@layout/layout_progess" />
+
+    <include layout="@layout/layout_menu" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/footer"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true">
 
         <TextView
-            android:id="@+id/pages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/footer_pages"
+            tools:text="26/1425"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:padding="5dp"
+            android:textColor="@color/pale_sandy_brown"/>
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="15dp"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="italic"
-            android:gravity="center_vertical|start"
-            android:paddingStart="15dp"
-            android:paddingLeft="15dp"
-            android:paddingEnd="15dp"
-            android:paddingRight="15dp"
-            android:textSize="@dimen/text_10"
-            android:background="@color/white"
+            android:layout_toRightOf="@+id/footer_pages"
+            android:ellipsize="end"
+            android:paddingLeft="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            android:id="@+id/footer_title"
+            android:layout_toEndOf="@+id/footer_pages"
+            android:textSize="@dimen/text_12"
+            android:layout_toStartOf="@+id/menu"
+            android:layout_toLeftOf="@+id/menu"
+            android:layout_centerVertical="true"
+            android:maxLines="1"
+            tools:text="Alice in the wonderland"
+            android:textColor="@color/pale_sandy_brown"
+            android:gravity="center"
+            android:layout_height="wrap_content"
             />
 
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:padding="5dp"
+            android:src="@drawable/dots" />
+    </RelativeLayout>
 
-    </com.softes.bottomsheetpanel.BottomSheetPanel>
-</LinearLayout>
+</RelativeLayout>
