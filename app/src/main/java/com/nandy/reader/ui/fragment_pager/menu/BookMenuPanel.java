@@ -10,10 +10,12 @@ import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
+import com.nandy.reader.ui.dialogs.BookSettingsDialog;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -59,6 +61,9 @@ public class BookMenuPanel implements MenuContract.View, DiscreteSeekBar.OnProgr
     TextView viewPagesFooter;
     @Bind(R.id.footer_title)
     TextView viewTitleFooter;
+
+    @Bind(R.id.settings)
+    ImageView viewSettings;
 
     @Bind(R.id.brightness)
     DiscreteSeekBar seekBarBrightness;
@@ -127,6 +132,11 @@ public class BookMenuPanel implements MenuContract.View, DiscreteSeekBar.OnProgr
     @OnClick(R.id.close)
     void onCloseClick() {
         presenter.onCloseClick();
+    }
+
+    @Override
+    public void openSettings() {
+        new BookSettingsDialog(viewSettings).show();
     }
 
     @Override

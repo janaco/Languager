@@ -11,6 +11,7 @@ import com.nandy.reader.readers.EPUBReader;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -51,6 +52,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
                 + fileType.substring(0, new Random().nextInt(fileType.length()))
                 + size + size * 2 + 37 + new Random().nextInt(150);
         setupMetaData();
+
     }
 
     public Book(File file) {
@@ -106,9 +108,9 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
         }
     };
 
-    private void setupMetaData(){
+    private void setupMetaData() {
 
-        switch (fileType){
+        switch (fileType) {
 
             case "EPUB":
                 metaData = EPUBReader.getMetadata(path);

@@ -87,7 +87,7 @@ public class MenuPresenter implements MenuContract.Presenter {
 
     @Override
     public void onSettingsClick() {
-
+        view.openSettings();
     }
 
     @Override

@@ -83,7 +83,7 @@ public class EPUBReader {
     private static String getNames(List<Author> authors){
         StringBuilder builder = new StringBuilder();
         for (Author author: authors){
-            builder.append(author.getFirstname()).append(author.getLastname()).append(", ");
+            builder.append(author.getFirstname()).append(" ").append(author.getLastname()).append(", ");
         }
         return builder.length() > 0 ? builder.substring(0, builder.length() - 2) : builder.toString();
 

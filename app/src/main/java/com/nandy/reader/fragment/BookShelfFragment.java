@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nandy.reader.translator.yandex.Language;
 import com.softes.cardviewer.ExpandableCard;
 import com.softes.cardviewer.ExpandablePagerFactory;
 import com.nandy.reader.R;
@@ -37,6 +39,7 @@ import com.nandy.reader.utils.FileSeeker;
 import com.nandy.reader.view.Fragment;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -108,12 +111,12 @@ public class BookShelfFragment extends Fragment
         //select and display books that are already available in db.
         //it is too long to search for them in file system
         //(search in file system will be performed but in background mode)
-        Realm realm= Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
         RealmQuery<Book> query = realm.where(Book.class);
         RealmResults<Book> results = query.findAllSortedAsync("name");
         results.load();
 
-        for (Book book: results){
+        for (Book book : results) {
             adapter.add(book);
             autocompeteAdapter.add(book.getName());
         }
@@ -136,7 +139,7 @@ public class BookShelfFragment extends Fragment
             FileSeeker.getBooks(this);
         } else {
             //Search in file system is finished. So, we need to update our records in database.
-            for (Book book: books){
+            for (Book book : books) {
                 book.insert();
             }
         }
@@ -150,12 +153,19 @@ public class BookShelfFragment extends Fragment
 
     @Override
     public void read(Book book) {
-        if (book.hasOriginLanguage() && book.hasTranslationLanguage()) {
-            NavigationManager.addFragment(getActivity(), PageViewerFragment.create(book));
-            return;
+
+        if (!book.hasOriginLanguage()){
+            Language  originLanguage = book.getMetaData().isEmpty() ? Language.ENGLISH
+                    : Language.getLanguage(book.getMetaData().getLanguage());
+            book.setOriginLanguage(originLanguage);
         }
 
-        NavigationManager.addFragment(getActivity(), BookSetupFragment.create(book));
+        if(!book.hasTranslationLanguage()){
+           Language translationLanguage = Language.getLanguage(Locale.getDefault().getLanguage());
+           book.setTranslationLanguage(translationLanguage);
+
+        }
+        NavigationManager.addFragment(getActivity(), PageViewerFragment.create(book));
     }
 
     @Override

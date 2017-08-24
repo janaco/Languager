@@ -67,6 +67,8 @@ public class MenuContract {
 
         void setBrightnessOnStart(int value);
 
+        void openSettings();
+
         void setCurrentItem(int index);
 
     }

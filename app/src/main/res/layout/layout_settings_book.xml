@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/language_settings"
+        android:textColor="@color/pine_green"
+        android:textSize="@dimen/text_14" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/origin_language"
+                android:textColor="@color/pale_sandy_brown"
+                android:textSize="@dimen/text_10" />
+
+            <Spinner
+                android:id="@+id/origin_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/translation_language"
+                android:textColor="@color/pale_sandy_brown"
+                android:textSize="@dimen/text_10" />
+
+            <Spinner
+                android:id="@+id/translations_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/page_setting"
+        android:textColor="@color/pine_green"
+        android:textSize="@dimen/text_14" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="@string/font_size"
+        android:textColor="@color/pale_sandy_brown"
+        android:textSize="@dimen/text_10" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textSize="@dimen/text_10"
+        android:background="@color/zinnwaldite"
+        android:textColor="@color/pine_green"
+        android:text="Not implemented"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="@string/text_color"
+        android:textColor="@color/pale_sandy_brown"
+        android:textSize="@dimen/text_10" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textSize="@dimen/text_10"
+        android:background="@color/zinnwaldite"
+        android:textColor="@color/pine_green"
+        android:text="Not implemented"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="@string/page_color"
+        android:textColor="@color/pale_sandy_brown"
+        android:textSize="@dimen/text_10" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textSize="@dimen/text_10"
+        android:background="@color/zinnwaldite"
+        android:textColor="@color/pine_green"
+        android:text="Not implemented"/>
+    </LinearLayout>
+</RelativeLayout>

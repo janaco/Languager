@@ -4,4 +4,15 @@
     <string name="no_items_yet">There are no items yet.</string>
     <string name="no_tests_available">No available tests.\nPlease, fill your dictionary.</string>
     <string name="no_learning_progress">You have no learning progress yet.</string>
+    <string name="languages">Languages</string>
+    <string name="change_language">Change language:</string>
+    <string name="language_settings">Language setting</string>
+    <string name="origin_language">Origin language</string>
+    <string name="translation_language">Translation language</string>
+    <string name="page_setting">Page settings</string>
+    <string name="font_size">Font size</string>
+    <string name="text_color">Font color</string>
+    <string name="page_color">Background color</string>
+
+
 </resources>

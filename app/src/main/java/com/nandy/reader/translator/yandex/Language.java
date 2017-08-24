@@ -163,7 +163,7 @@ public enum Language {
                 return UKRAINIAN;
 
             default:
-                return null;
+                return ENGLISH;
         }
     }
 

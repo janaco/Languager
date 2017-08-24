@@ -9,11 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.nandy.reader.R;
 import com.nandy.reader.fragment.BookShelfFragment;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.utils.ReaderPrefs;
+
+import java.util.Locale;
 
 import io.realm.Realm;
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ReaderPrefs.getPreferences(this);
         requestPermissions();
+
 
         Realm.init(this);
         NavigationManager.replaceFragment(this, new BookShelfFragment());
