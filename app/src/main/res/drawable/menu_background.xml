@@ -3,5 +3,5 @@
 
     <item android:drawable="@color/biege_light_a99" />
     <item android:drawable="@color/biege_light_a99" />
-    <item android:drawable="@color/biege_light_a99" />
+    <!--<item android:drawable="@color/biege_light_a99" />-->
 </layer-list>

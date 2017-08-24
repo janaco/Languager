@@ -1,5 +1,6 @@
 package com.nandy.reader.ui.fragment_pager.menu;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import com.nandy.reader.R;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,7 +25,7 @@ import butterknife.OnClick;
 
 public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChangeListener {
 
-    private static final int PANEL_HEIGHT = 150;
+    private static final int PANEL_HEIGHT = 160;
     private static final int ANIM_DURATION = 500;
 
     @Bind(R.id.panel_top)
@@ -54,17 +57,20 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
     TextView viewTitleFooter;
 
     @Bind(R.id.brightness)
-    SeekBar seekBarBrightness;
+    DiscreteSeekBar seekBarBrightness;
     @Bind(R.id.seekbar_pages)
-    SeekBar seekBarPages;
+    DiscreteSeekBar seekBarPages;
+
+    private View mainView;
 
     private boolean opened;
     private float scaledDensity;
 
     private MenuContract.Presenter presenter;
 
-    public BookMenuPanel(View view) {
+    public BookMenuPanel(View view, View mainView) {
         ButterKnife.bind(this, view);
+        this.mainView = mainView;
 
         WindowManager windowManager = (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
@@ -73,7 +79,7 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
 
         scaledDensity = metrics.scaledDensity;
 
-        seekBarPages.setOnSeekBarChangeListener(this);
+//        seekBarPages.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -88,7 +94,7 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
     }
 
     @OnClick(R.id.background)
-    void onBackgroundClick(){
+    void onBackgroundClick() {
         presenter.onBackgroundClick();
     }
 
@@ -207,12 +213,39 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
         ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(viewFooter, "translationY", 0, scaledDensity * PANEL_HEIGHT);
         ObjectAnimator backgroundAnimator = ObjectAnimator.ofFloat(viewBackground, "alpha", 0, 1);
 
+        ObjectAnimator mainViewScaleXAnim = ObjectAnimator.ofFloat(mainView, "scaleX", 1.0f, 0.8f);
+        ObjectAnimator mainViewScaleYAnim = ObjectAnimator.ofFloat(mainView, "scaleY", 1.0f, 0.9f);
+        ObjectAnimator mainViewAlphaAnim = ObjectAnimator.ofFloat(mainView, "alpha", 1.0f, 0.5f);
+
         AnimatorSet set = new AnimatorSet();
         set.setDuration(ANIM_DURATION);
-        set.playTogether(topAnimator, bottomAnimator, backgroundAnimator, footerAnimator);
+        set.playTogether(topAnimator, bottomAnimator, backgroundAnimator, footerAnimator,
+                mainViewScaleXAnim, mainViewScaleYAnim, mainViewAlphaAnim);
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                viewBackground.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
         set.start();
         opened = true;
     }
+
 
     @Override
     public void hide() {
@@ -225,9 +258,36 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
         ObjectAnimator backgroundAnimator = ObjectAnimator.ofFloat(viewBackground, "alpha", 1, 0);
         ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(viewFooter, "translationY", scaledDensity * PANEL_HEIGHT, 0);
 
+        ObjectAnimator mainViewScaleXAnim = ObjectAnimator.ofFloat(mainView, "scaleX", 0.8f, 1.0f);
+        ObjectAnimator mainViewScaleYAnim = ObjectAnimator.ofFloat(mainView, "scaleY", 0.9f, 1.0f);
+        ObjectAnimator mainViewAlphaAnim = ObjectAnimator.ofFloat(mainView, "alpha", 0.5f, 1.0f);
+
         AnimatorSet set = new AnimatorSet();
         set.setDuration(ANIM_DURATION);
-        set.playTogether(topAnimator, bottomAnimator, backgroundAnimator, footerAnimator);
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                viewBackground.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                viewBackground.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        set.playTogether(topAnimator, bottomAnimator, backgroundAnimator, footerAnimator,
+                mainViewScaleXAnim, mainViewScaleYAnim, mainViewAlphaAnim);
         set.start();
         opened = false;
     }

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <View
-        android:layout_width="match_parent"
         android:id="@+id/background"
-        android:alpha="0"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000"/>
-
+        android:alpha="0"
+        android:background="#99ffffff"
+        android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/panel_top"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:translationY="-150dp"
-        android:orientation="vertical">
+        android:layout_height="160dp"
+        android:orientation="vertical"
+        android:translationY="-160dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,14 +94,14 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="middle"
                 android:gravity="center"
-                android:paddingBottom="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
                 android:paddingEnd="30dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
                 android:paddingStart="30dp"
-                android:paddingTop="10dp"
                 android:textColor="@color/pine_green"
-                android:textSize="@dimen/text_18"
+                android:textSize="@dimen/text_20"
                 android:textStyle="bold"
                 tools:text="Alice in the wonderland" />
 
@@ -112,6 +113,7 @@
                 android:paddingEnd="30dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
+                android:layout_marginBottom="20dp"
                 android:paddingStart="30dp"
                 android:textColor="@color/pale_sandy_brown"
                 android:textSize="@dimen/text_12"
@@ -119,38 +121,49 @@
 
         </LinearLayout>
 
-        <SeekBar
+
+        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
             android:id="@+id/brightness"
-            android:layout_width="match_parent"
+            android:layout_width="422dp"
             android:layout_height="20dp"
             android:layout_marginTop="10dp"
-            android:translationY="-20dp" />
+            android:translationX="-22dp"
+            android:translationY="-27dp"
+            app:dsb_indicatorPopupEnabled="false"
+            app:dsb_max="100"
+            app:dsb_min="1"
+            app:dsb_progressColor="@color/pale_brown"
+            app:dsb_rippleColor="@color/pale_sandy_brown"
+            app:dsb_scrubberHeight="5dp"
+            app:dsb_thumbSize="15dp"
+            app:dsb_trackColor="@color/pale_sandy_brown"
+            app:dsb_trackHeight="3dp"
+            app:dsb_value="22" />
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/panel_bottom"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:translationY="150dp"
+        android:layout_height="160dp"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-
+        android:orientation="vertical"
+        android:translationY="160dp">
 
         <LinearLayout
-            android:padding="10dp"
-            android:layout_below="@+id/seekbar_pages"
             android:layout_width="match_parent"
-            android:background="@drawable/menu_background"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/menu_background"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -159,7 +172,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_16"
+                    android:textColor="@color/pine_green"
                     android:textStyle="bold"
                     tools:text="101" />
 
@@ -167,9 +181,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/pale_brown"
-                    android:textStyle="bold"
-                    android:text=" of " />
+                    android:text=" of "
+                    android:textColor="@color/pine_green"
+                    android:textStyle="bold" />
 
 
                 <TextView
@@ -177,7 +191,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/pale_brown"
+                    android:textSize="@dimen/text_16"
+                    android:textColor="@color/pine_green"
                     android:textStyle="bold"
                     tools:text="1598" />
 
@@ -187,6 +202,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginBottom="5dp"
                 android:padding="10dp">
 
                 <TextView
@@ -208,17 +224,35 @@
                     tools:text="12 items to learn." />
 
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:translationY="16dp"
+            android:orientation="vertical">
+
+            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                android:id="@+id/seekbar_pages"
+                android:layout_width="422dp"
+                android:layout_height="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:translationX="-23dp"
+                app:dsb_indicatorPopupEnabled="false"
+                app:dsb_max="100"
+                app:dsb_min="1"
+                app:dsb_progressColor="@color/pale_brown"
+                app:dsb_rippleColor="@color/pale_sandy_brown"
+                app:dsb_scrubberHeight="5dp"
+                app:dsb_thumbSize="15dp"
+                app:dsb_trackColor="@color/pale_sandy_brown"
+                app:dsb_trackHeight="3dp"
+                app:dsb_value="22" />
 
         </LinearLayout>
 
-        <SeekBar
-            android:id="@+id/seekbar_pages"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:translationY="20dp"
-            android:layout_marginBottom="10dp" />
     </RelativeLayout>
-
 
 
 </RelativeLayout>
