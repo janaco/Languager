@@ -88,6 +88,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
         dest.writeParcelable(metaData, flags);
     }
 
+
     @Override
     public int describeContents() {
         return 0;

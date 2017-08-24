@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
@@ -24,8 +25,7 @@ import butterknife.OnClick;
  * Created by yana on 20.08.17.
  */
 
-public class BookMenuPanel implements MenuContract.View,
-        SeekBar.OnSeekBarChangeListener, DiscreteSeekBar.OnProgressChangeListener {
+public class BookMenuPanel implements MenuContract.View, DiscreteSeekBar.OnProgressChangeListener {
 
     private static final int PANEL_HEIGHT = 160;
     private static final int ANIM_DURATION = 500;
@@ -39,7 +39,7 @@ public class BookMenuPanel implements MenuContract.View,
     @Bind(R.id.footer)
     View viewFooter;
     @Bind(R.id.pager)
-    View mainView;
+    ViewPager mainView;
 
     @Bind(R.id.languages)
     TextView viewLanguages;
@@ -82,10 +82,10 @@ public class BookMenuPanel implements MenuContract.View,
         display.getMetrics(metrics);
 
         seekBarBrightness.setOnProgressChangeListener(this);
+        seekBarPages.setOnProgressChangeListener(this);
 
         scaledDensity = metrics.scaledDensity;
 
-//        seekBarPages.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -177,19 +177,10 @@ public class BookMenuPanel implements MenuContract.View,
     }
 
     @Override
-    public void onPageChanged(int page) {
+    public void onNextPageOpened(int page) {
         presenter.onPageChanged(page);
     }
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        presenter.onPagesProgressChanged(progress, fromUser);
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
 
     @Override
     public void setNoItemsInTheDictionary() {
@@ -198,14 +189,15 @@ public class BookMenuPanel implements MenuContract.View,
     }
 
     @Override
+    public void setCurrentItem(int index) {
+        mainView.setCurrentItem(index);
+    }
+
+    @Override
     public void setFooterPagesText(String text) {
         viewPagesFooter.setText(text);
     }
 
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
 
     @Override
     public void onBookParsingFinished(int pagesCount) {
@@ -315,6 +307,10 @@ public class BookMenuPanel implements MenuContract.View,
             case R.id.brightness:
                 presenter.onBrightnessChanged(window, value);
                 break;
+
+            case R.id.seekbar_pages:
+                presenter.onPagesProgressChanged(value);
+                break;
         }
     }
 
@@ -326,5 +322,11 @@ public class BookMenuPanel implements MenuContract.View,
     @Override
     public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
 
+        switch (seekBar.getId()){
+
+            case R.id.seekbar_pages:
+                presenter.afterPagesProgressChanged(seekBar.getProgress());
+                break;
+        }
     }
 }

@@ -29,6 +29,9 @@ public class MenuContract {
         int getPagesCount();
 
         String getBookId();
+
+        void setBookmark(int bookmark);
+
     }
     public interface View extends BaseView<Presenter>{
 
@@ -54,7 +57,7 @@ public class MenuContract {
 
         void setFooterPagesText(String text);
 
-        void onPageChanged(int page);
+        void onNextPageOpened(int page);
 
         void onBookParsingFinished(int pagesCount);
 
@@ -63,6 +66,8 @@ public class MenuContract {
         void hide();
 
         void setBrightnessOnStart(int value);
+
+        void setCurrentItem(int index);
 
     }
 
@@ -82,11 +87,13 @@ public class MenuContract {
 
         void onPageChanged(int page);
 
-        void onPagesProgressChanged(int progress, boolean byUser);
+        void onPagesProgressChanged(int progress);
 
         void onBookParsingFinished(int pagesCount);
 
         void onBrightnessChanged(Window window, int progress);
+
+        void afterPagesProgressChanged(int progress);
 
     }
 }

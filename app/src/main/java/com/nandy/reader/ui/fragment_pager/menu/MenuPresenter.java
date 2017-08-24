@@ -30,7 +30,9 @@ public class MenuPresenter implements MenuContract.Presenter {
         view.setLanguages(model.getPrimaryLanguage() + " - " + model.getTranslationLanguage());
 
         view.setCurrentPage(String.valueOf(model.getBookmark()));
+        view.setPagesCount(String.valueOf(model.getPagesCount()));
         view.setCurrentPagesProgress(model.getBookmark());
+        view.setMaxPagesProgress(model.getPagesCount());
 
         view.setTitle(model.getTitle());
         view.setAuthor(model.getAuthor());
@@ -112,16 +114,18 @@ public class MenuPresenter implements MenuContract.Presenter {
     }
 
     @Override
-    public void onPagesProgressChanged(int progress, boolean byUser) {
-        if (byUser) {
-//            viewPager.setCurrentItem(value);
-//
-//            String textProgress = seekBar.getProgress() + "/" + seekBar.getMax();
-//            itemPages.setText(textProgress);
-//            pageNumber.setText(textProgress);
-//
-//            book.setBookmark(viewPager.getCurrentItem(), pagination.getPagesCount());
-        }
+    public void onPagesProgressChanged(int value) {
+
+        view.setCurrentPage(String.valueOf(value));
+        model.setBookmark(value);
+    }
+
+    @Override
+    public void afterPagesProgressChanged(int page) {
+        view.setCurrentPagesProgress(page);
+        view.setCurrentPage(String.valueOf(page));
+        view.setFooterPagesText(page + "/" + model.getPagesCount());
+        view.setCurrentItem(page);
     }
 
     @Override
@@ -138,7 +142,6 @@ public class MenuPresenter implements MenuContract.Presenter {
 
     @Override
     public void onBrightnessChanged(Window window, int progress) {
-//        Settings.System.putInt(window.getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, progress);
         WindowManager.LayoutParams windowAttributes = window.getAttributes();
         windowAttributes.screenBrightness = progress / (float) 255;
         window.setAttributes(windowAttributes);

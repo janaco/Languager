@@ -56,4 +56,9 @@ public class MenuModel implements MenuContract.Model {
     public String getBookId() {
         return book.getId();
     }
+
+    @Override
+    public void setBookmark(int bookmark) {
+        book.setBookmark(bookmark, book.getPages());
+    }
 }
