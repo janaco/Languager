@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -23,7 +24,8 @@ import butterknife.OnClick;
  * Created by yana on 20.08.17.
  */
 
-public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChangeListener {
+public class BookMenuPanel implements MenuContract.View,
+        SeekBar.OnSeekBarChangeListener, DiscreteSeekBar.OnProgressChangeListener {
 
     private static final int PANEL_HEIGHT = 160;
     private static final int ANIM_DURATION = 500;
@@ -36,6 +38,8 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
     View viewBackground;
     @Bind(R.id.footer)
     View viewFooter;
+    @Bind(R.id.pager)
+    View mainView;
 
     @Bind(R.id.languages)
     TextView viewLanguages;
@@ -61,21 +65,23 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
     @Bind(R.id.seekbar_pages)
     DiscreteSeekBar seekBarPages;
 
-    private View mainView;
+    private Window window;
 
     private boolean opened;
     private float scaledDensity;
 
     private MenuContract.Presenter presenter;
 
-    public BookMenuPanel(View view, View mainView) {
+    public BookMenuPanel(View view, Window window) {
         ButterKnife.bind(this, view);
-        this.mainView = mainView;
+        this.window = window;
 
         WindowManager windowManager = (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
+
+        seekBarBrightness.setOnProgressChangeListener(this);
 
         scaledDensity = metrics.scaledDensity;
 
@@ -85,7 +91,12 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
     @Override
     public void setPresenter(MenuContract.Presenter presenter) {
         this.presenter = presenter;
-        this.presenter.start();
+        this.presenter.start(window.getContext());
+    }
+
+    @Override
+    public void setBrightnessOnStart(int value) {
+        seekBarBrightness.setProgress(value);
     }
 
     @OnClick(R.id.menu)
@@ -290,5 +301,30 @@ public class BookMenuPanel implements MenuContract.View, SeekBar.OnSeekBarChange
                 mainViewScaleXAnim, mainViewScaleYAnim, mainViewAlphaAnim);
         set.start();
         opened = false;
+    }
+
+    @Override
+    public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+
+        if (!fromUser) {
+            return;
+        }
+
+        switch (seekBar.getId()) {
+
+            case R.id.brightness:
+                presenter.onBrightnessChanged(window, value);
+                break;
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
     }
 }

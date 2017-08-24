@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0"
-        android:background="#99ffffff"
+        android:background="#50ffffff"
         android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/panel_top"
@@ -130,7 +130,7 @@
             android:translationX="-22dp"
             android:translationY="-27dp"
             app:dsb_indicatorPopupEnabled="false"
-            app:dsb_max="100"
+            app:dsb_max="255"
             app:dsb_min="1"
             app:dsb_progressColor="@color/pale_brown"
             app:dsb_rippleColor="@color/pale_sandy_brown"

@@ -1,5 +1,8 @@
 package com.nandy.reader.ui.fragment_pager.menu;
 
+import android.content.Context;
+import android.view.Window;
+
 import com.nandy.reader.BasePresenter;
 import com.nandy.reader.BaseView;
 
@@ -59,6 +62,8 @@ public class MenuContract {
 
         void hide();
 
+        void setBrightnessOnStart(int value);
+
     }
 
     public interface Presenter extends BasePresenter{
@@ -80,6 +85,8 @@ public class MenuContract {
         void onPagesProgressChanged(int progress, boolean byUser);
 
         void onBookParsingFinished(int pagesCount);
+
+        void onBrightnessChanged(Window window, int progress);
 
     }
 }

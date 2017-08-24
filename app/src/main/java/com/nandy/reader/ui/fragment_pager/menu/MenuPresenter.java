@@ -1,8 +1,11 @@
 package com.nandy.reader.ui.fragment_pager.menu;
 
-import android.support.v7.widget.LinearLayoutManager;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.provider.Settings;
+import android.view.Window;
+import android.view.WindowManager;
 
-import com.nandy.reader.adapter.BookDictionaryAdapter;
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.model.word.WordInfo;
 
@@ -23,7 +26,7 @@ public class MenuPresenter implements MenuContract.Presenter {
     }
 
     @Override
-    public void start() {
+    public void start(Context context) {
         view.setLanguages(model.getPrimaryLanguage() + " - " + model.getTranslationLanguage());
 
         view.setCurrentPage(String.valueOf(model.getBookmark()));
@@ -34,12 +37,26 @@ public class MenuPresenter implements MenuContract.Presenter {
 
         int itemsCount = getItemsInTheDictionaty();
 
-        if (itemsCount > 0){
+        if (itemsCount > 0) {
             int unknownItems = getUnknownItemsInTheDictionaty();
             view.setItemsInDictionary(itemsCount + " words in the dictionary.");
             view.setItemsToLearn(unknownItems + " words to learn");
-        }else {
+        } else {
             view.setNoItemsInTheDictionary();
+        }
+
+        setBrightnessOnStart(context);
+    }
+
+
+    private void setBrightnessOnStart(Context context) {
+
+        try {
+            ContentResolver contentResolver = context.getContentResolver();
+            int brightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS);
+            view.setBrightnessOnStart(brightness);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -117,5 +134,13 @@ public class MenuPresenter implements MenuContract.Presenter {
         view.setMaxPagesProgress(pagesCount);
         view.setPagesCount(String.valueOf(pagesCount));
         model.setPagesCount(pagesCount);
+    }
+
+    @Override
+    public void onBrightnessChanged(Window window, int progress) {
+//        Settings.System.putInt(window.getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, progress);
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.screenBrightness = progress / (float) 255;
+        window.setAttributes(windowAttributes);
     }
 }

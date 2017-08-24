@@ -96,7 +96,7 @@ public class PageViewerFragment extends Fragment
         View view = inflater.inflate(R.layout.fragmet_viewer, container, false);
         ButterKnife.bind(this, view);
 
-        menuPanel = new BookMenuPanel(view, viewPager);
+        menuPanel = new BookMenuPanel(view, getActivity().getWindow());
         menuPanel.setPresenter(new MenuPresenter(
                 new MenuModel(book), menuPanel));
 
