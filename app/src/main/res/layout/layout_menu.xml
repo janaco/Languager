@@ -13,6 +13,7 @@
         android:alpha="0"
         android:background="#50ffffff"
         android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/panel_top"
         android:layout_width="match_parent"
@@ -100,16 +101,19 @@
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
                 android:paddingStart="30dp"
+                android:singleLine="true"
                 android:textColor="@color/pine_green"
                 android:textSize="@dimen/text_20"
                 android:textStyle="bold"
-                tools:text="Alice in the wonderland" />
+                tools:text="Alice's Adventures in the wonderland" />
 
             <TextView
                 android:id="@+id/author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:paddingEnd="30dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"

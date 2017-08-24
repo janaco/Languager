@@ -4,8 +4,10 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.nandy.reader.emums.FileType;
+import com.nandy.reader.readers.EPUBReader;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.io.File;
@@ -36,6 +38,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
 
     private int bookmark;
     private int pages;
+    private MetaData metaData;
 
     public Book(String path, String name, long size) {
         this.path = path;
@@ -47,6 +50,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
                 + new Random().nextInt(43 + new Random().nextInt(100))
                 + fileType.substring(0, new Random().nextInt(fileType.length()))
                 + size + size * 2 + 37 + new Random().nextInt(150);
+        setupMetaData();
     }
 
     public Book(File file) {
@@ -55,6 +59,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
 
     public Book() {
     }
+
 
     protected Book(Parcel in) {
         id = in.readString();
@@ -66,10 +71,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
         translationLanguage = in.readString();
         bookmark = in.readInt();
         pages = in.readInt();
-    }
-
-    public String getId() {
-        return id;
+        metaData = in.readParcelable(MetaData.class.getClassLoader());
     }
 
     @Override
@@ -83,6 +85,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
         dest.writeString(translationLanguage);
         dest.writeInt(bookmark);
         dest.writeInt(pages);
+        dest.writeParcelable(metaData, flags);
     }
 
     @Override
@@ -101,6 +104,24 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
             return new Book[size];
         }
     };
+
+    private void setupMetaData(){
+
+        switch (fileType){
+
+            case "EPUB":
+                metaData = EPUBReader.getMetadata(path);
+                break;
+        }
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     @Override
     public String toString() {
