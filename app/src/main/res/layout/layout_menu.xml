@@ -233,7 +233,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:translationY="16dp"
+            android:translationY="14dp"
             android:orientation="vertical">
 
             <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
