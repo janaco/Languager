@@ -14,7 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
-import com.nandy.reader.ui.dialogs.BookSettingsDialog;
+import com.nandy.reader.model.Book;
+import com.nandy.reader.ui.dialogs.book_settings.BookSettingsDialog;
+import com.nandy.reader.ui.dialogs.book_settings.SettingsModel;
+import com.nandy.reader.ui.dialogs.book_settings.SettingsPresenter;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -134,8 +137,11 @@ public class BookMenuPanel implements MenuContract.View, DiscreteSeekBar.OnProgr
     }
 
     @Override
-    public void openSettings() {
-        new BookSettingsDialog(viewSettings).show();
+    public void openSettings(Book book) {
+        BookSettingsDialog dialog = new BookSettingsDialog(viewSettings);
+        dialog.setPresenter(new SettingsPresenter(new SettingsModel(book), dialog));
+        dialog.setCallback(presenter);
+        dialog.show();
     }
 
     @Override

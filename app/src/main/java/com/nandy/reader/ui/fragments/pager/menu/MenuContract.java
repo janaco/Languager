@@ -4,6 +4,8 @@ import android.view.Window;
 
 import com.nandy.reader.BasePresenter;
 import com.nandy.reader.BaseView;
+import com.nandy.reader.model.Book;
+import com.nandy.reader.ui.dialogs.book_settings.BookSettingsDialog;
 
 /**
  * Created by yana on 20.08.17.
@@ -28,6 +30,8 @@ public class MenuContract {
         int getPagesCount();
 
         String getBookId();
+
+        Book getBook();
 
         void setBookmark(int bookmark);
 
@@ -66,13 +70,13 @@ public class MenuContract {
 
         void setBrightnessOnStart(int value);
 
-        void openSettings();
+        void openSettings(Book book);
 
         void setCurrentItem(int index);
 
     }
 
-    public interface Presenter extends BasePresenter{
+    public interface Presenter extends BasePresenter, BookSettingsDialog.Callback{
 
         void onMenuClick();
 

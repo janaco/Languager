@@ -3,11 +3,16 @@ package com.nandy.reader.ui.fragments.pager.menu;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.provider.Settings;
+import android.util.Pair;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.model.word.WordInfo;
+import com.nandy.reader.translator.yandex.Language;
+import com.nandy.reader.ui.dialogs.book_settings.BookSettingsDialog;
+
+import java.util.Locale;
 
 import io.realm.Realm;
 
@@ -15,7 +20,7 @@ import io.realm.Realm;
  * Created by yana on 20.08.17.
  */
 
-public class MenuPresenter implements MenuContract.Presenter {
+public class MenuPresenter implements MenuContract.Presenter{
 
     private MenuContract.View view;
     private MenuContract.Model model;
@@ -87,7 +92,7 @@ public class MenuPresenter implements MenuContract.Presenter {
 
     @Override
     public void onSettingsClick() {
-        view.openSettings();
+        view.openSettings(model.getBook());
     }
 
     @Override
@@ -145,5 +150,11 @@ public class MenuPresenter implements MenuContract.Presenter {
         WindowManager.LayoutParams windowAttributes = window.getAttributes();
         windowAttributes.screenBrightness = progress / (float) 255;
         window.setAttributes(windowAttributes);
+    }
+
+    @Override
+    public void onBookLanguageChanged(Pair<Language, Language> languagePair) {
+        view.setLanguages(new Locale(languagePair.first.toString()).getDisplayLanguage() + " - "
+                + new Locale(languagePair.second.toString()).getDisplayLanguage());
     }
 }

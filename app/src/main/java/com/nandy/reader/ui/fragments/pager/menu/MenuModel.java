@@ -43,6 +43,11 @@ public class MenuModel implements MenuContract.Model {
     }
 
     @Override
+    public Book getBook() {
+        return book;
+    }
+
+    @Override
     public void setPagesCount(int pagesCount) {
         this.pagesCount = pagesCount;
     }
