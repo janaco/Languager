@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nandy.reader.translator.yandex.Language;
+import com.nandy.reader.ui.fragments.pager.ViewerFragment;
 import com.softes.cardviewer.ExpandableCard;
 import com.softes.cardviewer.ExpandablePagerFactory;
 import com.nandy.reader.R;
@@ -165,7 +165,7 @@ public class BookShelfFragment extends Fragment
            book.setTranslationLanguage(translationLanguage);
 
         }
-        NavigationManager.addFragment(getActivity(), PageViewerFragment.create(book));
+        NavigationManager.addFragment(getActivity(), ViewerFragment.getInstance(book));
     }
 
     @Override

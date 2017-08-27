@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragments.pager.page;
 
 import android.graphics.Color;
 import android.graphics.Typeface;

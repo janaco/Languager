@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.fragment_pager.menu;
+package com.nandy.reader.ui.fragments.pager.menu;
 
 import com.nandy.reader.model.Book;
 

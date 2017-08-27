@@ -8,7 +8,5 @@ import com.nandy.reader.pagination.Pagination;
 
 public interface PagesParserCallback {
 
-    void onPagesParsed(Pagination pagination);
-
     void afterPagesParsingFinished(Pagination pagination);
 }

@@ -2,6 +2,8 @@ package com.nandy.reader.readers;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
+import com.nandy.reader.pagination.Pagination;
+import com.nandy.reader.utils.ReaderPrefs;
 
 import java.io.IOException;
 
@@ -15,20 +17,19 @@ public class PDFReader {
 
     public static String parseAsText(String filePath) {
 
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
 
         try {
             PdfReader reader = new PdfReader(filePath);
 
-            int pages = reader.getNumberOfPages();
-            for (int page = 1; page <= pages; page++) {
-                stringBuilder.append(PdfTextExtractor.getTextFromPage(reader, page));
+            for (int page = 1; page <= reader.getNumberOfPages(); page++) {
+                builder.append(PdfTextExtractor.getTextFromPage(reader, page));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return stringBuilder.toString();
+        return builder.toString();
     }
 
     public static String getPage(String filePath, String  fileName, int pageNumber) {

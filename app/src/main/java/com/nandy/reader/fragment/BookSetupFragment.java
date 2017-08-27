@@ -18,6 +18,7 @@ import com.nandy.reader.dialog.ChooseLanguageDialog;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.translator.yandex.Language;
+import com.nandy.reader.ui.fragments.pager.ViewerFragment;
 import com.nandy.reader.view.Fragment;
 
 import java.util.Locale;
@@ -130,7 +131,7 @@ public class BookSetupFragment extends Fragment implements DialogListener {
         FragmentActivity activity = getActivity();
 
         NavigationManager.removeFragment(activity, this);
-        NavigationManager.addFragment(activity, PageViewerFragment.create(book));
+        NavigationManager.addFragment(activity, ViewerFragment.getInstance(book));
     }
 
 

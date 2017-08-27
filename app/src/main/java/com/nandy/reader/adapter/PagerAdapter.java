@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.nandy.reader.core.TranslationCallback;
-import com.nandy.reader.fragment.PageFragment;
+import com.nandy.reader.ui.fragments.pager.page.PageFragment;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.translator.yandex.Language;
 

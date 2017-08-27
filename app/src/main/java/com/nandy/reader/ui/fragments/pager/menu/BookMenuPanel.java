@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.fragment_pager.menu;
+package com.nandy.reader.ui.fragments.pager.menu;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.nandy.reader.R;

@@ -21,7 +21,9 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled = true
+
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,6 +31,8 @@ android {
         }
     }
 }
+
+
 
 repositories {
     mavenCentral()
@@ -47,10 +51,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.0.1'
     compile 'com.android.support:design:25.0.1'
 
-//reactive android
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
-
     compile 'com.github.blackfizz:eazegraph:1.2.2@aar'
     compile 'com.nineoldandroids:library:2.4.0'
 
@@ -66,12 +66,16 @@ dependencies {
 
     compile 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1' //?
     compile 'com.victor:lib:1.0.4'//?
-
+    compile 'com.github.michaelye.easydialog:easydialog:1.4'
 
     compile 'org.jetbrains:annotations-java5:15.0'
 
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    compile 'com.netflix.rxjava:rxjava-android:0.16.1'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
+        transitive = true
     }
 
 
@@ -84,3 +88,5 @@ dependencies {
     compile project(path: ':cardviewer')
     compile project(path: ':flippy')
 }
+apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'

@@ -1,53 +1,38 @@
 package com.nandy.reader.readers.task;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
+import com.nandy.reader.app.Preferences;
 import com.nandy.reader.emums.FileType;
+import com.nandy.reader.model.Book;
 import com.nandy.reader.pagination.Pagination;
 import com.nandy.reader.readers.EPUBReader;
 import com.nandy.reader.readers.PDFReader;
-import com.nandy.reader.readers.PagesParserCallback;
 import com.nandy.reader.readers.TxtReader;
 import com.nandy.reader.readers.XMLReader;
 import com.nandy.reader.utils.ReaderPrefs;
 
 import java.io.File;
 
+import io.reactivex.Single;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by yana on 21.05.17.
  */
 
-public class BaseParser extends AsyncTask<String, Void, Pagination> {
+public class BaseParser {
 
-    private Context context;
+    public Single<Pagination> parse(ReaderPrefs readerPrefs, Book book) {
 
-    private PagesParserCallback pagesParserCallback;
-
-    public BaseParser(Context context) {
-        this.context = context;
+        return Single.create((SingleOnSubscribe<Pagination>) e -> {
+            Pagination pagination = new Pagination(getContent(book.getPath()), readerPrefs);
+            e.onSuccess(pagination);
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public BaseParser pagesParserCallback(PagesParserCallback pagesParserCallback) {
-        this.pagesParserCallback = pagesParserCallback;
-
-        return this;
-    }
-
-    @Override
-    protected Pagination doInBackground(String... args) {
-
-        return new Pagination(getBookContent(args[0]), ReaderPrefs.getPreferences(context));
-    }
-
-    @Override
-    protected void onPostExecute(Pagination pagination) {
-        pagesParserCallback.onPagesParsed(pagination);
-        pagesParserCallback.afterPagesParsingFinished(pagination);
-    }
-
-
-    private static CharSequence getBookContent(String path) {
+    private static CharSequence getContent(String path) {
 
         File file = new File(path);
 
