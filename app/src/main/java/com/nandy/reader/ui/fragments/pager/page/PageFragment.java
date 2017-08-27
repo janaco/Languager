@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nandy.reader.model.Book;
+import com.nandy.reader.ui.dialogs.floating_translation_dialog.TranslationDialog;
 import com.softes.clickabletextview.ClickableTextView;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.DictionaryAdapter;
@@ -109,8 +110,9 @@ public class PageFragment extends Fragment
     }
 
     @Override
-    public void onClick(final String word) {
-        presenter.translate(getContext(), word);
+    public void onClick(final String word, int x, int y) {
+        new TranslationDialog().show(getContext(), x, y);
+//        presenter.translate(getContext(), word);
     }
 
 

@@ -60,7 +60,7 @@ public class StyleCallback implements ActionMode.Callback {
             case R.id.item_translate:
                 CharacterStyle characterStyle = new StyleSpan(Typeface.BOLD);
                 foregroundColorSpan = new ForegroundColorSpan(
-                        ContextCompat.getColor(view.getContext(), R.color.colorPrimaryDark));
+                        ContextCompat.getColor(view.getContext(), R.color.pine_green));
 
                 stringBuilder.setSpan(characterStyle, indexStart, indexEnd,  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 stringBuilder.setSpan(foregroundColorSpan, indexStart, indexEnd,  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -70,12 +70,8 @@ public class StyleCallback implements ActionMode.Callback {
                 return true;
 
             case R.id.item_highlight:
-                BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(
-                        ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
                 foregroundColorSpan = new ForegroundColorSpan(
-                        ContextCompat.getColor(view.getContext(), R.color.colorSecondaryText));
-
-                stringBuilder.setSpan(backgroundColorSpan, indexStart, indexEnd,  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ContextCompat.getColor(view.getContext(), R.color.pine_green));
                 stringBuilder.setSpan(foregroundColorSpan, indexStart, indexEnd,  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 view.setText(stringBuilder);
                 return true;

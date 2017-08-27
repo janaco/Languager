@@ -2,6 +2,8 @@ package com.softes.clickabletextview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
@@ -15,6 +17,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,7 +33,7 @@ import java.util.List;
  * Created by yana on 25.12.16.
  */
 
-public class ClickableTextView extends TextView {
+public class ClickableTextView extends android.support.v7.widget.AppCompatTextView {
 
     public static final String TAG = "JCTextView";
 
@@ -43,7 +46,6 @@ public class ClickableTextView extends TextView {
     private ForegroundColorSpan foregroundColorSpan;
     private CharacterStyle characterStyle;
 
-    private int highlightColor;
     private String highlightText;
 
     private CharSequence content;
@@ -52,24 +54,14 @@ public class ClickableTextView extends TextView {
 
     public ClickableTextView(Context context) {
         this(context, null);
-        highlightColor = ContextCompat.getColor(context,
-                R.color.colorPrimary);
     }
 
     public ClickableTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ClickableTextView);
-        highlightColor = typedArray.getColor(R.styleable.ClickableTextView_highlightColor,
-                ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
     public ClickableTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ClickableTextView);
-        highlightColor = typedArray.getColor(R.styleable.ClickableTextView_highlightColor,
-                ContextCompat.getColor(context, R.color.colorPrimary));
-        highlightText = typedArray.getString(R.styleable.ClickableTextView_highlightText);
-        typedArray.recycle();
     }
 
     @Override
@@ -77,7 +69,7 @@ public class ClickableTextView extends TextView {
 
         this.charSequence = text;
         bufferType = type;
-        setHighlightColor(highlightColor);
+        setHighlightColor(Color.TRANSPARENT);
         setMovementMethod(LinkMovementMethod.getInstance());
         setText();
 
@@ -86,7 +78,7 @@ public class ClickableTextView extends TextView {
 
     private void setText() {
         spannableString = new SpannableString(charSequence);
-        setHighLightSpan(spannableString);
+//        setHighLightSpan(spannableString);
         splitText();
 
         super.setText(spannableString, bufferType);
@@ -107,7 +99,11 @@ public class ClickableTextView extends TextView {
         int hIndex = charSequence.toString().indexOf(highlightText);
         while (hIndex != -1) {
             spannableString.setSpan(
-                    new ForegroundColorSpan(highlightColor),
+                    new ForegroundColorSpan(
+                            ContextCompat.getColor(getContext(), R.color.pine_green)),
+                    hIndex, hIndex + highlightText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(
+                    new StyleSpan(Typeface.BOLD),
                     hIndex, hIndex + highlightText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             hIndex += highlightText.length();
             hIndex = charSequence.toString().indexOf(highlightText, hIndex);
@@ -117,7 +113,7 @@ public class ClickableTextView extends TextView {
     private void setSelectedSpan(int indexStart, int indexEnd) {
         if (foregroundColorSpan == null || characterStyle == null) {
             foregroundColorSpan = new ForegroundColorSpan(
-                    ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                    ContextCompat.getColor(getContext(), R.color.pine_green));
             characterStyle = new StyleSpan(Typeface.BOLD);
 
         } else {
@@ -139,18 +135,75 @@ public class ClickableTextView extends TextView {
         return new ClickableSpan() {
             @Override
             public void onClick(View widget) {
+
+                Log.d("TEXT_CLICK", "onClick");
                 TextView tv = (TextView) widget;
                 int indexStart = tv.getSelectionStart();
                 int indexEnd = tv.getSelectionEnd();
 
                 try {
 
-                    String word = tv.getText()
-                            .subSequence(indexStart, indexEnd).toString();
-                    setSelectedSpan(indexStart, indexEnd);
+                    String word = new StringBuilder( tv.getText()).substring(indexStart, indexEnd);
+//                    setSelectedSpan(indexStart, indexEnd);
 
+                    Log.d("TEXT_CLICK", "word: " + word);
                     if (onWordClickListener != null) {
-                        onWordClickListener.onClick(word);
+
+                        TextView parentTextView = (TextView) widget;
+
+                        Rect parentTextViewRect = new Rect();
+
+                        // Initialize values for the computing of clickedText position
+                        SpannableString completeText = (SpannableString)(parentTextView).getText();
+                        Layout textViewLayout = parentTextView.getLayout();
+
+                        double startOffsetOfClickedText = completeText.getSpanStart(this);
+                        double endOffsetOfClickedText = completeText.getSpanEnd(this);
+                        double startXCoordinatesOfClickedText = textViewLayout.getPrimaryHorizontal((int)startOffsetOfClickedText);
+                        double endXCoordinatesOfClickedText = textViewLayout.getPrimaryHorizontal((int)endOffsetOfClickedText);
+
+
+                        // Get the rectangle of the clicked text
+                        int currentLineStartOffset = textViewLayout.getLineForOffset((int)startOffsetOfClickedText);
+                        int currentLineEndOffset = textViewLayout.getLineForOffset((int)endOffsetOfClickedText);
+                        boolean keywordIsInMultiLine = currentLineStartOffset != currentLineEndOffset;
+                        textViewLayout.getLineBounds(currentLineStartOffset, parentTextViewRect);
+
+
+                        // Update the rectangle position to his real position on screen
+                        int[] parentTextViewLocation = {0,0};
+                        parentTextView.getLocationOnScreen(parentTextViewLocation);
+
+                        double parentTextViewTopAndBottomOffset = (
+                                parentTextViewLocation[1] -
+                                        parentTextView.getScrollY() +
+                                        parentTextView.getCompoundPaddingTop()
+                        );
+                        parentTextViewRect.top += parentTextViewTopAndBottomOffset;
+                        parentTextViewRect.bottom += parentTextViewTopAndBottomOffset;
+
+                        parentTextViewRect.left += (
+                                parentTextViewLocation[0] +
+                                        startXCoordinatesOfClickedText +
+                                        parentTextView.getCompoundPaddingLeft() -
+                                        parentTextView.getScrollX()
+                        );
+                        parentTextViewRect.right = (int) (
+                                parentTextViewRect.left +
+                                        endXCoordinatesOfClickedText -
+                                        startXCoordinatesOfClickedText
+                        );
+
+                        int x = (parentTextViewRect.left + parentTextViewRect.right) / 2;
+                        int y = parentTextViewRect.bottom;
+                        if (keywordIsInMultiLine) {
+                            x = parentTextViewRect.left;
+                        }
+
+
+                        Log.d("TEXT_CLICK", "location: " + x + "x" + y);
+
+                        onWordClickListener.onClick(word, x, y);
                     }
                 } catch (StringIndexOutOfBoundsException e) {
                     e.printStackTrace();
@@ -170,10 +223,6 @@ public class ClickableTextView extends TextView {
 
     public void setHighLightText(String text) {
         highlightText = text;
-    }
-
-    public void setHighLightColor(int color) {
-        highlightColor = color;
     }
 
 
@@ -210,6 +259,6 @@ public class ClickableTextView extends TextView {
 
 
     public interface OnWordClickListener {
-        void onClick(String word);
+        void onClick(String word, int x, int y);
     }
 }
