@@ -84,6 +84,14 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         return translations;
     }
 
+    public void setTranslations(RealmList<RealmString> translations) {
+        this.translations = translations;
+    }
+
+    public boolean hasTranslations(){
+        return translations !=null && translations.size() > 0;
+    }
+
     public String getTranslationsAsString() {
 
         StringBuilder builder = new StringBuilder();
@@ -182,7 +190,7 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         Realm.init(context);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        realm.copyToRealm(this);
+        realm.insertOrUpdate(this);
         realm.commitTransaction();
     }
 

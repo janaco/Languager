@@ -10,16 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
-import com.nandy.reader.adapter.PagerAdapter;
-import com.nandy.reader.core.TranslationCallback;
-import com.nandy.reader.emums.FileType;
 import com.nandy.reader.model.Book;
-import com.nandy.reader.model.word.Word;
-import com.nandy.reader.pagination.Pagination;
-import com.nandy.reader.readers.PagesParserCallback;
-import com.nandy.reader.readers.task.BaseParser;
-import com.nandy.reader.readers.task.PDFParser;
 import com.nandy.reader.ui.SimpleOnPageChangeListener;
+import com.nandy.reader.ui.fragments.pager.adapter.PagerAdapter;
 import com.nandy.reader.ui.fragments.pager.menu.BookMenuPanel;
 import com.nandy.reader.ui.fragments.pager.menu.MenuModel;
 import com.nandy.reader.ui.fragments.pager.menu.MenuPresenter;
@@ -37,9 +30,7 @@ import butterknife.ButterKnife;
  * Created by yana on 04.01.17.
  */
 
-public class ViewerFragment extends Fragment
-        implements TranslationCallback,
-        ViewerContract.View {
+public class ViewerFragment extends Fragment implements ViewerContract.View {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
@@ -68,7 +59,6 @@ public class ViewerFragment extends Fragment
         menuPanel.setPresenter(new MenuPresenter(new MenuModel(presenter.getBook()), menuPanel));
 
         pagerAdapter = new PagerAdapter(getChildFragmentManager(), presenter.getBook());
-        pagerAdapter.setTranslationCallback(this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
             @Override
@@ -124,10 +114,6 @@ public class ViewerFragment extends Fragment
         presenter.destroy();
     }
 
-    @Override
-    public void newTranslation(Word word) {
-        presenter.onNewTranslation(getContext(), word);
-    }
 
 
     public static ViewerFragment getInstance(Book book) {

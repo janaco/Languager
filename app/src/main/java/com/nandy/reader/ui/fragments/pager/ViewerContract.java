@@ -51,8 +51,6 @@ public class ViewerContract {
 
         void onPageSelected(int position);
 
-        void onNewTranslation(Context context, Word word);
-
         void saveBookmarkOnDestroy(int bookmark);
 
         Book getBook();

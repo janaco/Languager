@@ -30,6 +30,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 
@@ -61,8 +65,8 @@ dependencies {
     compile 'org.adw.library:discrete-seekbar:1.0.1' //seekbar
     compile 'com.daimajia.numberprogressbar:library:1.4@aar' //material progress bar
     compile 'com.squareup.okhttp3:okhttp:3.0.0' //okhttp client
-    compile 'com.squareup.retrofit2:retrofit:2.1.0' //retrofit client
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0' //retrofit gson conventer
+    compile 'com.squareup.retrofit2:retrofit:2.3.0' //retrofit client
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0' //retrofit gson conventer
 
     compile 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1' //?
     compile 'com.victor:lib:1.0.4'//?

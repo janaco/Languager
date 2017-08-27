@@ -1,4 +1,4 @@
-package com.nandy.reader.adapter;
+package com.nandy.reader.ui.fragments.pager.adapter;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,17 +19,12 @@ import java.util.List;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
-    private Language primaryLanguage;
-    private Language translationLanguage;
-
     private List<CharSequence> pages = new ArrayList<>();
-
-    private TranslationCallback translationCallback;
+    private Book book;
 
     public PagerAdapter(FragmentManager fragmentManager, Book book) {
         super(fragmentManager);
-        this.primaryLanguage = book.getOriginLanguage();
-        this.translationLanguage = book.getTranslationLanguage();
+        this.book = book;
     }
 
     public void setPages(List<CharSequence> pages) {
@@ -40,15 +35,10 @@ public class PagerAdapter extends FragmentPagerAdapter {
     }
 
 
-    public void setTranslationCallback(TranslationCallback translationCallback) {
-        this.translationCallback = translationCallback;
-    }
-
     @Override
     public android.support.v4.app.Fragment getItem(final int position) {
 
-        return PageFragment.create(position, pages.get(position),
-                primaryLanguage, translationLanguage, translationCallback);
+        return PageFragment.getInstance(book, pages.get(position));
     }
 
     @Override

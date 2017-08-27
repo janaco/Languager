@@ -52,11 +52,6 @@ public class ViewerPresenter implements ViewerContract.Presenter {
         view.notifyNextPageOpened(position);
     }
 
-    @Override
-    public void onNewTranslation(Context context, Word word) {
-        word.setBookId(model.getPath());
-        word.insert(context);
-    }
 
     @Override
     public void saveBookmarkOnDestroy(int bookmark) {

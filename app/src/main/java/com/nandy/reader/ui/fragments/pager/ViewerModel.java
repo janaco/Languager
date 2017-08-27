@@ -56,7 +56,7 @@ public class ViewerModel implements ViewerContract.Model {
 
     @Override
     public Single<Pagination> parseBook(Context context) {
-        return new BaseParser().parse(ReaderPrefs.getPreferences(context), book);
+        return new BaseParser().parse(ReaderPrefs.getPreferences(context), book.getPath());
 
     }
 }

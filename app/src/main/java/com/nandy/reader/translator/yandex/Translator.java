@@ -1,6 +1,6 @@
 package com.nandy.reader.translator.yandex;
 
-import android.util.Log;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,38 +33,32 @@ import retrofit2.http.QueryMap;
 
 public class Translator {
 
-    public interface Callback<T> {
+   private Callback callback;
 
-        void translationSuccess(T item);
 
-        void translationFailure(Call call, Response response);
-
-        void translationError(Call call, Throwable error);
+    public Translator setCallback(Callback callback) {
+        this.callback = callback;
+        return this;
     }
 
-
-    public static void translate(final CharSequence textToTranslate, final Language[] languages,
-                                 final Callback<Word> callback) {
+    public void translate(final CharSequence textToTranslate, Pair<Language, Language> languages) {
 
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_TRANSLATOR_KEY);
-        map.put("lang", languages[0].toString() + "-" + languages[1].toString());
+        map.put("lang", languages.first.toString() + "-" + languages.second.toString());
         map.put("text", textToTranslate.toString());
 
-        Log.d("TRANSLATOR_", "map: " + map);
         Call<Word> call = getService(Api.TRANSLATOR_URL).translate(map);
 
-        Log.d("TRANSLATOR_", "call.url: " + call.request().url());
 
         call.enqueue(new retrofit2.Callback<Word>() {
             @Override
             public void onResponse(Call<Word> call, Response<Word> response) {
-                Log.d("TRANSLATOR_", "onResponse: " + response.isSuccessful());
                 if (response.isSuccessful()) {
                     Word word = response.body();
                     word.setText(textToTranslate.toString());
-                    word.setOriginLanguage(languages[0]);
-                    word.setTranslationLanguage(languages[1]);
+                    word.setOriginLanguage(languages.first);
+                    word.setTranslationLanguage(languages.second);
                     callback.translationSuccess(word);
                 } else {
                     callback.translationFailure(call, response);
@@ -73,21 +67,18 @@ public class Translator {
 
             @Override
             public void onFailure(Call<Word> call, Throwable t) {
-                Log.d("TRANSLATOR_", "onFailure: " + t.getMessage());
                 callback.translationError(call, t);
             }
         });
     }
 
-    public static void getDictionary(final CharSequence textToTranslate, final Language[] languages,
-                                     final Callback<Dictionary> callback) {
+    public  void getDictionary(final CharSequence textToTranslate, Pair<Language, Language> languages) {
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_DICTIONARY_KEY);
-        map.put("lang", languages[0].toString() + "-" + languages[1].toString());
+        map.put("lang", languages.first.toString() + "-" + languages.second.toString());
         map.put("text", textToTranslate.toString());
         final Call<Dictionary> call = getService(Api.DICTIONARY_URL).lookup(map);
 
-        Log.d("TRANSLATOR", "dictionary.url: " + call.request().url());
 
         call.enqueue(new retrofit2.Callback<Dictionary>() {
             @Override
@@ -150,5 +141,14 @@ public class Translator {
         Call<Dictionary> lookup(@QueryMap Map<String, String> params);
 
 
+    }
+
+    public interface Callback<T> {
+
+        void translationSuccess(T item);
+
+        void translationFailure(Call call, Response response);
+
+        void translationError(Call call, Throwable error);
     }
 }

@@ -23,10 +23,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class BaseParser {
 
-    public Single<Pagination> parse(ReaderPrefs readerPrefs, Book book) {
+    public Single<Pagination> parse(ReaderPrefs readerPrefs, String path) {
 
         return Single.create((SingleOnSubscribe<Pagination>) e -> {
-            Pagination pagination = new Pagination(getContent(book.getPath()), readerPrefs);
+            Pagination pagination = new Pagination(getContent(path), readerPrefs);
             e.onSuccess(pagination);
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

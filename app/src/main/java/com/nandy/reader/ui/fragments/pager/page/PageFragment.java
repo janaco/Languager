@@ -15,11 +15,13 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nandy.reader.model.Book;
 import com.softes.clickabletextview.ClickableTextView;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.DictionaryAdapter;
@@ -49,47 +51,16 @@ import retrofit2.Response;
  * Created by yana on 01.01.17.
  */
 
-public class PageFragment extends Fragment implements ClickableTextView.OnWordClickListener, ActionModeCallback {
+public class PageFragment extends Fragment
+        implements PageContract.View, ClickableTextView.OnWordClickListener, ActionModeCallback {
 
     @Bind(R.id.item_content)
     ClickableTextView textView;
 
-    private TranslationCallback translationCallback;
-
-    public static final String ARG_PAGE = "page";
-    public static final String ARG_CONTENT = "content";
-    private CharSequence content;
-
     private View popView;
     private PopupFragment popupFragment;
 
-    private Language primaryLanguage;
-    private Language translationLangusage;
-
-
-    public static PageFragment create(int pageNumber, CharSequence content, Language primaryLang,
-                                      Language translationLang, TranslationCallback translationCallback) {
-        PageFragment fragment = new PageFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, pageNumber);
-        args.putCharSequence(ARG_CONTENT, content);
-        args.putString("primary_lang", primaryLang.toString());
-        args.putString("trans_lang", translationLang.toString());
-        fragment.setArguments(args);
-
-        fragment.setTranslationCallback(translationCallback);
-
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        content = getArguments().getCharSequence(ARG_CONTENT);
-        primaryLanguage = Language.getLanguage(getArguments().getString("primary_lang"));
-        translationLangusage = Language.getLanguage(getArguments().getString("trans_lang"));
-    }
+    private PageContract.Presenter presenter;
 
     @Nullable
     @Override
@@ -117,145 +88,91 @@ public class PageFragment extends Fragment implements ClickableTextView.OnWordCl
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        textView.setText(content.toString());
+        presenter.start(getContext());
     }
 
     @Override
+    public void setPresenter(PageContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void setContentText(String text) {
+        textView.setText(text);
+    }
+
+
+
+    @Override
     public void onTranslateOptionSelected(CharSequence text) {
-        onTranslate(text);
+        presenter.translate(getContext(), text);
     }
 
     @Override
     public void onClick(final String word) {
-        onTranslate(word);
+        presenter.translate(getContext(), word);
     }
 
-    public void showPopup() {
+
+    @Override
+    public void showPopupWindow() {
+     //TODO: change
         if (!popupFragment.isShowing()) {
             popView = popupFragment.showPopup();
         }
-        popView.findViewById(R.id.item_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupFragment.hidePopup();
-            }
-        });
+        popView.findViewById(R.id.item_close)
+                .setOnClickListener(v -> popupFragment.hidePopup());
 
     }
 
-    private void setUpDictionary(List<DictionaryItem> dictionary) {
+    @Override
+    public void setPopupHeader(String text) {
+        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
+        textOrigin.setTextColor(Color.WHITE);
+        textOrigin.setText(text);
+    }
+
+
+    @Override
+    public void setTranslation(String text, String translation) {
+
+        popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
+
+        TextView textView = (TextView) popView.findViewById(R.id.item_translation);
+
+        String primary = text + "\n";
+        primary = primary.toUpperCase(Locale.getDefault());
+
+        SpannableString spannable = new SpannableString(primary + translation);
+        spannable.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannable.setSpan(new RelativeSizeSpan(0.85f), primary.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
+                primary.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(spannable);
+
+    }
+
+    @Override
+    public void setDictionaryContent(List<DictionaryItem> items) {
         RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        DictionaryAdapter adapter = new DictionaryAdapter(dictionary);
+        DictionaryAdapter adapter = new DictionaryAdapter(items);
         recyclerView.setAdapter(adapter);
     }
 
-    private void onTranslate(CharSequence text) {
-        showPopup();
-        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
-        textOrigin.setTextColor(Color.WHITE);
-        textOrigin.setText(text);
-        translate(text);
-    }
+    public static PageFragment getInstance(Book book, CharSequence content){
+        PageFragment fragment = new PageFragment();
+        PageModel pageModel = new PageModel(book.getId(), content, new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage()));
+        fragment.setPresenter(new PagePresenter(pageModel, fragment));
 
-    /**
-     * Request translation in Yandex Translator API.
-     *
-     * @param original - word or phrase to translate.
-     */
-    private void translate(final CharSequence original) {
-        Translator.translate(original, new Language[]{primaryLanguage, translationLangusage},
-                new Translator.Callback<Word>() {
-                    @Override
-                    public void translationSuccess(Word word) {
-
-                        if (popView == null) {
-                            showPopup();
-                        }
-
-
-                        popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
-
-                        TextView textView = (TextView) popView.findViewById(R.id.item_translation);
-
-                        String primary = original + "\n";
-                        primary = primary.toUpperCase(Locale.getDefault());
-
-                        SpannableString text = new SpannableString(primary + word.getTranslationsAsString());
-                        text.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        text.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                        text.setSpan(new RelativeSizeSpan(0.85f), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        text.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
-                                primary.length(), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                        textView.setText(text);
-
-                        if (text.toString().split(" ").length < 3) {
-                            lookup(word);
-                        } else {
-                            translationCallback.newTranslation(word);
-                        }
-
-
-                    }
-
-                    @Override
-                    public void translationFailure(Call call, Response response) {
-
-                    }
-
-                    @Override
-                    public void translationError(Call call, Throwable error) {
-
-                    }
-                });
-
-
-    }
-
-
-    /**
-     * Request translation from Yandex Dictionary.
-     */
-    private void lookup(final Word word) {
-        Translator.getDictionary(word.getText(), new Language[]{primaryLanguage, translationLangusage},
-                new Translator.Callback<Dictionary>() {
-                    @Override
-                    public void translationSuccess(Dictionary dictionary) {
-
-                        if (popView == null) {
-                            showPopup();
-                        }
-
-                        setUpDictionary(dictionary.getItems());
-//                DictionaryTable.insert(getContext(), items, item);
-
-                        word.setDictionary(dictionary);
-                        translationCallback.newTranslation(word);
-
-                    }
-
-                    @Override
-                    public void translationFailure(Call call, Response response) {
-
-                    }
-
-                    @Override
-                    public void translationError(Call call, Throwable error) {
-
-                    }
-                });
-
-    }
-
-
-    public void setTranslationCallback(TranslationCallback translationCallback) {
-        this.translationCallback = translationCallback;
+        return fragment;
     }
 }
 
