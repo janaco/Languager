@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.nandy.reader.model.Book;
 import com.nandy.reader.ui.dialogs.floating_translation_dialog.TranslationDialog;
+import com.nandy.reader.ui.dialogs.floating_translation_dialog.TranslationsModel;
+import com.nandy.reader.ui.dialogs.floating_translation_dialog.TranslationsPresenter;
 import com.softes.clickabletextview.ClickableTextView;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.DictionaryAdapter;
@@ -58,10 +60,13 @@ public class PageFragment extends Fragment
     @Bind(R.id.item_content)
     ClickableTextView textView;
 
+    private Book book;
+
     private View popView;
     private PopupFragment popupFragment;
 
     private PageContract.Presenter presenter;
+
 
     @Nullable
     @Override
@@ -103,7 +108,6 @@ public class PageFragment extends Fragment
     }
 
 
-
     @Override
     public void onTranslateOptionSelected(CharSequence text) {
         presenter.translate(getContext(), text);
@@ -111,14 +115,19 @@ public class PageFragment extends Fragment
 
     @Override
     public void onClick(final String word, int x, int y) {
-        new TranslationDialog().show(getContext(), x, y);
-//        presenter.translate(getContext(), word);
+        TranslationDialog translationDialog = new TranslationDialog(getContext(), new int[]{x, y});
+
+        TranslationsPresenter presenter = new TranslationsPresenter(translationDialog);
+        presenter.setTranslationsModel(new TranslationsModel(getContext(), book.getId(), new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage())));
+
+        translationDialog.setPresenter(presenter);
+        translationDialog.show(word);
     }
 
 
     @Override
     public void showPopupWindow() {
-     //TODO: change
+        //TODO: change
         if (!popupFragment.isShowing()) {
             popView = popupFragment.showPopup();
         }
@@ -169,8 +178,13 @@ public class PageFragment extends Fragment
         recyclerView.setAdapter(adapter);
     }
 
-    public static PageFragment getInstance(Book book, CharSequence content){
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public static PageFragment getInstance(Book book, CharSequence content) {
         PageFragment fragment = new PageFragment();
+        fragment.setBook(book);
         PageModel pageModel = new PageModel(book.getId(), content, new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage()));
         fragment.setPresenter(new PagePresenter(pageModel, fragment));
 
