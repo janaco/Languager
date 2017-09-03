@@ -1,41 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingEnd="10dp"
-    android:paddingStart="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingEnd="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingStart="10dp"
+    android:paddingTop="5dp">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/translation_preview"
         android:layout_width="match_parent"
-        android:gravity="center"
         android:layout_height="wrap_content"
-        android:id="@+id/translation"
-        android:text="Translation"
-        android:textSize="@dimen/text_18"
-        android:textColor="@color/pine_green"
-        android:textStyle="bold"
-        android:padding="10dp"/>
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <TextView
+            android:id="@+id/translation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textColor="@color/pine_green"
+            android:textSize="@dimen/text_18"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tool:text="Translation" />
+
+        <TextView
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:drawablePadding="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:padding="5dp"
+            android:text="@string/translating"
+            android:textColor="@color/pine_green"
+            android:textSize="@dimen/text_14" />
+
+        <com.github.chuross.library.ExpandableLayout
+            android:id="@+id/layout_translations"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/translation"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/translations"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/pale_brown"
+                android:textSize="@dimen/text_12"
+                tool:text="translation1, translation2, translation3, translation3, translation4" />
+
+        </com.github.chuross.library.ExpandableLayout>
+
+
+    </RelativeLayout>
+
+
 
     <com.github.chuross.library.ExpandableLayout
         android:id="@+id/layout_expandable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/biege"/>
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/recycler_view"
-            tool:listitem="@layout/item_translation"/>
+            tool:listitem="@layout/item_translation" />
 
     </com.github.chuross.library.ExpandableLayout>
 

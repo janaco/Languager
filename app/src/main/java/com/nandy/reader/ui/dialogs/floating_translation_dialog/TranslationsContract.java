@@ -16,7 +16,11 @@ public class TranslationsContract {
 
         void setTranslation(String translation);
 
-        void setDictioary(List<DictionaryItem> items);
+        void setDictionary(List<DictionaryItem> items);
+
+        void setDictionaryPreview(String text);
+
+        void setHasDictionary(boolean hasDictionary);
 
         void onTranslationFailed();
     }

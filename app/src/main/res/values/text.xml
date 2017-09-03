@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="translating">Translating…</string>
     <string name="learn">Learn words</string>
     <string name="general_test">General test</string>
     <string name="quick_test">Quick test</string>

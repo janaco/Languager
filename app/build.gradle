@@ -60,6 +60,7 @@ dependencies {
 
     compile 'com.github.lecho:hellocharts-android:v1.5.8'
     compile 'com.github.chuross:expandable-layout:+'
+    compile 'com.github.ybq:Android-SpinKit:1.1.0'
 
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'org.adw.library:discrete-seekbar:1.0.1' //seekbar
