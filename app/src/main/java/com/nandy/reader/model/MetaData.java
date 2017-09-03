@@ -137,10 +137,6 @@ public class MetaData extends RealmObject implements Parcelable{
         return publishers;
     }
 
-    public boolean isEmpty(){
-        return TextUtils.isEmpty(titles);
-    }
-
     public void setPublishers(String publishers) {
         this.publishers = publishers;
     }

@@ -155,7 +155,7 @@ public class BookShelfFragment extends Fragment
     public void read(Book book) {
 
         if (!book.hasOriginLanguage()){
-            Language  originLanguage = book.getMetaData().isEmpty() ? Language.ENGLISH
+            Language  originLanguage = book.getMetaData() == null ? Language.ENGLISH
                     : Language.getLanguage(book.getMetaData().getLanguage());
             book.setOriginLanguage(originLanguage);
         }

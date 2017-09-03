@@ -19,12 +19,12 @@ public class MenuModel implements MenuContract.Model {
 
     @Override
     public String getTitle() {
-        return book.getMetaData().isEmpty()? book.getName() : book.getMetaData().getTitles() ;
+        return book.getMetaData() == null ? book.getName() : book.getMetaData().getTitles() ;
     }
 
     @Override
     public String getAuthor() {
-        return book.getMetaData().isEmpty()? book.getName() : book.getMetaData().getAuthor();
+        return book.getMetaData() == null ? book.getName() : book.getMetaData().getAuthor();
     }
 
     @Override

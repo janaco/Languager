@@ -61,7 +61,7 @@ return metaData;
             e.printStackTrace();
         }
 
-        return new MetaData();
+        return null;
     }
 
 

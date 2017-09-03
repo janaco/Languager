@@ -77,7 +77,7 @@ public class EPUBReader {
             e.printStackTrace();
         }
 
-        return new MetaData();
+        return null;
     }
 
     private static String getNames(List<Author> authors){

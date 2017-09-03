@@ -120,6 +120,7 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
             case "FB2":
                 metaData = XMLMetadataParser.getMetadata(path);
                 break;
+
         }
     }
 
