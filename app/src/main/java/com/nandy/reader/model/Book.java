@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.nandy.reader.emums.FileType;
 import com.nandy.reader.readers.EPUBReader;
+import com.nandy.reader.readers.XMLMetadataParser;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.io.File;
@@ -114,6 +115,10 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
 
             case "EPUB":
                 metaData = EPUBReader.getMetadata(path);
+                break;
+
+            case "FB2":
+                metaData = XMLMetadataParser.getMetadata(path);
                 break;
         }
     }

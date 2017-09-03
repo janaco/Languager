@@ -49,7 +49,8 @@ public class FloatingDictionaryAdapter extends RecyclerView.Adapter<FloatingDict
 
         holder.viewPartOfSpeech.setText(item.isKnownPartOfSpeech() ? item.getPartOfSpeech() : "");
         holder.itemText.setText(item.getOriginText());
-        holder.viewTranscription.setText(item.hasTranscription() ?  item.getTranscription() : "");
+        holder.viewTranscription.setText( item.getTranscription() );
+        holder.viewTranscription.setVisibility(item.hasTranscription() ? View.VISIBLE : View.GONE);
 
         //list of possible translations related with origin word
         List<Translation> translations = item.getTranslations();

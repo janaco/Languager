@@ -2,18 +2,27 @@ package com.nandy.reader.readers;
 
 import android.util.Xml;
 
+import com.nandy.reader.model.MetaData;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+
+import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.domain.Metadata;
+import nl.siegmann.epublib.epub.EpubReader;
 
 /**
  * Created by yana on 10.06.17.
  */
 
 public class XMLReader {
+
 
 
     public static CharSequence parseAsText(File file) {
