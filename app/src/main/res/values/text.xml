@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="books_loading_failed">Failed to load books…</string>
+
     <string name="translating">Translating…</string>
     <string name="learn">Learn words</string>
     <string name="general_test">General test</string>

@@ -42,6 +42,10 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
     private int pages;
     private MetaData metaData;
 
+    public Book(File file){
+        this(file.getPath(), file.getName(), file.length());
+    }
+
     public Book(String path, String name, long size) {
         this.path = path;
         this.name = name.contains(".") ? name.substring(0, name.lastIndexOf(".")) : name;
@@ -56,9 +60,6 @@ public class Book extends RealmObject implements Comparable<Book>, Parcelable {
 
     }
 
-    public Book(File file) {
-        this(file.getPath(), file.getName(), file.length());
-    }
 
     public Book() {
     }

@@ -24,6 +24,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nandy.reader.SimpleOnPageChangeListener;
+import com.nandy.reader.activity.MainActivity;
+import com.nandy.reader.mvp.contract.BookshelfContract;
+import com.nandy.reader.mvp.model.BookshelfModel;
+import com.nandy.reader.mvp.presenter.BookshelfPresenter;
 import com.nandy.reader.translator.yandex.Language;
 import com.nandy.reader.ui.fragment.ViewerFragment;
 import com.softes.cardviewer.ExpandableCard;
@@ -32,10 +37,8 @@ import com.nandy.reader.R;
 import com.nandy.reader.adapter.AutocompleteAdapter;
 import com.nandy.reader.adapter.BooksAdapter;
 import com.nandy.reader.core.BookItemListener;
-import com.nandy.reader.core.FileSeekerCallback;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
-import com.nandy.reader.utils.FileSeeker;
 import com.nandy.reader.view.Fragment;
 
 import java.util.List;
@@ -44,9 +47,6 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * There list of all books is displayed.
@@ -56,12 +56,10 @@ import io.realm.RealmResults;
  */
 
 public class BookShelfFragment extends Fragment
-        implements FileSeekerCallback, BookItemListener, AdapterView.OnItemClickListener,
-        ViewPager.OnPageChangeListener, View.OnFocusChangeListener, TextView.OnEditorActionListener {
+        implements BookshelfContract.View,  BookItemListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener, TextView.OnEditorActionListener {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
-
     @Bind(R.id.layout_search)
     RelativeLayout layoutSearch;
     @Bind(R.id.item_text)
@@ -70,8 +68,9 @@ public class BookShelfFragment extends Fragment
     CoordinatorLayout layoutCoordinator;
 
     private BooksAdapter adapter;
-
     private AutocompleteAdapter autocompeteAdapter;
+
+    private BookshelfContract.Presenter presenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,43 +105,43 @@ public class BookShelfFragment extends Fragment
 
         adapter = new BooksAdapter(getChildFragmentManager(), this);
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(BookShelfFragment.this);
+        viewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position) {
+                closeItemBeforeMoveToAnother();
+            }
+        });
 
-        //select and display books that are already available in db.
-        //it is too long to search for them in file system
-        //(search in file system will be performed but in background mode)
-        Realm realm = Realm.getDefaultInstance();
-        RealmQuery<Book> query = realm.where(Book.class);
-        RealmResults<Book> results = query.findAllSortedAsync("name");
-        results.load();
+        presenter.start();
+    }
 
-        for (Book book : results) {
-            adapter.add(book);
-            autocompeteAdapter.add(book.getName());
-        }
-        afterBookSearchResults(results, true);
+
+    @Override
+    public void setPresenter(BookshelfContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override
-    public void onBookFound(Book book) {
-        adapter.add(book);
+    public void onBookLoaded(Book book) {
+       adapter.add(book);
         autocompeteAdapter.add(book.getName());
     }
 
-    @Override
-    public void afterBookSearchResults(List<Book> books, boolean fromDB) {
 
-        if (fromDB) {
-            //Means that all books from db are shown to user, but maybe there
-            //are new books available in file system.
-            //Lets search for them.
-            FileSeeker.getBooks(this);
-        } else {
-            //Search in file system is finished. So, we need to update our records in database.
-            for (Book book : books) {
-                book.insert();
-            }
-        }
+    @Override
+    public void onBookNotFound(String message) {
+
+        Snackbar snackbar = Snackbar.make(layoutCoordinator, message, Snackbar.LENGTH_SHORT);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorLightPrimary));
+        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.red_500));
+        snackbar.show();
+    }
+
+    @Override
+    public void moveToPosition(int index) {
+        viewPager.setCurrentItem(index);
     }
 
     @Override //book was renamed
@@ -165,7 +164,8 @@ public class BookShelfFragment extends Fragment
            book.setTranslationLanguage(translationLanguage);
 
         }
-        NavigationManager.addFragment(getActivity(), ViewerFragment.getInstance(book));
+
+        ((MainActivity) getActivity()).replace( ViewerFragment.getInstance(book));
     }
 
     @Override
@@ -175,7 +175,7 @@ public class BookShelfFragment extends Fragment
             case R.id.item_text:
                 //action was performed on search view, so we can search for book with entered name
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    searchForBook(autoCompleteTextView.getText().toString());
+                    presenter.searchForBook(adapter, autoCompleteTextView.getText().toString());
                     return true;
                 }
 
@@ -186,7 +186,7 @@ public class BookShelfFragment extends Fragment
 
     @Override //On autocomplete  dropdown list item click
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        searchForBook(autoCompleteTextView.getText().toString());
+        presenter.searchForBook(adapter, autoCompleteTextView.getText().toString());
     }
 
     @Override
@@ -199,21 +199,6 @@ public class BookShelfFragment extends Fragment
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        closeItemBeforeMoveToAnother();
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        //Do nothing
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        //Do nothing
     }
 
     @OnClick(R.id.item_back)
@@ -244,51 +229,19 @@ public class BookShelfFragment extends Fragment
 
     @OnClick(R.id.item_settings)
     void onSettingsClick() {
-        Toast.makeText(getContext(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-        NavigationManager.addFragment(getActivity(), new SettingsFragment());
+        ((MainActivity) getActivity()).replace( new SettingsFragment());
     }
 
     @OnClick(R.id.item_statistics)
     void onStatisticsClick() {
-        NavigationManager.addFragment(getActivity(), new FragmentStatistics());
+        ((MainActivity) getActivity()).replace(new FragmentStatistics());
     }
 
     @OnClick(R.id.item_exams)
     void onExamsClick() {
-        NavigationManager.addFragment(getActivity(), new FragmentTests());
+        ((MainActivity) getActivity()).replace(new FragmentTests());
     }
 
-    /**
-     * This method will be called after search action will be performed by user.
-     * It will search for the book with the entered name in the list
-     * (in future in the file system) and scroll to it.
-     *
-     * @param name - name of book to search
-     */
-    private void searchForBook(final String name) {
-
-        NavigationManager.hideKeyboard(getActivity());
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                int index = adapter.getPositionOf(name);
-                if (index >= 0) {
-                    viewPager.setCurrentItem(index);
-                } else {
-
-                    Snackbar snackbar = Snackbar.make(layoutCoordinator, getString(R.string.nothing_found), Snackbar.LENGTH_SHORT);
-                    View snackbarView = snackbar.getView();
-                    snackbarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorLightPrimary));
-                    TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.red_500));
-                    snackbar.show();
-                }
-            }
-        }, 1000);
-
-    }
 
     private void closeItemBeforeMoveToAnother() {
         ExpandableCard expandingFragment = ExpandablePagerFactory.getCurrentFragment(viewPager);
@@ -319,5 +272,16 @@ public class BookShelfFragment extends Fragment
             public void afterTextChanged(Editable editable) {
             }
         };
+    }
+
+    public static BookShelfFragment newInstance(Context context){
+        BookShelfFragment fragment = new BookShelfFragment();
+
+        BookshelfPresenter presenter = new BookshelfPresenter(fragment);
+        presenter.setBookshelfModel(new BookshelfModel(context));
+
+        fragment.setPresenter(presenter);
+
+        return fragment;
     }
 }
