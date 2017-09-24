@@ -18,7 +18,7 @@ import com.nandy.reader.dialog.ChooseLanguageDialog;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.translator.yandex.Language;
-import com.nandy.reader.ui.fragments.pager.ViewerFragment;
+import com.nandy.reader.ui.fragment.ViewerFragment;
 import com.nandy.reader.view.Fragment;
 
 import java.util.Locale;

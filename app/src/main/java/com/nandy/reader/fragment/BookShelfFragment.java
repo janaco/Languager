@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nandy.reader.translator.yandex.Language;
-import com.nandy.reader.ui.fragments.pager.ViewerFragment;
+import com.nandy.reader.ui.fragment.ViewerFragment;
 import com.softes.cardviewer.ExpandableCard;
 import com.softes.cardviewer.ExpandablePagerFactory;
 import com.nandy.reader.R;
