@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_margin="5dp"
     android:elevation="3dp"
-    tools:context=".fragment.FragmentTop">
+    tools:context=".ui.fragment.FragmentTop">
 
     <LinearLayout
         android:layout_width="match_parent"

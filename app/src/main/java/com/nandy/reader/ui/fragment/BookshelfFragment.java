@@ -1,9 +1,8 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -22,15 +21,18 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nandy.reader.SimpleOnPageChangeListener;
+import com.nandy.reader.SimpleOnTextChangedListener;
 import com.nandy.reader.activity.MainActivity;
+import com.nandy.reader.fragment.DictionariesFragment;
+import com.nandy.reader.fragment.FragmentStatistics;
+import com.nandy.reader.fragment.FragmentTests;
+import com.nandy.reader.fragment.SettingsFragment;
 import com.nandy.reader.mvp.contract.BookshelfContract;
 import com.nandy.reader.mvp.model.BookshelfModel;
 import com.nandy.reader.mvp.presenter.BookshelfPresenter;
 import com.nandy.reader.translator.yandex.Language;
-import com.nandy.reader.ui.fragment.ViewerFragment;
 import com.softes.cardviewer.ExpandableCard;
 import com.softes.cardviewer.ExpandablePagerFactory;
 import com.nandy.reader.R;
@@ -41,7 +43,6 @@ import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.view.Fragment;
 
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -55,7 +56,7 @@ import butterknife.OnClick;
  * Created by yana on 25.03.17.
  */
 
-public class BookShelfFragment extends Fragment
+public class BookshelfFragment extends Fragment
         implements BookshelfContract.View,  BookItemListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener, TextView.OnEditorActionListener {
 
     @Bind(R.id.pager)
@@ -93,7 +94,14 @@ public class BookShelfFragment extends Fragment
         autoCompleteTextView.setOnEditorActionListener(this);
         autoCompleteTextView.setOnFocusChangeListener(this);
         autoCompleteTextView.setOnItemClickListener(this);
-        autoCompleteTextView.addTextChangedListener(getSearchInputTextWatcher());
+        autoCompleteTextView.addTextChangedListener(new SimpleOnTextChangedListener() {
+            @Override
+            public void onTextChanged(CharSequence s) {
+                    if (autocompeteAdapter != null && autoCompleteTextView.getLayoutParams() != null) {
+                        autocompeteAdapter.notifyDataSetChanged();
+                    }
+            }
+        });
         autoCompleteTextView.setAdapter(autocompeteAdapter);
 
         return view;
@@ -121,12 +129,53 @@ public class BookShelfFragment extends Fragment
         this.presenter = presenter;
     }
 
-    @Override
-    public void onBookLoaded(Book book) {
-       adapter.add(book);
-        autocompeteAdapter.add(book.getName());
+
+    @OnClick(R.id.item_back)
+    void closeSearchView() {
+        layoutSearch.setVisibility(View.GONE);
     }
 
+    @OnClick(R.id.item_clean)
+    void cleanSearchView() {
+        autoCompleteTextView.setText("");
+    }
+
+    @OnClick(R.id.item_dictionary)
+    void onDictionaryButtonClick() {
+        ((MainActivity) getActivity()).replace( new DictionariesFragment());
+    }
+
+    @OnClick(R.id.item_open_search)
+    void onOpenSearchItemClick() {
+        if (layoutSearch.getVisibility() == View.GONE) {
+            autoCompleteTextView.setText("");
+            layoutSearch.setVisibility(View.VISIBLE);
+            layoutSearch.setAnimation(AnimationUtils.makeInAnimation(getContext(), true));
+        } else {
+            closeSearchView();
+        }
+    }
+
+    @OnClick(R.id.item_settings)
+    void onSettingsClick() {
+        ((MainActivity) getActivity()).replace( new SettingsFragment());
+    }
+
+    @OnClick(R.id.item_statistics)
+    void onStatisticsClick() {
+        ((MainActivity) getActivity()).replace(new FragmentStatistics());
+    }
+
+    @OnClick(R.id.item_exams)
+    void onExamsClick() {
+        ((MainActivity) getActivity()).replace(new FragmentTests());
+    }
+
+    @Override
+    public void onBookLoaded(Book book) {
+        adapter.add(book);
+        autocompeteAdapter.add(book.getName());
+    }
 
     @Override
     public void onBookNotFound(String message) {
@@ -144,11 +193,6 @@ public class BookShelfFragment extends Fragment
         viewPager.setCurrentItem(index);
     }
 
-    @Override //book was renamed
-    public void rename(Book book, int position) {
-        adapter.set(book, position);
-    }
-
 
     @Override
     public void read(Book book) {
@@ -160,8 +204,8 @@ public class BookShelfFragment extends Fragment
         }
 
         if(!book.hasTranslationLanguage()){
-           Language translationLanguage = Language.getLanguage(Locale.getDefault().getLanguage());
-           book.setTranslationLanguage(translationLanguage);
+            Language translationLanguage = Language.getLanguage(Locale.getDefault().getLanguage());
+            book.setTranslationLanguage(translationLanguage);
 
         }
 
@@ -201,48 +245,6 @@ public class BookShelfFragment extends Fragment
         }
     }
 
-    @OnClick(R.id.item_back)
-    void closeSearchView() {
-        layoutSearch.setVisibility(View.GONE);
-    }
-
-    @OnClick(R.id.item_clean)
-    void cleanSearchView() {
-        autoCompleteTextView.setText("");
-    }
-
-    @OnClick(R.id.item_dictionary)
-    void onDictionaryButtonClick() {
-        NavigationManager.addFragment(getActivity(), new DictionariesFragment());
-    }
-
-    @OnClick(R.id.item_open_search)
-    void onOpenSearchItemClick() {
-        if (layoutSearch.getVisibility() == View.GONE) {
-            autoCompleteTextView.setText("");
-            layoutSearch.setVisibility(View.VISIBLE);
-            layoutSearch.setAnimation(AnimationUtils.makeInAnimation(getContext(), true));
-        } else {
-            closeSearchView();
-        }
-    }
-
-    @OnClick(R.id.item_settings)
-    void onSettingsClick() {
-        ((MainActivity) getActivity()).replace( new SettingsFragment());
-    }
-
-    @OnClick(R.id.item_statistics)
-    void onStatisticsClick() {
-        ((MainActivity) getActivity()).replace(new FragmentStatistics());
-    }
-
-    @OnClick(R.id.item_exams)
-    void onExamsClick() {
-        ((MainActivity) getActivity()).replace(new FragmentTests());
-    }
-
-
     private void closeItemBeforeMoveToAnother() {
         ExpandableCard expandingFragment = ExpandablePagerFactory.getCurrentFragment(viewPager);
         if (expandingFragment != null && expandingFragment.isOpened()) {
@@ -250,32 +252,8 @@ public class BookShelfFragment extends Fragment
         }
     }
 
-    private TextWatcher getSearchInputTextWatcher() {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                try {
-                    if (autocompeteAdapter != null && autoCompleteTextView != null && autoCompleteTextView.getLayoutParams() != null) {
-                        autocompeteAdapter.notifyDataSetChanged();
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        };
-    }
-
-    public static BookShelfFragment newInstance(Context context){
-        BookShelfFragment fragment = new BookShelfFragment();
+    public static BookshelfFragment newInstance(Context context){
+        BookshelfFragment fragment = new BookshelfFragment();
 
         BookshelfPresenter presenter = new BookshelfPresenter(fragment);
         presenter.setBookshelfModel(new BookshelfModel(context));

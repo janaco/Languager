@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,21 +35,14 @@ public class FragmentBottom extends Fragment {
     NumberProgressBar progressBar;
     @Bind(R.id.item_languages)
     TextView itemLanguages;
-    @Bind(R.id.layout_base)
-    LinearLayout layoutBase;
-    @Bind(R.id.layout_rename)
-    LinearLayout layoutRemane;
 
-    private int position;
     private Book book;
     private BookItemListener bookItemListener;
-    private RenameModeCallback renameModeCallback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         book = getArguments().getParcelable("book");
-        position = getArguments().getInt("position");
     }
 
     @Nullable
@@ -81,49 +74,16 @@ public class FragmentBottom extends Fragment {
 
     }
 
-    @OnClick(R.id.item_rename)
-    void onRenameItemClick() {
-        renameModeCallback.onRenameModeEnabled();
-    }
-
     @OnClick(R.id.item_read)
     void onReadItemClick() {
-        Log.d("LANGUAGER_", "READ: " + book.getPath());
         bookItemListener.read(book);
-    }
-
-    @OnClick(R.id.item_cancel)
-    void onCancelRenameModeClick() {
-        renameModeCallback.onRenameModeCanceled();
-    }
-
-    @OnClick(R.id.item_save)
-    void onSaveChangesClick() {
-
-        renameModeCallback.onBookRenamed(book, position);
     }
 
     public void setBookItemListener(BookItemListener bookItemListener) {
         this.bookItemListener = bookItemListener;
     }
 
-    public void setRenameModeEnabled(boolean enable) {
-
-        if (enable) {
-            layoutBase.setVisibility(View.GONE);
-            layoutRemane.setVisibility(View.VISIBLE);
-        } else {
-            layoutBase.setVisibility(View.VISIBLE);
-            layoutRemane.setVisibility(View.GONE);
-        }
-
-    }
-
-    public void setRenameModeCallback(RenameModeCallback renameModeCallback) {
-        this.renameModeCallback = renameModeCallback;
-    }
-
-    public static FragmentBottom newInstance(Book book, BookItemListener listener, RenameModeCallback renameModeCallback, int position) {
+    public static FragmentBottom newInstance(Book book, BookItemListener listener, int position) {
         Bundle args = new Bundle();
         args.putParcelable("book", book);
         args.putInt("position", position);
@@ -131,7 +91,6 @@ public class FragmentBottom extends Fragment {
         FragmentBottom fragment = new FragmentBottom();
         fragment.setArguments(args);
         fragment.setBookItemListener(listener);
-        fragment.setRenameModeCallback(renameModeCallback);
 
         return fragment;
     }

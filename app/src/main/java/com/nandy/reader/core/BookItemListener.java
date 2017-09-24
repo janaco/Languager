@@ -8,7 +8,5 @@ import com.nandy.reader.model.Book;
 
 public interface BookItemListener {
 
-    void rename(Book book, int position);
-
     void read(Book book);
 }

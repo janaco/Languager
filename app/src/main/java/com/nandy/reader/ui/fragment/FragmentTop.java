@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,8 +29,6 @@ import butterknife.OnClick;
 
 public class FragmentTop extends Fragment {
 
-    @Bind(R.id.item_cover)
-    LinearLayout layoutCover;
     @Bind(R.id.item_name)
     EditText itemName;
     @Bind(R.id.item_format)
@@ -50,7 +48,6 @@ public class FragmentTop extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top, container, false);
         ButterKnife.bind(this, view);
-//        layoutCover.setBackgroundResource(getCover());
         itemName.setText(book.getName());
         itemExtention.setText(book.getFileType().name());
         return view;
@@ -61,31 +58,8 @@ public class FragmentTop extends Fragment {
         listener.onExpandableItemClick();
     }
 
-    private int getCover() {
-        int[] covers = {R.drawable.cover_1, R.drawable.cover_3, R.drawable.cover_4, R.drawable.cover_6, R.drawable.cover_7, R.drawable.cover_8, R.drawable.cover_9, R.drawable.cover_10};
-        int index = new Random().nextInt(covers.length);
-        return index == covers.length ? covers[0] : covers[index];
-    }
-
     public void setListener(OnExpandableItemClickListener listener) {
         this.listener = listener;
-    }
-
-    public void setRenameModeEnabled(boolean enable) {
-        itemName.setEnabled(enable);
-        if (enable) {
-            itemName.setSelection(itemName.getText().length());
-            itemName.requestFocus();
-            NavigationManager.showKeyboard(getContext());
-        }
-    }
-
-    public String getNameFromInput() {
-        return itemName.getText().toString();
-    }
-
-    public void setNameError() {
-        itemName.setError(getString(R.string.enter_correct_name));
     }
 
     public static FragmentTop newInstance(Book book, OnExpandableItemClickListener listener) {

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.softes.cardviewer.ExpandablePagerAdapter;
 import com.nandy.reader.core.BookItemListener;
-import com.nandy.reader.fragment.BookExpandingFragment;
+import com.nandy.reader.ui.fragment.BookExpandingFragment;
 import com.nandy.reader.model.Book;
 
 import java.util.ArrayList;

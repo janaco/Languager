@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.nandy.reader.Navigable;
 import com.nandy.reader.R;
-import com.nandy.reader.fragment.BookShelfFragment;
+import com.nandy.reader.ui.fragment.BookshelfFragment;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.utils.ReaderPrefs;
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements Navigable {
         requestPermissions();
 
         Realm.init(this);
-        replace(BookShelfFragment.newInstance(this));
+        replace(BookshelfFragment.newInstance(this));
 
     }
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements Navigable {
 
         switch (requestCode) {
             case 1:
-                NavigationManager.replaceFragment(this, new BookShelfFragment());
+                NavigationManager.replaceFragment(this, new BookshelfFragment());
                 break;
         }
     }
