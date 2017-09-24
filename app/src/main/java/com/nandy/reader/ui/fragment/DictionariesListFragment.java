@@ -1,5 +1,6 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,9 @@ import com.nandy.reader.emums.Status;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.word.Word;
 import com.nandy.reader.model.word.WordInfo;
+import com.nandy.reader.mvp.contract.DictionaryListContract;
+import com.nandy.reader.mvp.model.DictionaryListModel;
+import com.nandy.reader.mvp.presenter.DictionaryListPresenter;
 import com.nandy.reader.view.Fragment;
 
 import java.util.ArrayList;
@@ -32,7 +36,7 @@ import io.realm.Sort;
  * Created by yana on 21.05.17.
  */
 
-public class DictionariesFragment extends Fragment implements DictionariesListAdapter.OnItemClickListener {
+public class DictionariesListFragment extends Fragment implements DictionariesListAdapter.OnItemClickListener, DictionaryListContract.View {
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -41,9 +45,8 @@ public class DictionariesFragment extends Fragment implements DictionariesListAd
     @Bind(R.id.alert)
     TextView viewAlert;
 
-
-
     private DictionariesListAdapter adapter;
+    private DictionaryListContract.Presenter presenter;
 
     @Nullable
     @Override
@@ -51,51 +54,39 @@ public class DictionariesFragment extends Fragment implements DictionariesListAd
         View view = inflater.inflate(R.layout.fragment_dictionaries_list, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        adapter = new DictionariesListAdapter();
+        adapter.setOnListItemClickListener(this);
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        presenter.start();
+    }
 
-        Realm.init(getContext());
-        Realm realm = Realm.getDefaultInstance();
-        RealmQuery<WordInfo> query = realm.where(WordInfo.class);
-        RealmResults<WordInfo> results =
-                query.distinct("originLanguage", "translationLanguage")
-                        .sort("originLanguage", Sort.ASCENDING, "translationLanguage", Sort.ASCENDING);
+    @Override
+    public void addDictionary(DictionariesListAdapter.Item item) {
+        adapter.add(item);
+    }
 
-        List<DictionariesListAdapter.Item> items = new ArrayList<>();
-        for (WordInfo info : results) {
+    @Override
+    public void onDictionaryListEmpty() {
+        viewEmty.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        viewAlert.setText(R.string.no_items_yet);
+    }
 
-            int wordsCount = (int) Realm.getDefaultInstance()
-                    .where(Word.class)
-                    .equalTo("info.originLanguage", info.getOriginLanguage())
-                    .equalTo("info.translationLanguage", info.getTranslationLanguage())
-                    .count();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.destroy();
+    }
 
-            int unknownWordsCount = (int) Realm.getDefaultInstance()
-                    .where(Word.class)
-                    .equalTo("info.originLanguage", info.getOriginLanguage())
-                    .equalTo("info.translationLanguage", info.getTranslationLanguage())
-                    .equalTo("info.status", Status.UNKNOWN.name())
-                    .count();
-
-            items.add(new DictionariesListAdapter.Item(info.getOriginLanguage(), info.getTranslationLanguage(), wordsCount, unknownWordsCount));
-        }
-
-        if (items.size() == 0) {
-            viewEmty.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-            viewAlert.setText(R.string.no_items_yet);
-            return;
-        }
-
-        adapter = new DictionariesListAdapter(items);
-        adapter.setOnListItemClickListener(this);
-        recyclerView.setAdapter(adapter);
-
-
+    @Override
+    public void setPresenter(DictionaryListContract.Presenter presenter) {
+this.presenter = presenter;
     }
 
     @Override
@@ -123,10 +114,14 @@ public class DictionariesFragment extends Fragment implements DictionariesListAd
         getActivity().onBackPressed();
     }
 
-    void onCleanAllClick() {
-//        DictionaryTable.clean(getContext());
-//        Map<String, ArrayList<Word>> dictionaries = DictionaryTable.getDictionaries(getContext());
-//        adapter = new DictionariesPagerAdapter(getActivity().getSupportFragmentManager(), dictionaries);
-//        viewPager.setAdapter(adapter);
+    public static DictionariesListFragment newInstance(Context context){
+        DictionariesListFragment fragment = new DictionariesListFragment();
+
+        DictionaryListPresenter presenter =new DictionaryListPresenter(fragment);
+        presenter.setDictionaryListModel(new DictionaryListModel(context));
+
+        fragment.setPresenter(presenter);
+
+        return fragment;
     }
 }

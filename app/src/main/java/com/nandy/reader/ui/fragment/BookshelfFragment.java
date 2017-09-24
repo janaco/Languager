@@ -8,8 +8,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +23,6 @@ import android.widget.TextView;
 import com.nandy.reader.SimpleOnPageChangeListener;
 import com.nandy.reader.SimpleOnTextChangedListener;
 import com.nandy.reader.activity.MainActivity;
-import com.nandy.reader.fragment.DictionariesFragment;
 import com.nandy.reader.fragment.FragmentStatistics;
 import com.nandy.reader.fragment.FragmentTests;
 import com.nandy.reader.fragment.SettingsFragment;
@@ -39,7 +36,6 @@ import com.nandy.reader.R;
 import com.nandy.reader.adapter.AutocompleteAdapter;
 import com.nandy.reader.adapter.BooksAdapter;
 import com.nandy.reader.core.BookItemListener;
-import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.view.Fragment;
 
@@ -142,7 +138,7 @@ public class BookshelfFragment extends Fragment
 
     @OnClick(R.id.item_dictionary)
     void onDictionaryButtonClick() {
-        ((MainActivity) getActivity()).replace( new DictionariesFragment());
+        ((MainActivity) getActivity()).replace( DictionariesListFragment.newInstance(getContext()));
     }
 
     @OnClick(R.id.item_open_search)

@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,13 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
+import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.core.DialogListener;
 import com.nandy.reader.core.OnLanguageSelectedListener;
 import com.nandy.reader.dialog.ChooseLanguageDialog;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.translator.yandex.Language;
-import com.nandy.reader.ui.fragment.ViewerFragment;
 import com.nandy.reader.view.Fragment;
 
 import java.util.Locale;
@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * Created by yana on 20.01.17.
  */
 
-public class BookSetupFragment extends Fragment implements DialogListener {
+public class ChooseLanguageFragment extends Fragment implements DialogListener {
 
     @Bind(R.id.btn_translate_from)
     TextView viewTranslateFrom;
@@ -48,16 +48,6 @@ public class BookSetupFragment extends Fragment implements DialogListener {
 
     private Book book;
 
-    public static BookSetupFragment create(Book book) {
-
-        BookSetupFragment fragment = new BookSetupFragment();
-
-        Bundle arguments = new Bundle();
-        arguments.putParcelable("book", book);
-
-        fragment.setArguments(arguments);
-        return fragment;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,25 +92,19 @@ public class BookSetupFragment extends Fragment implements DialogListener {
 
     @OnClick(R.id.btn_translate_from)
     void chooseBookPrimaryLanguage() {
-        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
-            @Override
-            public void onLanguageSelected(Language language) {
-                languagePrimary = language;
-                String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
-                viewTranslateFrom.setText(displayLanguage);
-            }
+        ChooseLanguageDialog.show(getActivity(), this, language -> {
+            languagePrimary = language;
+            String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
+            viewTranslateFrom.setText(displayLanguage);
         });
     }
 
     @OnClick(R.id.btn_translate_to)
     void chooseBookTranslationLanguage() {
-        ChooseLanguageDialog.show(getActivity(), this, new OnLanguageSelectedListener() {
-            @Override
-            public void onLanguageSelected(Language language) {
-                languageTranslation = language;
-                String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
-                viewTranslateTo.setText(displayLanguage);
-            }
+        ChooseLanguageDialog.show(getActivity(), this, language -> {
+            languageTranslation = language;
+            String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
+            viewTranslateTo.setText(displayLanguage);
         });
     }
 
@@ -128,10 +112,8 @@ public class BookSetupFragment extends Fragment implements DialogListener {
     void read() {
         book.setOriginLanguage(languagePrimary);
         book.setTranslationLanguage(languageTranslation);
-        FragmentActivity activity = getActivity();
 
-        NavigationManager.removeFragment(activity, this);
-        NavigationManager.addFragment(activity, ViewerFragment.getInstance(getContext(), book));
+        ((MainActivity) getActivity()).replace(ViewerFragment.getInstance(getContext(), book));
     }
 
 

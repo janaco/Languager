@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.nandy.reader.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,20 +20,22 @@ import java.util.Locale;
 
 public class DictionariesListAdapter extends RecyclerView.Adapter<DictionariesListAdapter.ViewHolder> {
 
-    private List<Item> list;
+    private final List<Item> list = new ArrayList<>();
     private OnItemClickListener onListItemClickListener;
 
-    public DictionariesListAdapter(List<Item> list) {
-        this.list = list;
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dictionary, null));
     }
 
+    public void add(Item item){
+        list.add(item);
+        notifyDataSetChanged();
+    }
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
         final Item item = list.get(position);
         String originLanguage = new Locale(item.langOrigin).getDisplayLanguage();
@@ -47,19 +50,9 @@ public class DictionariesListAdapter extends RecyclerView.Adapter<DictionariesLi
             holder.viewInfo.setText(item.unknownWordsCount + " words to learn");
         }
 
-        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onListItemClickListener.onListItemClick(item, position);
-            }
-        });
+        holder.mainLayout.setOnClickListener(v -> onListItemClickListener.onListItemClick(item, position));
 
-        holder.btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onListItemClickListener.onItemMenuClick(item, position);
-            }
-        });
+        holder.btnMenu.setOnClickListener(v -> onListItemClickListener.onItemMenuClick(item, position));
 
 
     }

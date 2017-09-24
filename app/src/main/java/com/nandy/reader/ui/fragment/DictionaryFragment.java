@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nandy.reader.fragment.WordDetailsFragment;
 import com.softes.categorizedlistview.CategorizedListView;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.BaseDictionaryAdapter;
