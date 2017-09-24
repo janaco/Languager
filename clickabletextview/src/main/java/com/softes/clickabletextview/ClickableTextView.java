@@ -46,8 +46,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
     private ForegroundColorSpan foregroundColorSpan;
     private CharacterStyle characterStyle;
 
-    private String highlightText;
-
     private CharSequence content;
 
     private boolean measuring = false;
@@ -69,7 +67,7 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
 
         this.charSequence = text;
         bufferType = type;
-        setHighlightColor(Color.TRANSPARENT);
+        setHighlightColor(ContextCompat.getColor(getContext(), R.color.zinnwaldite));
         setMovementMethod(LinkMovementMethod.getInstance());
         setText();
 
@@ -78,7 +76,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
 
     private void setText() {
         spannableString = new SpannableString(charSequence);
-//        setHighLightSpan(spannableString);
         splitText();
 
         super.setText(spannableString, bufferType);
@@ -92,25 +89,7 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
     }
 
 
-    private void setHighLightSpan(SpannableString spannableString) {
-        if (android.text.TextUtils.isEmpty(highlightText)) {
-            return;
-        }
-        int hIndex = charSequence.toString().indexOf(highlightText);
-        while (hIndex != -1) {
-            spannableString.setSpan(
-                    new ForegroundColorSpan(
-                            ContextCompat.getColor(getContext(), R.color.pine_green)),
-                    hIndex, hIndex + highlightText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(
-                    new StyleSpan(Typeface.BOLD),
-                    hIndex, hIndex + highlightText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            hIndex += highlightText.length();
-            hIndex = charSequence.toString().indexOf(highlightText, hIndex);
-        }
-    }
-
-    private void setSelectedSpan(int indexStart, int indexEnd) {
+    public void setSelectedSpan(int indexStart, int indexEnd) {
         if (foregroundColorSpan == null || characterStyle == null) {
             foregroundColorSpan = new ForegroundColorSpan(
                     ContextCompat.getColor(getContext(), R.color.pine_green));
@@ -136,7 +115,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
             @Override
             public void onClick(View widget) {
 
-                Log.d("TEXT_CLICK", "onClick");
                 TextView tv = (TextView) widget;
                 int indexStart = tv.getSelectionStart();
                 int indexEnd = tv.getSelectionEnd();
@@ -146,7 +124,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
                     String word = new StringBuilder( tv.getText()).substring(indexStart, indexEnd);
 //                    setSelectedSpan(indexStart, indexEnd);
 
-                    Log.d("TEXT_CLICK", "word: " + word);
                     if (onWordClickListener != null) {
 
                         TextView parentTextView = (TextView) widget;
@@ -200,10 +177,7 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
                             x = parentTextViewRect.left;
                         }
 
-
-                        Log.d("TEXT_CLICK", "location: " + x + "x" + y);
-
-                        onWordClickListener.onClick(word, x, y);
+                        onWordClickListener.onClick(word, x, y, indexStart, indexEnd);
                     }
                 } catch (StringIndexOutOfBoundsException e) {
                     e.printStackTrace();
@@ -221,17 +195,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
         this.onWordClickListener = listener;
     }
 
-    public void setHighLightText(String text) {
-        highlightText = text;
-    }
-
-
-    private Typeface mTypeface = null;
-    private float mTextSize = 0f;
-    private float mTextScaleX = 0f;
-    private boolean mFakeBold = false;
-    private int mWidth = 0;
-
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -244,7 +207,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override
@@ -259,6 +221,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
 
 
     public interface OnWordClickListener {
-        void onClick(String word, int x, int y);
+        void onClick(String word, int x, int y, int start, int end);
     }
 }

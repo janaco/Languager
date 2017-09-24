@@ -114,7 +114,7 @@ public class PageFragment extends Fragment
     }
 
     @Override
-    public void onClick(final String word, int x, int y) {
+    public void onClick(final String word, int x, int y, int start, int end) {
         TranslationDialog translationDialog = new TranslationDialog(getContext(), new int[]{x, y});
 
         TranslationsPresenter presenter = new TranslationsPresenter(translationDialog);
