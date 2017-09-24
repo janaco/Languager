@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,15 +92,8 @@ this.presenter = presenter;
 
     @Override
     public void onListItemClick(DictionariesListAdapter.Item item, int position) {
-        DictionaryFragment fragment = new DictionaryFragment();
 
-        Bundle args = new Bundle();
-        args.putString("primary", item.langOrigin);
-        args.putString("translation", item.langTranslation);
-
-        fragment.setArguments(args);
-
-        NavigationManager.addFragment(getActivity(), fragment);
+        NavigationManager.addFragment(getActivity(), DictionaryFragment.newInstance(new Pair<>(item.langOrigin, item.langTranslation)));
 
     }
 

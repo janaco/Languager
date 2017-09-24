@@ -32,24 +32,9 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
         void onItemClick(String key, Word word, int position);
     }
 
-    //    private List<DictionaryItem> list;
-    private List<Word> list = new ArrayList<>();
+    private final List<Word> list = new ArrayList<>();
     private OnItemClickListener onListItemClickListener;
 
-
-    public BaseDictionaryAdapter(List<Word> list) {
-        this.list = new ArrayList<>(list);
-
-        HashMap<String, Integer> map =new HashMap<>();
-        int index = 0;
-        for (Word word: list){
-            String key = word.getText().substring(0, 1);
-            if (!map.containsKey(key)){
-                map.put(key, index);
-            }
-            index++;
-        }
-    }
 
     public void setOnListItemClickListener(OnItemClickListener onListItemClickListener) {
         this.onListItemClickListener = onListItemClickListener;
@@ -61,8 +46,13 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
                 LayoutInflater.from(parent.getContext()).inflate(R.layout.item_general_dictionary, null, false));
     }
 
+    public void addItem(Word word){
+        list.add(word);
+        notifyDataSetChanged();
+    }
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder,  int position) {
 
         final Word word = list.get(position);
 
@@ -81,12 +71,7 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
 
         holder.itemText.setText(text);
 
-        holder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onListItemClickListener.onItemClick(origin, word, position);
-            }
-        });
+        holder.view.setOnClickListener(view -> onListItemClickListener.onItemClick(origin, word, holder.getAdapterPosition()));
 
 
         if (position > 0){
@@ -119,11 +104,6 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
     public void remove(int position){
         list.remove(position);
         notifyItemRemoved(position);
-        notifyDataSetChanged();
-    }
-
-    public void cleanAll(){
-        list.clear();
         notifyDataSetChanged();
     }
 

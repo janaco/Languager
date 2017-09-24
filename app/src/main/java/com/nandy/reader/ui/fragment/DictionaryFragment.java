@@ -3,11 +3,15 @@ package com.nandy.reader.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.nandy.reader.fragment.WordDetailsFragment;
+import com.nandy.reader.mvp.contract.DictionaryContract;
+import com.nandy.reader.mvp.model.DictionaryModel;
+import com.nandy.reader.mvp.presenter.DictionaryPresenter;
 import com.softes.categorizedlistview.CategorizedListView;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.BaseDictionaryAdapter;
@@ -29,23 +33,15 @@ import io.realm.RealmResults;
  * Created by yana on 21.05.17.
  */
 
-public class DictionaryFragment extends Fragment implements BaseDictionaryAdapter.OnItemClickListener, DictionaryItemListener {
+public class DictionaryFragment extends Fragment
+        implements BaseDictionaryAdapter.OnItemClickListener, DictionaryItemListener,
+        DictionaryContract.View{
 
     @Bind(R.id.recycler_view)
     CategorizedListView recyclerView;
 
     private BaseDictionaryAdapter adapter;
-    private List<Word> list;
-
-    private String primaryLang;
-    private String translationLang;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        primaryLang = getArguments().getString("primary");
-        translationLang = getArguments().getString("translation");
-    }
+    private DictionaryContract.Presenter presenter;
 
     @Nullable
     @Override
@@ -54,24 +50,18 @@ public class DictionaryFragment extends Fragment implements BaseDictionaryAdapte
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        adapter = new BaseDictionaryAdapter();
+        adapter.setOnListItemClickListener(this);
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        Realm realm = Realm.getDefaultInstance();
-        RealmQuery<Word> query = realm.where(Word.class)
-                .equalTo("info.originLanguage", primaryLang)
-                .equalTo("info.translationLanguage", translationLang);
-        RealmResults<Word> results = query.findAllSortedAsync("original");
-        results.load();
 
-        list = results;
-
-        adapter = new BaseDictionaryAdapter(list);
-        adapter.setOnListItemClickListener(this);
-        recyclerView.setAdapter(adapter);
+        super.onViewCreated(view, savedInstanceState);
+        presenter.start();
 
 //        HashSet<String> set = new HashSet<>();
 //        for (Word item : list) {
@@ -89,6 +79,11 @@ public class DictionaryFragment extends Fragment implements BaseDictionaryAdapte
     }
 
     @Override
+    public void setPresenter(DictionaryContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
     public void onItemClick(String key, Word word, int position) {
         NavigationManager.addFragment(getActivity(), WordDetailsFragment.getInstance(word, position, this));
     }
@@ -98,13 +93,20 @@ public class DictionaryFragment extends Fragment implements BaseDictionaryAdapte
         adapter.remove(position);
     }
 
-    public static DictionaryFragment getInstance(ArrayList<Word> list) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("items", list);
+    public static DictionaryFragment newInstance(Pair<String, String> languages) {
 
         DictionaryFragment fragment = new DictionaryFragment();
-        fragment.setArguments(bundle);
+
+        DictionaryPresenter presenter = new DictionaryPresenter(fragment);
+        presenter.setDictionaryModel(new DictionaryModel(languages.first, languages.second));
+
+        fragment.setPresenter( presenter);
 
         return fragment;
+    }
+
+    @Override
+    public void addItem(Word word) {
+
     }
 }
