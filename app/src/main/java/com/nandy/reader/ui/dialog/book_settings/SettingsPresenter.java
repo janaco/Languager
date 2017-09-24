@@ -17,7 +17,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     }
 
     @Override
-    public void start(Context context) {
+    public void start() {
         view.setupSpinners(model.getLanguages(), model.getOriginLanguageSelection(), model.getTranslationLanguageSelection());
     }
 

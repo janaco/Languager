@@ -1,7 +1,6 @@
 package com.nandy.reader.mvp.presenter;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.provider.Settings;
 import android.util.Pair;
 import android.view.Window;
@@ -10,6 +9,7 @@ import android.view.WindowManager;
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.model.word.WordInfo;
 import com.nandy.reader.mvp.contract.MenuContract;
+import com.nandy.reader.mvp.model.MenuModel;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.util.Locale;
@@ -23,24 +23,27 @@ import io.realm.Realm;
 public class MenuPresenter implements MenuContract.Presenter{
 
     private MenuContract.View view;
-    private MenuContract.Model model;
+    private MenuModel menuModel;
 
-    public MenuPresenter(MenuContract.Model model, MenuContract.View view) {
-        this.model = model;
+    public MenuPresenter(MenuContract.View view) {
         this.view = view;
     }
 
+    public void setMenuModel(MenuModel menuModel) {
+        this.menuModel = menuModel;
+    }
+
     @Override
-    public void start(Context context) {
-        view.setLanguages(model.getPrimaryLanguage() + " - " + model.getTranslationLanguage());
+    public void start() {
+        view.setLanguages(menuModel.getPrimaryLanguage() + " - " + menuModel.getTranslationLanguage());
 
-        view.setCurrentPage(String.valueOf(model.getBookmark()));
-        view.setPagesCount(String.valueOf(model.getPagesCount()));
-        view.setCurrentPagesProgress(model.getBookmark());
-        view.setMaxPagesProgress(model.getPagesCount());
+        view.setCurrentPage(String.valueOf(menuModel.getBookmark()));
+        view.setPagesCount(String.valueOf(menuModel.getPagesCount()));
+        view.setCurrentPagesProgress(menuModel.getBookmark());
+        view.setMaxPagesProgress(menuModel.getPagesCount());
 
-        view.setTitle(model.getTitle());
-        view.setAuthor(model.getAuthor());
+        view.setTitle(menuModel.getTitle());
+        view.setAuthor(menuModel.getAuthor());
 
         int itemsCount = getItemsInTheDictionaty();
 
@@ -52,31 +55,21 @@ public class MenuPresenter implements MenuContract.Presenter{
             view.setNoItemsInTheDictionary();
         }
 
-        setBrightnessOnStart(context);
+        view.setBrightnessOnStart(menuModel.getStartBrightness());
     }
 
 
-    private void setBrightnessOnStart(Context context) {
-
-        try {
-            ContentResolver contentResolver = context.getContentResolver();
-            int brightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS);
-            view.setBrightnessOnStart(brightness);
-        } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     private int getItemsInTheDictionaty() {
 
         return (int) Realm.getDefaultInstance().where(WordInfo.class)
-                .equalTo("bookId", model.getBookId()).count();
+                .equalTo("bookId", menuModel.getBookId()).count();
     }
 
     private int getUnknownItemsInTheDictionaty() {
 
         return (int) Realm.getDefaultInstance().where(WordInfo.class)
-                .equalTo("bookId", model.getBookId())
+                .equalTo("bookId", menuModel.getBookId())
                 .equalTo("status", Status.UNKNOWN.name()).count();
     }
 
@@ -92,7 +85,7 @@ public class MenuPresenter implements MenuContract.Presenter{
 
     @Override
     public void onSettingsClick() {
-        view.openSettings(model.getBook());
+        view.openSettings(menuModel.getBook());
     }
 
     @Override
@@ -115,21 +108,21 @@ public class MenuPresenter implements MenuContract.Presenter{
         page += 1;
         view.setCurrentPagesProgress(page);
         view.setCurrentPage(String.valueOf(page));
-        view.setFooterPagesText(page + "/" + model.getPagesCount());
+        view.setFooterPagesText(page + "/" + menuModel.getPagesCount());
     }
 
     @Override
     public void onPagesProgressChanged(int value) {
 
         view.setCurrentPage(String.valueOf(value));
-        model.setBookmark(value);
+        menuModel.setBookmark(value);
     }
 
     @Override
     public void afterPagesProgressChanged(int page) {
         view.setCurrentPagesProgress(page);
         view.setCurrentPage(String.valueOf(page));
-        view.setFooterPagesText(page + "/" + model.getPagesCount());
+        view.setFooterPagesText(page + "/" + menuModel.getPagesCount());
         view.setCurrentItem(page);
     }
 
@@ -142,7 +135,7 @@ public class MenuPresenter implements MenuContract.Presenter{
     public void onBookParsingFinished(int pagesCount) {
         view.setMaxPagesProgress(pagesCount);
         view.setPagesCount(String.valueOf(pagesCount));
-        model.setPagesCount(pagesCount);
+        menuModel.setPagesCount(pagesCount);
     }
 
     @Override

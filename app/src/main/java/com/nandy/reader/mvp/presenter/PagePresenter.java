@@ -1,10 +1,9 @@
 package com.nandy.reader.mvp.presenter;
 
-import android.content.Context;
-
 import com.nandy.reader.model.word.Dictionary;
 import com.nandy.reader.model.word.Word;
 import com.nandy.reader.mvp.contract.PageContract;
+import com.nandy.reader.mvp.model.PageModel;
 import com.nandy.reader.translator.yandex.Translator;
 
 import retrofit2.Call;
@@ -16,17 +15,20 @@ import retrofit2.Response;
 
 public class PagePresenter implements PageContract.Presenter {
 
-    private PageContract.Model model;
+    private PageModel pageModel;
     private PageContract.View view;
 
-    public PagePresenter(PageContract.Model model, PageContract.View view){
-        this.model = model;
+    public PagePresenter(PageContract.View view){
         this.view = view;
     }
 
+    public void setPageModel(PageModel pageModel) {
+        this.pageModel = pageModel;
+    }
+
     @Override
-    public void start(Context context) {
-        view.setContentText(model.getContent());
+    public void start() {
+        view.setContentText(pageModel.getContent());
     }
 
     @Override
@@ -35,20 +37,20 @@ public class PagePresenter implements PageContract.Presenter {
     }
 
     @Override
-    public void translate(Context context, CharSequence text) {
+    public void translate( CharSequence text) {
 
         view.showPopupWindow();
         view.setPopupHeader(text.toString());
-         model.translate(text.toString(), new Translator.Callback<Word>() {
+         pageModel.translate(text.toString(), new Translator.Callback<Word>() {
              @Override
              public void translationSuccess(Word word) {
                  word.setTranslations(word.getTranslations());
                  view.showPopupWindow();
                  view.setTranslation(text.toString(), word.getTranslationsAsString());
-                 model.saveWord(context, word);
+                 pageModel.saveWord( word);
 
                  if (word.hasTranslations()) {
-                     requestDictionaryTranslation(context, word);
+                     requestDictionaryTranslation( word);
                  }
 
              }
@@ -66,15 +68,15 @@ public class PagePresenter implements PageContract.Presenter {
 
     }
 
-    private void requestDictionaryTranslation(Context context, final Word word) {
-        model.requestDictionary(word.getText(), new Translator.Callback<Dictionary>() {
+    private void requestDictionaryTranslation(final Word word) {
+        pageModel.requestDictionary(word.getText(), new Translator.Callback<Dictionary>() {
             @Override
             public void translationSuccess(Dictionary dictionary) {
                 view.showPopupWindow();
                 view.setDictionaryContent(dictionary.getItems());
 
                 word.setDictionary(dictionary);
-                model.saveWord(context, word);
+                pageModel.saveWord( word);
 
             }
 

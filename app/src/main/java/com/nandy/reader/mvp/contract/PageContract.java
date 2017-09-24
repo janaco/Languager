@@ -17,18 +17,6 @@ import java.util.List;
 
 public class PageContract {
 
-    public interface Model{
-
-        String getContent();
-
-        void translate(String text, Translator.Callback<Word> callback);
-
-        void requestDictionary(String text, Translator.Callback<Dictionary> callback);
-
-        void saveWord(Context context, Word word);
-    }
-
-
     public interface View extends BaseView<Presenter>{
 
         void setContentText(String content);
@@ -46,6 +34,6 @@ public class PageContract {
     public interface Presenter extends BasePresenter{
 
 
-        void translate(Context context, CharSequence text);
+        void translate(CharSequence text);
     }
 }

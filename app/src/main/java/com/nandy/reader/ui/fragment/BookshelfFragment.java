@@ -209,7 +209,7 @@ public class BookshelfFragment extends Fragment
 
         }
 
-        ((MainActivity) getActivity()).replace( ViewerFragment.getInstance(book));
+        ((MainActivity) getActivity()).replace( ViewerFragment.getInstance(getContext(), book));
     }
 
     @Override

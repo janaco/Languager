@@ -86,7 +86,7 @@ public class BookSettingsDialog implements SettingsContract.View{
     }
 
     public void show() {
-        presenter.start(context);
+        presenter.start();
         dialog
                 .setLayout(view)
                 .setBackgroundColor(context.getResources().getColor(R.color.white))

@@ -99,7 +99,7 @@ public class BookMenuPanel implements MenuContract.View, DiscreteSeekBar.OnProgr
     @Override
     public void setPresenter(MenuContract.Presenter presenter) {
         this.presenter = presenter;
-        this.presenter.start(window.getContext());
+        this.presenter.start();
     }
 
     @Override

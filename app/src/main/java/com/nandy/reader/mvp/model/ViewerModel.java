@@ -14,49 +14,43 @@ import io.reactivex.Single;
  * Created by yana on 26.08.17.
  */
 
-public class ViewerModel implements ViewerContract.Model {
+public class ViewerModel {
 
     private Book book;
     private Pagination pagination;
+    private Context context;
 
-    ViewerModel(Book book) {
+    public ViewerModel(Context context, Book book) {
+        this.context=context;
         this.book = book;
     }
 
-    @Override
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
 
 
-    @Override
     public String getPath() {
         return book.getPath();
     }
 
-    @Override
     public int getBookmark() {
         return book.getBookmark();
     }
 
-
-    @Override
     public Book getBook() {
         return book;
     }
 
-    @Override
     public void setBookmark(int bookmark) {
         book.setBookmark(bookmark, pagination.getPagesCount());
     }
 
-    @Override
     public String getTitle() {
         return null;
     }
 
-    @Override
-    public Single<Pagination> parseBook(Context context) {
+    public Single<Pagination> parseBook() {
         return new BaseParser().parse(ReaderPrefs.getPreferences(context), book.getPath());
 
     }

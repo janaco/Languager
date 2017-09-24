@@ -131,7 +131,7 @@ public class BookSetupFragment extends Fragment implements DialogListener {
         FragmentActivity activity = getActivity();
 
         NavigationManager.removeFragment(activity, this);
-        NavigationManager.addFragment(activity, ViewerFragment.getInstance(book));
+        NavigationManager.addFragment(activity, ViewerFragment.getInstance(getContext(), book));
     }
 
 

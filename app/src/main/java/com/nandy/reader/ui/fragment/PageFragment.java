@@ -1,5 +1,6 @@
 package com.nandy.reader.ui.fragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -90,7 +91,13 @@ public class PageFragment extends Fragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        presenter.start(getContext());
+        presenter.start();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.destroy();
     }
 
     @Override
@@ -106,7 +113,7 @@ public class PageFragment extends Fragment
 
     @Override
     public void onTranslateOptionSelected(CharSequence text) {
-        presenter.translate(getContext(), text);
+        presenter.translate( text);
     }
 
     @Override
@@ -178,11 +185,13 @@ public class PageFragment extends Fragment
         this.book = book;
     }
 
-    public static PageFragment getInstance(Book book, CharSequence content) {
+    public static PageFragment getInstance(Context context, Book book, CharSequence content) {
         PageFragment fragment = new PageFragment();
         fragment.setBook(book);
-        PageModel pageModel = new PageModel(book.getId(), content, new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage()));
-        fragment.setPresenter(new PagePresenter(pageModel, fragment));
+
+        PagePresenter  presenter = new PagePresenter( fragment);
+        presenter.setPageModel(new PageModel(context, book.getId(), content, new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage())));
+        fragment.setPresenter(presenter);
 
         return fragment;
     }

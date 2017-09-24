@@ -13,29 +13,6 @@ import com.nandy.reader.ui.dialog.book_settings.BookSettingsDialog;
 
 public class MenuContract {
 
-    public interface Model{
-
-        String getPrimaryLanguage();
-
-        String getTranslationLanguage();
-
-        String getTitle();
-
-        String getAuthor();
-
-        int getBookmark();
-
-        void setPagesCount(int pagesCount);
-
-        int getPagesCount();
-
-        String getBookId();
-
-        Book getBook();
-
-        void setBookmark(int bookmark);
-
-    }
     public interface View extends BaseView<Presenter>{
 
         void setLanguages(String languages);

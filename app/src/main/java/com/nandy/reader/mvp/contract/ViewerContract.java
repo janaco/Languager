@@ -17,25 +17,8 @@ import io.reactivex.Single;
 
 public class ViewerContract {
 
-    interface Model{
 
-        void setPagination(Pagination pagination);
-
-        void setBookmark(int bookmark);
-
-        String getTitle();
-
-        Single<Pagination> parseBook(Context context);
-
-        int getBookmark();
-
-        String getPath();
-
-        Book getBook();
-
-    }
-
-    interface View extends BaseView<Presenter>{
+   public interface View extends BaseView<Presenter>{
 
         void startLoadingProgress(String text);
 
@@ -46,7 +29,7 @@ public class ViewerContract {
         void afterParsingFinished(List<CharSequence> pages, int pagesCount, int bookmark);
     }
 
-    interface Presenter extends BasePresenter{
+    public interface Presenter extends BasePresenter{
 
         void onPageSelected(int position);
 

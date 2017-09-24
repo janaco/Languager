@@ -28,7 +28,7 @@ public class TranslationsPresenter implements TranslationsContract.Presenter {
     }
 
     @Override
-    public void start(Context context) {
+    public void start() {
 
     }
 

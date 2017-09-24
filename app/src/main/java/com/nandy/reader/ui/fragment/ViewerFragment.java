@@ -1,5 +1,6 @@
 package com.nandy.reader.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -59,7 +60,9 @@ public class ViewerFragment extends Fragment implements ViewerContract.View {
         ButterKnife.bind(this, view);
 
         menuPanel = new BookMenuPanel(view, getActivity().getWindow());
-        menuPanel.setPresenter(new MenuPresenter(new MenuModel(presenter.getBook()), menuPanel));
+        MenuPresenter menuPresenter = new MenuPresenter( menuPanel);
+        menuPresenter.setMenuModel(new MenuModel(getContext(), presenter.getBook()));
+        menuPanel.setPresenter(menuPresenter);
 
         pagerAdapter = new PagerAdapter(getChildFragmentManager(), presenter.getBook());
         viewPager.setAdapter(pagerAdapter);
@@ -107,7 +110,7 @@ public class ViewerFragment extends Fragment implements ViewerContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        presenter.start(getContext());
+        presenter.start();
     }
 
     @Override
@@ -119,10 +122,13 @@ public class ViewerFragment extends Fragment implements ViewerContract.View {
 
 
 
-    public static ViewerFragment getInstance(Book book) {
+    public static ViewerFragment getInstance(Context context, Book book) {
 
         ViewerFragment fragment = new ViewerFragment();
-        fragment.setPresenter(new ViewerPresenter(new ViewerModel(book), fragment));
+        ViewerPresenter presenter = new ViewerPresenter(fragment);
+        presenter.setViewerModel(new ViewerModel(context, book));
+
+        fragment.setPresenter(presenter);
         return fragment;
     }
 

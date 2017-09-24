@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.nandy.reader.model.Book;
 import com.nandy.reader.mvp.contract.ViewerContract;
+import com.nandy.reader.mvp.model.ViewerModel;
 
 import io.reactivex.disposables.Disposable;
 
@@ -14,18 +15,22 @@ import io.reactivex.disposables.Disposable;
 public class ViewerPresenter implements ViewerContract.Presenter {
 
     private ViewerContract.View view;
-    private ViewerContract.Model model;
+    private ViewerModel model;
 
     private Disposable parserSubscription;
 
-    ViewerPresenter(ViewerContract.Model model, ViewerContract.View view){
-        this.model = model;
+    public ViewerPresenter(ViewerContract.View view){
         this.view = view;
     }
-    @Override
-    public void start(Context context) {
 
-      parserSubscription =   model.parseBook(context)
+    public void setViewerModel(ViewerModel model) {
+        this.model = model;
+    }
+
+    @Override
+    public void start() {
+
+      parserSubscription =   model.parseBook()
                 .doOnSubscribe(disposable -> view.startLoadingProgress(model.getTitle()))
                 .doFinally(() -> view.cancelLoadingProgress())
                 .subscribe(pagination -> {
