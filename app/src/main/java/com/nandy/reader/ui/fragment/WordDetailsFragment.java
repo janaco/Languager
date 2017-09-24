@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,23 +15,23 @@ import com.nandy.reader.adapter.DictionaryAdapter;
 import com.nandy.reader.core.DictionaryItemListener;
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.model.word.Word;
+import com.nandy.reader.mvp.contract.WordContract;
+import com.nandy.reader.mvp.model.WordModel;
+import com.nandy.reader.mvp.presenter.WordPresenter;
 import com.nandy.reader.view.Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Translation, usage examples and any additional information about certain word
  * are displayed on this fragment.
- *
+ * <p>
  * Created by yana on 12.03.17.
  */
 
-public class WordDetailsFragment extends Fragment {
+public class WordDetailsFragment extends Fragment implements WordContract.View {
 
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -42,20 +42,8 @@ public class WordDetailsFragment extends Fragment {
     @Bind(R.id.item_lang)
     TextView itemLanguages;
 
-    private String text;
-    private DictionaryItemListener listener;
-    private int position;
+    private WordContract.Presenter presenter;
 
-    private Word word;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        text = getArguments().getString("word");
-        position = getArguments().getInt("position");
-    }
 
     @Nullable
     @Override
@@ -71,12 +59,13 @@ public class WordDetailsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Realm realm = Realm.getDefaultInstance();
-        RealmQuery<Word> query = realm.where(Word.class).equalTo("original", text);
-        RealmResults<Word> results = query.findAllAsync();
-        results.load();
+        presenter.start();
 
-        word = results.first();
+
+    }
+
+    @Override
+    public void onWordLoaded(Word word) {
         String languages = word.getOriginLanguage() + "-" + word.getTranslationLanguage();
         itemLanguages.setText(languages);
         itemTitle.setText(word.getText());
@@ -90,11 +79,19 @@ public class WordDetailsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void setPresenter(WordContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
     @OnClick(R.id.item_remove)
     void onRemoveClick() {
 
-        word.delete();
-        listener.onDictionaryItemRemoved(position);
+        presenter.removeWord();
+    }
+
+    @Override
+    public void onWordRemoved() {
         getActivity().onBackPressed();
     }
 
@@ -103,19 +100,15 @@ public class WordDetailsFragment extends Fragment {
         getActivity().onBackPressed();
     }
 
-    public void setListener(DictionaryItemListener listener) {
-        this.listener = listener;
-    }
 
-    public static WordDetailsFragment getInstance(Word word, int position, DictionaryItemListener listener) {
+    public static WordDetailsFragment newInstance(String text) {
 
-        Bundle bundle = new Bundle();
-        bundle.putString("word", word.getText());
-        bundle.putInt("position", position);
 
         WordDetailsFragment fragment = new WordDetailsFragment();
-        fragment.setArguments(bundle);
-        fragment.setListener(listener);
+
+        WordPresenter presenter  = new WordPresenter(fragment);
+        presenter.setWordModel(new WordModel(text));
+        fragment.setPresenter(presenter);
 
         return fragment;
     }

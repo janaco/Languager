@@ -25,7 +25,6 @@ import com.nandy.reader.SimpleOnTextChangedListener;
 import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.fragment.FragmentStatistics;
 import com.nandy.reader.fragment.FragmentTests;
-import com.nandy.reader.fragment.SettingsFragment;
 import com.nandy.reader.mvp.contract.BookshelfContract;
 import com.nandy.reader.mvp.model.BookshelfModel;
 import com.nandy.reader.mvp.presenter.BookshelfPresenter;

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nandy.reader.fragment.WordDetailsFragment;
 import com.nandy.reader.mvp.contract.DictionaryContract;
 import com.nandy.reader.mvp.model.DictionaryModel;
 import com.nandy.reader.mvp.presenter.DictionaryPresenter;
@@ -20,14 +19,8 @@ import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.word.Word;
 import com.nandy.reader.view.Fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by yana on 21.05.17.
@@ -85,7 +78,7 @@ public class DictionaryFragment extends Fragment
 
     @Override
     public void onItemClick(String key, Word word, int position) {
-        NavigationManager.addFragment(getActivity(), WordDetailsFragment.getInstance(word, position, this));
+        NavigationManager.addFragment(getActivity(), WordDetailsFragment.newInstance(word.getText()));
     }
 
     @Override
