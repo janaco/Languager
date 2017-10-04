@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.dialog.floating_translation_dialog.adapter;
+package com.nandy.reader.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;

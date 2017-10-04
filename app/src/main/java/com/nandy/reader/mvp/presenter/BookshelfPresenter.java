@@ -11,7 +11,6 @@ import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by yana on 24.09.17.
@@ -40,12 +39,16 @@ public class BookshelfPresenter implements BookshelfContract.Presenter {
         if (booksLadingSubscription != null && !booksLadingSubscription.isDisposed()) {
             booksLadingSubscription.dispose();
         }
+
+        if (searchBookSubscription != null && !searchBookSubscription.isDisposed()){
+            searchBookSubscription.dispose();
+        }
     }
 
     @Override
     public void loadBooks() {
 
-        bookshelfModel.loadBooks().subscribeOn(Schedulers.io())
+        bookshelfModel.loadBooks()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Book>() {
                     @Override
@@ -55,7 +58,7 @@ public class BookshelfPresenter implements BookshelfContract.Presenter {
 
                     @Override
                     public void onNext(Book book) {
-                        view.onBookLoaded(book);
+                        view.addBook(book);
                     }
 
                     @Override
@@ -88,7 +91,7 @@ public class BookshelfPresenter implements BookshelfContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.onBookNotFound(e.getMessage());
+                        view.onEmptySearchResults(e.getMessage());
                     }
                 });
     }

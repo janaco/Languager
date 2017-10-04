@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class DictionaryFragment extends Fragment
         implements BaseDictionaryAdapter.OnItemClickListener, DictionaryItemListener,
-        DictionaryContract.View{
+        DictionaryContract.View {
 
     @Bind(R.id.recycler_view)
     CategorizedListView recyclerView;
@@ -56,6 +56,7 @@ public class DictionaryFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         presenter.start();
 
+        //Index bar
 //        HashSet<String> set = new HashSet<>();
 //        for (Word item : list) {
 //            String word = item.getText().substring(0, 1).toUpperCase();
@@ -82,6 +83,11 @@ public class DictionaryFragment extends Fragment
     }
 
     @Override
+    public void addItem(Word word) {
+        adapter.addItem(word);
+    }
+
+    @Override
     public void onDictionaryItemRemoved(int position) {
         adapter.remove(position);
     }
@@ -93,13 +99,10 @@ public class DictionaryFragment extends Fragment
         DictionaryPresenter presenter = new DictionaryPresenter(fragment);
         presenter.setDictionaryModel(new DictionaryModel(languages.first, languages.second));
 
-        fragment.setPresenter( presenter);
+        fragment.setPresenter(presenter);
 
         return fragment;
     }
 
-    @Override
-    public void addItem(Word word) {
 
-    }
 }

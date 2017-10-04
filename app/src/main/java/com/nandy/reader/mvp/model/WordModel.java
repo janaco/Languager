@@ -1,5 +1,7 @@
 package com.nandy.reader.mvp.model;
 
+import android.util.Log;
+
 import com.nandy.reader.model.word.Word;
 
 import io.reactivex.Single;
@@ -28,15 +30,20 @@ public class WordModel {
 
             Realm realm = Realm.getDefaultInstance();
             RealmQuery<Word> query = realm.where(Word.class).equalTo("original", text);
-            RealmResults<Word> results = query.findAllAsync();
+            RealmResults<Word> results = query.findAll();
             results.load();
 
-            word= results.first();
-            e.onSuccess(word);
+            Log.d("WORD_", "isLoaded: " + results.isLoaded());
+            if (!results.isLoaded()){
+                e.onError(new Throwable());
+            }
+
+                word = results.first();
+                e.onSuccess(word);
         });
     }
 
-    public Single<Boolean> remove(){
+    public Single<Boolean> remove() {
 
         return Single.create(e -> {
             word.delete();

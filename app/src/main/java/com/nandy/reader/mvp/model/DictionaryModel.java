@@ -21,19 +21,21 @@ public class DictionaryModel {
         this.translationLang = translationLang;
     }
 
-    public Observable<Word> loadItems(){
+    public Observable<Word> loadItems() {
 
         return Observable.create(e -> {
 
             Realm realm = Realm.getDefaultInstance();
             RealmQuery<Word> query = realm.where(Word.class)
-                    .equalTo("info.originLanguage", primaryLang)
-                    .equalTo("info.translationLanguage", translationLang);
-            RealmResults<Word> results = query.findAllSortedAsync("original");
+                    .equalTo(Word.FIELD_LANGUAGE_ORIGIN, primaryLang)
+                    .equalTo(Word.FIELD_LANGUAGE_TRANSLATION, translationLang);
+            RealmResults<Word> results = query.findAllSortedAsync(Word.FIELD_ORIGINAL);
             results.load();
 
-            for (Word word: results){
-                e.onNext(word);
+            if (results.isLoaded()) {
+                for (Word word : results) {
+                    e.onNext(word);
+                }
             }
             e.onComplete();
 

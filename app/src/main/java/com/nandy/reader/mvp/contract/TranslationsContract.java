@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.dialog.floating_translation_dialog;
+package com.nandy.reader.mvp.contract;
 
 import com.nandy.reader.mvp.BasePresenter;
 import com.nandy.reader.mvp.BaseView;

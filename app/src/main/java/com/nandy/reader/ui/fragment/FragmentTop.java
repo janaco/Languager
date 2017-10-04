@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nandy.reader.mvp.BasePresenter;
+import com.nandy.reader.mvp.contract.BookCoverContract;
+import com.nandy.reader.mvp.presenter.BookCoverPresenter;
 import com.softes.cardviewer.OnExpandableItemClickListener;
 import com.nandy.reader.R;
 import com.nandy.reader.manager.NavigationManager;
@@ -27,30 +30,43 @@ import butterknife.OnClick;
  * Created by yana on 19.03.17.
  */
 
-public class FragmentTop extends Fragment {
+public class FragmentTop extends Fragment implements BookCoverContract.View{
 
     @Bind(R.id.item_name)
     EditText itemName;
     @Bind(R.id.item_format)
     TextView itemExtention;
 
-    private Book book;
     private OnExpandableItemClickListener listener;
+    private BasePresenter presenter;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        book = getArguments().getParcelable("book");
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_top, container, false);
+        return inflater.inflate(R.layout.fragment_top, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        itemName.setText(book.getName());
-        itemExtention.setText(book.getFileType().name());
-        return view;
+        presenter.start();
+    }
+
+    @Override
+    public void setPresenter(BasePresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        itemName.setText(title);
+    }
+
+    @Override
+    public void setExtention(String extention) {
+        itemExtention.setText(extention);
     }
 
     @OnClick(R.id.item_cover)
@@ -63,11 +79,13 @@ public class FragmentTop extends Fragment {
     }
 
     public static FragmentTop newInstance(Book book, OnExpandableItemClickListener listener) {
-        Bundle args = new Bundle();
-        args.putParcelable("book", book);
 
         FragmentTop fragment = new FragmentTop();
-        fragment.setArguments(args);
+
+        BookCoverPresenter presenter = new BookCoverPresenter(fragment);
+        presenter.setBook(book);
+
+        fragment.setPresenter(presenter);
         fragment.setListener(listener);
         return fragment;
     }

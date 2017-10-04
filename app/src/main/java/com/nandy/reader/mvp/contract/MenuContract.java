@@ -5,7 +5,7 @@ import android.view.Window;
 import com.nandy.reader.mvp.BasePresenter;
 import com.nandy.reader.mvp.BaseView;
 import com.nandy.reader.model.Book;
-import com.nandy.reader.ui.dialog.book_settings.BookSettingsDialog;
+import com.nandy.reader.ui.dialog.BookSettingsDialog;
 
 /**
  * Created by yana on 20.08.17.

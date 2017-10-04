@@ -1,8 +1,9 @@
-package com.nandy.reader.ui.dialog.book_settings;
+package com.nandy.reader.mvp.model;
 
 import android.util.Pair;
 
 import com.nandy.reader.model.Book;
+import com.nandy.reader.mvp.contract.SettingsContract;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Locale;
  * Created by yana on 27.08.17.
  */
 
-public class SettingsModel implements SettingsContract.Model {
+public class SettingsModel  {
 
     private Book book;
     private Language[] languages = Language.values();
@@ -25,7 +26,6 @@ public class SettingsModel implements SettingsContract.Model {
         this.book = book;
     }
 
-    @Override
     public List<String> getLanguages() {
 
 
@@ -47,29 +47,24 @@ public class SettingsModel implements SettingsContract.Model {
         return values;
     }
 
-    @Override
     public int getOriginLanguageSelection() {
         return positionOrigin;
     }
 
-    @Override
     public int getTranslationLanguageSelection() {
         return positionTranslation;
     }
 
-    @Override
     public void setOriginLanguage(int selection) {
         positionOrigin = selection;
         book.setOriginLanguage(languages[selection]);
     }
 
-    @Override
     public void setTranslationLanguage(int selection) {
         positionTranslation = selection;
         book.setTranslationLanguage(languages[selection]);
     }
 
-    @Override
     public Pair<Language, Language> getLanguagePair() {
         return new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage());
     }

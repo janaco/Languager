@@ -106,7 +106,7 @@ public class WordDetailsFragment extends Fragment implements WordContract.View {
 
         WordDetailsFragment fragment = new WordDetailsFragment();
 
-        WordPresenter presenter  = new WordPresenter(fragment);
+        WordPresenter presenter = new WordPresenter(fragment);
         presenter.setWordModel(new WordModel(text));
         fragment.setPresenter(presenter);
 

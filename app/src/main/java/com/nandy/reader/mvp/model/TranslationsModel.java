@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.dialog.floating_translation_dialog;
+package com.nandy.reader.mvp.model;
 
 import android.content.Context;
 import android.util.Pair;
@@ -14,13 +14,11 @@ import com.nandy.reader.translator.yandex.Translator;
 
 public class TranslationsModel {
 
-    private Context context;
     private String bookId;
     private Pair<Language, Language> languages;
 
-    public TranslationsModel(Context context, String bookId, Pair<Language, Language> languages){
+    public TranslationsModel(String bookId, Pair<Language, Language> languages){
         this.bookId = bookId;
-        this.context = context;
         this.languages = languages;
     }
 
@@ -36,6 +34,6 @@ public class TranslationsModel {
         word.setOriginLanguage(languages.first);
         word.setTranslationLanguage(languages.second);
         word.setBookId(bookId);
-        word.insert(context);
+        word.insert();
     }
 }

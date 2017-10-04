@@ -1,16 +1,10 @@
 package com.nandy.reader.mvp.model;
 
 import android.content.Context;
-import android.os.Handler;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.view.View;
-import android.widget.TextView;
 
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.BooksAdapter;
 import com.nandy.reader.emums.FileType;
-import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.utils.StorageInfo;
 import com.nandy.reader.utils.StorageUtils;
@@ -22,10 +16,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 /**
@@ -71,12 +62,10 @@ public class BookshelfModel {
     private void loadFromDB(ObservableEmitter<Book> e) {
         //select and display books that are already available in db.
         //it is too long to search for them in file system
-        //(search in file system will be performed but in background mode)
-        Realm realm = Realm.getDefaultInstance();
-        RealmQuery<Book> query = realm.where(Book.class);
-        RealmResults<Book> results = query.findAllSortedAsync("name");
+        //(search in file system will be performed but after previous search results will be displayed)
+        RealmResults<Book> results = Realm.getDefaultInstance().where(Book.class)
+                .findAllSortedAsync(Book.FIELD_NAME);
         results.load();
-
 
         if (results.isLoaded()) {
             for (Book book : results) {
@@ -113,7 +102,7 @@ public class BookshelfModel {
     }
 
 
-    private static void listDir(File directory, ObservableEmitter<Book> emitter) {
+    private void listDir(File directory, ObservableEmitter<Book> emitter) {
 
 
         for (File file : directory.listFiles(getBooksFilter())) {
@@ -128,12 +117,12 @@ public class BookshelfModel {
     }
 
 
-    private static FileFilter getBooksFilter() {
+    private FileFilter getBooksFilter() {
 
         return file -> isBooksFolder(file) || isBook(file);
     }
 
-    private static boolean isBook(File file) {
+    private boolean isBook(File file) {
 
         boolean isTextFile = false;
         String fileName = file.getName().toLowerCase();
@@ -150,7 +139,7 @@ public class BookshelfModel {
         return isTextFile;
     }
 
-    private static boolean isBooksFolder(File file) {
+    private boolean isBooksFolder(File file) {
 
         String path = file.getPath().toLowerCase();
 

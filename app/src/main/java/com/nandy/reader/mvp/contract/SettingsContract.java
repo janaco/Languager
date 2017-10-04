@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.dialog.book_settings;
+package com.nandy.reader.mvp.contract;
 
 import android.util.Pair;
 
@@ -14,29 +14,14 @@ import java.util.List;
 
 public class SettingsContract  {
 
-    interface Model{
-
-        List<String> getLanguages();
-
-        int getOriginLanguageSelection();
-
-        int getTranslationLanguageSelection();
-
-        void setOriginLanguage(int selection);
-
-        void setTranslationLanguage(int selection);
-
-        Pair<Language, Language> getLanguagePair();
-    }
-
-    interface View extends BaseView<Presenter>{
+    public interface View extends BaseView<Presenter>{
 
         void setupSpinners(List<String> values, int originSelection, int translationSelection);
 
         void onLanguageChanged(Pair<Language, Language> languagePair);
     }
 
-    interface Presenter extends BasePresenter{
+    public interface Presenter extends BasePresenter{
 
 
         void onOriginLanguageSelected(int selection);

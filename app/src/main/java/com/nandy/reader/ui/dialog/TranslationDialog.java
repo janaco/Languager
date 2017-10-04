@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.dialog.floating_translation_dialog;
+package com.nandy.reader.ui.dialog;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -19,7 +19,8 @@ import com.github.ybq.android.spinkit.style.RotatingPlane;
 import com.michael.easydialog.EasyDialog;
 import com.nandy.reader.R;
 import com.nandy.reader.model.word.DictionaryItem;
-import com.nandy.reader.ui.dialog.floating_translation_dialog.adapter.FloatingDictionaryAdapter;
+import com.nandy.reader.mvp.contract.TranslationsContract;
+import com.nandy.reader.adapter.FloatingDictionaryAdapter;
 
 import java.util.List;
 

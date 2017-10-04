@@ -2,21 +2,19 @@ package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.nandy.reader.R;
-import com.nandy.reader.core.BookItemListener;
-import com.nandy.reader.core.RenameModeCallback;
+import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.model.Book;
+import com.nandy.reader.mvp.BasePresenter;
+import com.nandy.reader.mvp.contract.BookListItemContract;
+import com.nandy.reader.mvp.presenter.BookListItemPresenter;
 import com.nandy.reader.view.Fragment;
-
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,25 +23,18 @@ import butterknife.OnClick;
 
 /**
  * It is a bottom part of BookExpandingFragment.
- *
+ * <p>
  * Created by yana on 19.03.17.
  */
 
-public class FragmentBottom extends Fragment {
+public class FragmentBottom extends Fragment implements BookListItemContract.View {
 
     @Bind(R.id.item_progress)
     NumberProgressBar progressBar;
     @Bind(R.id.item_languages)
     TextView itemLanguages;
 
-    private Book book;
-    private BookItemListener bookItemListener;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        book = getArguments().getParcelable("book");
-    }
+    private BookListItemContract.Presenter presenter;
 
     @Nullable
     @Override
@@ -56,41 +47,51 @@ public class FragmentBottom extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int bookmark = book.getBookmark();
-        if (bookmark > 0) {
-            progressBar.setMax(book.getPages());
-            progressBar.setProgress(bookmark);
-            progressBar.setVisibility(View.VISIBLE);
-        }
 
-        if (book.hasOriginLanguage() && book.hasTranslationLanguage()) {
-            String origin = new Locale(book.getOriginLanguage().toString()).getDisplayLanguage();
-            String translation = new Locale(book.getTranslationLanguage().toString()).getDisplayLanguage();
+        presenter.start();
+    }
 
-            itemLanguages.setText(origin.concat(" - ").concat(translation));
-        } else {
-            itemLanguages.setText(getString(R.string.you_have_not_read_book));
-        }
+    @Override
+    public void setPresenter(BookListItemContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
 
+    @Override
+    public void setLanguages(String languages) {
+        itemLanguages.setText(languages);
+    }
+
+    @Override
+    public void setLanguageAlert(int resId) {
+        itemLanguages.setText(resId);
+    }
+
+    @Override
+    public void setProgress(int current, int max) {
+        progressBar.setMax(max);
+        progressBar.setProgress(current);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.item_read)
     void onReadItemClick() {
-        bookItemListener.read(book);
+        presenter.onReadBookClick();
+
     }
 
-    public void setBookItemListener(BookItemListener bookItemListener) {
-        this.bookItemListener = bookItemListener;
+    @Override
+    public void openBook(Book book) {
+        ((MainActivity) getActivity()).replace(ViewerFragment.getInstance(getContext(), book));
     }
 
-    public static FragmentBottom newInstance(Book book, BookItemListener listener, int position) {
-        Bundle args = new Bundle();
-        args.putParcelable("book", book);
-        args.putInt("position", position);
+    public static FragmentBottom newInstance(Book book) {
+
 
         FragmentBottom fragment = new FragmentBottom();
-        fragment.setArguments(args);
-        fragment.setBookItemListener(listener);
+
+        BookListItemPresenter presenter = new BookListItemPresenter(fragment);
+        presenter.setBook(book);
+        fragment.setPresenter(presenter);
 
         return fragment;
     }

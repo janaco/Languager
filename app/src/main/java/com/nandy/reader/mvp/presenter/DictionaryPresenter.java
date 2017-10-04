@@ -1,13 +1,10 @@
 package com.nandy.reader.mvp.presenter;
 
-import com.nandy.reader.model.word.Word;
 import com.nandy.reader.mvp.contract.DictionaryContract;
 import com.nandy.reader.mvp.model.DictionaryModel;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by yana on 24.09.17.
@@ -26,7 +23,7 @@ public class DictionaryPresenter implements DictionaryContract.Presenter {
 
     @Override
     public void start() {
-        loadingSubscription = dictionaryModel.loadItems().subscribeOn(Schedulers.io())
+        loadingSubscription = dictionaryModel.loadItems()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(word -> view.addItem(word));
     }

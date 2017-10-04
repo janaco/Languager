@@ -31,7 +31,7 @@ public class WordPresenter implements WordContract.Presenter {
 
     @Override
     public void start() {
-        wordSubscription = wordModel.loadWord().subscribeOn(Schedulers.io())
+        wordSubscription = wordModel.loadWord()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(word -> view.onWordLoaded(word));
     }

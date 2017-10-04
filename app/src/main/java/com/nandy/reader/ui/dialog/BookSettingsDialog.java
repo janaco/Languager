@@ -1,4 +1,4 @@
-package com.nandy.reader.ui.dialog.book_settings;
+package com.nandy.reader.ui.dialog;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,6 +10,7 @@ import android.widget.Spinner;
 
 import com.michael.easydialog.EasyDialog;
 import com.nandy.reader.R;
+import com.nandy.reader.mvp.contract.SettingsContract;
 import com.nandy.reader.translator.yandex.Language;
 import com.nandy.reader.ui.SimpleOnItemSelectedListener;
 

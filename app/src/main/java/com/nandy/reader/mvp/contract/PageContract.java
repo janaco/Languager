@@ -1,15 +1,12 @@
 package com.nandy.reader.mvp.contract;
 
-import android.content.Context;
+import android.util.Pair;
 
+import com.nandy.reader.model.Book;
+import com.nandy.reader.model.word.Word;
 import com.nandy.reader.mvp.BasePresenter;
 import com.nandy.reader.mvp.BaseView;
-import com.nandy.reader.model.word.Dictionary;
-import com.nandy.reader.model.word.DictionaryItem;
-import com.nandy.reader.model.word.Word;
-import com.nandy.reader.translator.yandex.Translator;
-
-import java.util.List;
+import com.nandy.reader.translator.yandex.Language;
 
 /**
  * Created by yana on 27.08.17.
@@ -21,19 +18,11 @@ public class PageContract {
 
         void setContentText(String content);
 
-        void showPopupWindow();
-
-        void setPopupHeader(String text);
-
-        void setTranslation(String text, String translation);
-
-        void setDictionaryContent(List<DictionaryItem> items);
-
+        void showTranslationDialog(CharSequence word, Pair<Language, Language> languages, String bookId,  int x, int y);
     }
 
     public interface Presenter extends BasePresenter{
 
-
-        void translate(CharSequence text);
+        void onWordClick(String word, int x, int y);
     }
 }

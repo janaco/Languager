@@ -16,7 +16,7 @@ import io.realm.RealmObject;
  * Created by yana on 02.07.17.
  */
 
-public class DictionaryItem extends RealmObject implements Parcelable{
+public class DictionaryItem extends RealmObject {
     @SerializedName("text")
     private String originText;
     @SerializedName("pos")
@@ -27,24 +27,6 @@ public class DictionaryItem extends RealmObject implements Parcelable{
     private RealmList<Translation> translations;
 
     public DictionaryItem(){}
-
-    protected DictionaryItem(Parcel in) {
-        originText = in.readString();
-        partOfSpeech = in.readString();
-        transcription = in.readString();
-    }
-
-    public static final Creator<DictionaryItem> CREATOR = new Creator<DictionaryItem>() {
-        @Override
-        public DictionaryItem createFromParcel(Parcel in) {
-            return new DictionaryItem(in);
-        }
-
-        @Override
-        public DictionaryItem[] newArray(int size) {
-            return new DictionaryItem[size];
-        }
-    };
 
     public String getOriginText() {
         return originText;
@@ -112,16 +94,4 @@ public class DictionaryItem extends RealmObject implements Parcelable{
         return new Gson().toJson(this);
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(originText);
-        dest.writeString(partOfSpeech);
-        dest.writeString(transcription);
-    }
 }

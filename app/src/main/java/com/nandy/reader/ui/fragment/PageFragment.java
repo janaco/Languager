@@ -1,6 +1,5 @@
 package com.nandy.reader.ui.fragment;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,12 +22,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nandy.reader.model.Book;
+import com.nandy.reader.model.word.Word;
 import com.nandy.reader.mvp.contract.PageContract;
 import com.nandy.reader.mvp.model.PageModel;
 import com.nandy.reader.mvp.presenter.PagePresenter;
-import com.nandy.reader.ui.dialog.floating_translation_dialog.TranslationDialog;
-import com.nandy.reader.ui.dialog.floating_translation_dialog.TranslationsModel;
-import com.nandy.reader.ui.dialog.floating_translation_dialog.TranslationsPresenter;
+import com.nandy.reader.translator.yandex.Language;
+import com.nandy.reader.ui.dialog.TranslationDialog;
+import com.nandy.reader.mvp.model.TranslationsModel;
+import com.nandy.reader.mvp.presenter.TranslationsPresenter;
 import com.softes.clickabletextview.ClickableTextView;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.DictionaryAdapter;
@@ -52,18 +53,29 @@ import butterknife.ButterKnife;
  */
 
 public class PageFragment extends Fragment
-        implements PageContract.View, ClickableTextView.OnWordClickListener, ActionModeCallback {
+        implements ClickableTextView.OnWordClickListener, ActionModeCallback {
 
+    private static final String KEY_CONTENT = "text";
+    private static final String KEY_BOOK_ID = "book_id";
+    private static final String KEY_LANGUAGE_PRIMARY = "lang_primary";
+    private static final String KEY_LANGUAGE_TRANSLATION = "lang_translation";
     @Bind(R.id.item_content)
     ClickableTextView textView;
 
-    private Book book;
+    private String text;
+    private String bookId;
+    private Pair<Language, Language> languages;
 
-    private View popView;
-    private PopupFragment popupFragment;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        text = getArguments().getString(KEY_CONTENT);
+        bookId = getArguments().getString(KEY_BOOK_ID);
+        Language primary = Language.valueOf(getArguments().getString(KEY_LANGUAGE_PRIMARY));
+        Language translation = Language.valueOf(getArguments().getString(KEY_LANGUAGE_TRANSLATION));
+        languages = new Pair<>(primary, translation);
 
-    private PageContract.Presenter presenter;
-
+    }
 
     @Nullable
     @Override
@@ -71,7 +83,6 @@ public class PageFragment extends Fragment
         View view = inflater.inflate(R.layout.page, container, false);
         ButterKnife.bind(this, view);
 
-        popupFragment = new PopupFragment(getActivity(), view, R.layout.pop_view);
 
         ReaderPrefs prefs = ReaderPrefs.getPreferences(getContext());
         textView.setPadding(prefs.getPaddingHorizontal(), prefs.getPaddingVertical(), prefs.getPaddingHorizontal(), 0);
@@ -85,115 +96,45 @@ public class PageFragment extends Fragment
         textView.setCustomSelectionActionModeCallback(new StyleCallback(textView, this));
         textView.setTextIsSelectable(true);
         textView.setOnWordClickListener(this);
+        textView.setText(text);
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        presenter.start();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.destroy();
-    }
-
-    @Override
-    public void setPresenter(PageContract.Presenter presenter) {
-        this.presenter = presenter;
-    }
-
-    @Override
-    public void setContentText(String text) {
-        textView.setText(text);
-    }
-
-
-    @Override
     public void onTranslateOptionSelected(CharSequence text) {
-        presenter.translate( text);
+        //TODO: determine word coordinates on the screen to show floating dialog
     }
 
     @Override
     public void onClick(final String word, int x, int y, int start, int end) {
+        showFloatingTranslationDialog(word, x, y);
+    }
+
+    private void showFloatingTranslationDialog(String text, int x, int y) {
         TranslationDialog translationDialog = new TranslationDialog(getContext(), new int[]{x, y});
 
         TranslationsPresenter presenter = new TranslationsPresenter(translationDialog);
-        presenter.setTranslationsModel(new TranslationsModel(getContext(), book.getId(), new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage())));
+        presenter.setTranslationsModel(new TranslationsModel(bookId, languages));
 
         translationDialog.setPresenter(presenter);
-        translationDialog.show(word);
+        translationDialog.show(text);
     }
 
+    public static PageFragment getInstance(Book book, CharSequence content) {
 
-    @Override
-    public void showPopupWindow() {
-        //TODO: change
-        if (!popupFragment.isShowing()) {
-            popView = popupFragment.showPopup();
-        }
-        popView.findViewById(R.id.item_close)
-                .setOnClickListener(v -> popupFragment.hidePopup());
-
-    }
-
-    @Override
-    public void setPopupHeader(String text) {
-        TextView textOrigin = (TextView) popView.findViewById(R.id.item_origin);
-        textOrigin.setTextColor(Color.WHITE);
-        textOrigin.setText(text);
-    }
-
-
-    @Override
-    public void setTranslation(String text, String translation) {
-
-        popView.findViewById(R.id.layout_translation).setVisibility(View.VISIBLE);
-
-        TextView textView = (TextView) popView.findViewById(R.id.item_translation);
-
-        String primary = text + "\n";
-        primary = primary.toUpperCase(Locale.getDefault());
-
-        SpannableString spannable = new SpannableString(primary + translation);
-        spannable.setSpan(new UnderlineSpan(), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, primary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        spannable.setSpan(new RelativeSizeSpan(0.85f), primary.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new StyleSpan(Typeface.ITALIC), primary.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.colorSecondaryText)),
-                primary.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        textView.setText(spannable);
-
-    }
-
-    @Override
-    public void setDictionaryContent(List<DictionaryItem> items) {
-        RecyclerView recyclerView = (RecyclerView) popView.findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-
-        DictionaryAdapter adapter = new DictionaryAdapter(items);
-        recyclerView.setAdapter(adapter);
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public static PageFragment getInstance(Context context, Book book, CharSequence content) {
         PageFragment fragment = new PageFragment();
-        fragment.setBook(book);
 
-        PagePresenter  presenter = new PagePresenter( fragment);
-        presenter.setPageModel(new PageModel(context, book.getId(), content, new Pair<>(book.getOriginLanguage(), book.getTranslationLanguage())));
-        fragment.setPresenter(presenter);
+        Bundle args = new Bundle();
+        args.putString(KEY_CONTENT, content.toString());
+        args.putString(KEY_BOOK_ID, book.getId());
+        args.putString(KEY_LANGUAGE_PRIMARY, book.getOriginLanguage().name());
+        args.putString(KEY_LANGUAGE_TRANSLATION, book.getTranslationLanguage().name());
+
+        fragment.setArguments(args);
 
         return fragment;
+
     }
 }
 

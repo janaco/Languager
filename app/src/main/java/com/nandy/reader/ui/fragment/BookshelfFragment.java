@@ -8,11 +8,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -28,17 +28,13 @@ import com.nandy.reader.fragment.FragmentTests;
 import com.nandy.reader.mvp.contract.BookshelfContract;
 import com.nandy.reader.mvp.model.BookshelfModel;
 import com.nandy.reader.mvp.presenter.BookshelfPresenter;
-import com.nandy.reader.translator.yandex.Language;
 import com.softes.cardviewer.ExpandableCard;
 import com.softes.cardviewer.ExpandablePagerFactory;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.AutocompleteAdapter;
 import com.nandy.reader.adapter.BooksAdapter;
-import com.nandy.reader.core.BookItemListener;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.view.Fragment;
-
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,7 +48,7 @@ import butterknife.OnClick;
  */
 
 public class BookshelfFragment extends Fragment
-        implements BookshelfContract.View,  BookItemListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener, TextView.OnEditorActionListener {
+        implements BookshelfContract.View,  AdapterView.OnItemClickListener, View.OnFocusChangeListener, TextView.OnEditorActionListener {
 
     @Bind(R.id.pager)
     ViewPager viewPager;
@@ -81,10 +77,13 @@ public class BookshelfFragment extends Fragment
         ButterKnife.bind(this, view);
         ExpandablePagerFactory.setupViewPager(viewPager);
 
-        Point pointSize = new Point();
-        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getSize(pointSize);
-        autoCompleteTextView.setDropDownWidth(pointSize.x);
-        autoCompleteTextView.setDropDownWidth(pointSize.x);
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        if (display != null) {
+            Point pointSize = new Point();
+            display.getSize(pointSize);
+            autoCompleteTextView.setDropDownWidth(pointSize.x);
+            autoCompleteTextView.setDropDownWidth(pointSize.x);
+        }
 
         autoCompleteTextView.setOnEditorActionListener(this);
         autoCompleteTextView.setOnFocusChangeListener(this);
@@ -92,9 +91,9 @@ public class BookshelfFragment extends Fragment
         autoCompleteTextView.addTextChangedListener(new SimpleOnTextChangedListener() {
             @Override
             public void onTextChanged(CharSequence s) {
-                    if (autocompeteAdapter != null && autoCompleteTextView.getLayoutParams() != null) {
-                        autocompeteAdapter.notifyDataSetChanged();
-                    }
+                if (autocompeteAdapter != null && autoCompleteTextView.getLayoutParams() != null) {
+                    autocompeteAdapter.notifyDataSetChanged();
+                }
             }
         });
         autoCompleteTextView.setAdapter(autocompeteAdapter);
@@ -106,7 +105,7 @@ public class BookshelfFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new BooksAdapter(getChildFragmentManager(), this);
+        adapter = new BooksAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
             @Override
@@ -124,7 +123,6 @@ public class BookshelfFragment extends Fragment
         this.presenter = presenter;
     }
 
-
     @OnClick(R.id.item_back)
     void closeSearchView() {
         layoutSearch.setVisibility(View.GONE);
@@ -137,7 +135,7 @@ public class BookshelfFragment extends Fragment
 
     @OnClick(R.id.item_dictionary)
     void onDictionaryButtonClick() {
-        ((MainActivity) getActivity()).replace( DictionariesListFragment.newInstance(getContext()));
+        ((MainActivity) getActivity()).replace(DictionariesListFragment.newInstance(getContext()));
     }
 
     @OnClick(R.id.item_open_search)
@@ -153,7 +151,7 @@ public class BookshelfFragment extends Fragment
 
     @OnClick(R.id.item_settings)
     void onSettingsClick() {
-        ((MainActivity) getActivity()).replace( new SettingsFragment());
+        ((MainActivity) getActivity()).replace(new SettingsFragment());
     }
 
     @OnClick(R.id.item_statistics)
@@ -167,14 +165,13 @@ public class BookshelfFragment extends Fragment
     }
 
     @Override
-    public void onBookLoaded(Book book) {
+    public void addBook(Book book) {
         adapter.add(book);
         autocompeteAdapter.add(book.getName());
     }
 
     @Override
-    public void onBookNotFound(String message) {
-
+    public void onEmptySearchResults(String message) {
         Snackbar snackbar = Snackbar.make(layoutCoordinator, message, Snackbar.LENGTH_SHORT);
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorLightPrimary));
@@ -186,25 +183,6 @@ public class BookshelfFragment extends Fragment
     @Override
     public void moveToPosition(int index) {
         viewPager.setCurrentItem(index);
-    }
-
-
-    @Override
-    public void read(Book book) {
-
-        if (!book.hasOriginLanguage()){
-            Language  originLanguage = book.getMetaData() == null ? Language.ENGLISH
-                    : Language.getLanguage(book.getMetaData().getLanguage());
-            book.setOriginLanguage(originLanguage);
-        }
-
-        if(!book.hasTranslationLanguage()){
-            Language translationLanguage = Language.getLanguage(Locale.getDefault().getLanguage());
-            book.setTranslationLanguage(translationLanguage);
-
-        }
-
-        ((MainActivity) getActivity()).replace( ViewerFragment.getInstance(getContext(), book));
     }
 
     @Override
@@ -247,7 +225,7 @@ public class BookshelfFragment extends Fragment
         }
     }
 
-    public static BookshelfFragment newInstance(Context context){
+    public static BookshelfFragment newInstance(Context context) {
         BookshelfFragment fragment = new BookshelfFragment();
 
         BookshelfPresenter presenter = new BookshelfPresenter(fragment);

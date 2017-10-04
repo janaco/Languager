@@ -1,11 +1,9 @@
 package com.nandy.reader.mvp.model;
 
-import android.content.Context;
 import android.util.Pair;
 
 import com.nandy.reader.model.word.Dictionary;
 import com.nandy.reader.model.word.Word;
-import com.nandy.reader.mvp.contract.PageContract;
 import com.nandy.reader.translator.yandex.Language;
 import com.nandy.reader.translator.yandex.Translator;
 
@@ -15,16 +13,22 @@ import com.nandy.reader.translator.yandex.Translator;
 
 public class PageModel {
 
-    private Context context;
     private CharSequence content;
     private String bookId;
     private Pair<Language, Language> languages;
 
-    public PageModel(Context context, String bookId, CharSequence content, Pair<Language, Language> languages){
+    public PageModel( String bookId, CharSequence content, Pair<Language, Language> languages){
         this.bookId = bookId;
-        this.context = context;
         this.content = content;
         this.languages = languages;
+    }
+
+    public Pair<Language, Language> getLanguages() {
+        return languages;
+    }
+
+    public String getBookId() {
+        return bookId;
     }
 
     public String getContent() {
@@ -44,6 +48,6 @@ public class PageModel {
         word.setOriginLanguage(languages.first);
         word.setTranslationLanguage(languages.second);
         word.setBookId(bookId);
-        word.insert(context);
+        word.insert();
     }
 }

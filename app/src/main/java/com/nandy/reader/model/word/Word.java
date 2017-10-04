@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.translator.yandex.Language;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -23,7 +24,11 @@ import io.realm.annotations.PrimaryKey;
  * Created by yana on 12.03.17.
  */
 
-public class Word extends RealmObject implements Comparable<Word>, Parcelable {
+public class Word extends RealmObject implements Comparable<Word> {
+
+    public static final String FIELD_LANGUAGE_ORIGIN = "info.originLanguage";
+    public static final String FIELD_LANGUAGE_TRANSLATION = "info.translationLanguage";
+    public static final String FIELD_ORIGINAL = "original";
 
     @PrimaryKey
     private String original;
@@ -41,36 +46,6 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         this.info = new WordInfo(languages);
         this.translations = new RealmList<>(RealmString.convert(translations));
     }
-
-    protected Word(Parcel in) {
-        original = in.readString();
-        dictionary = in.readParcelable(Dictionary.class.getClassLoader());
-        info = in.readParcelable(WordInfo.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(original);
-        dest.writeParcelable(dictionary, flags);
-        dest.writeParcelable(info, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Word> CREATOR = new Creator<Word>() {
-        @Override
-        public Word createFromParcel(Parcel in) {
-            return new Word(in);
-        }
-
-        @Override
-        public Word[] newArray(int size) {
-            return new Word[size];
-        }
-    };
 
     public int getPassedTestsCount() {
         return info.getPassedTestsCount();
@@ -164,7 +139,7 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
     }
 
     public List<DictionaryItem> getDictionaryItems() {
-        return dictionary.getItems();
+        return dictionary !=null ? dictionary.getItems() : new ArrayList<>();
     }
 
 
@@ -186,8 +161,7 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
         return getText().compareToIgnoreCase(word.getText());
     }
 
-    public void insert(Context context) {
-        Realm.init(context);
+    public void insert() {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.insertOrUpdate(this);
@@ -195,27 +169,19 @@ public class Word extends RealmObject implements Comparable<Word>, Parcelable {
     }
 
     public void delete() {
-        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Word.this.deleteFromRealm();
-            }
-        });
+        Realm.getDefaultInstance().executeTransaction(realm -> Word.this.deleteFromRealm());
     }
 
     public void increaseLearningProgress() {
 
-        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
+        Realm.getDefaultInstance().executeTransaction(realm -> {
 
-                int passedTests = info.getPassedTestsCount() + 1;
+            int passedTests = info.getPassedTestsCount() + 1;
 
-                info.setPassedTestsCount(passedTests);
-                info.setStatus(passedTests <= 3 ? Status.UNKNOWN.name() : Status.KNOWN.name());
+            info.setPassedTestsCount(passedTests);
+            info.setStatus(passedTests <= 3 ? Status.UNKNOWN.name() : Status.KNOWN.name());
 
-                realm.copyToRealmOrUpdate(Word.this);
-            }
+            realm.copyToRealmOrUpdate(Word.this);
         });
     }
 

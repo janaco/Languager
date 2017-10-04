@@ -1,12 +1,12 @@
-package com.nandy.reader.ui.dialog.floating_translation_dialog;
-
-import android.content.Context;
+package com.nandy.reader.mvp.presenter;
 
 import com.nandy.reader.model.word.Dictionary;
 import com.nandy.reader.model.word.DictionaryItem;
 import com.nandy.reader.model.word.Translation;
 import com.nandy.reader.model.word.Word;
+import com.nandy.reader.mvp.model.TranslationsModel;
 import com.nandy.reader.translator.yandex.Translator;
+import com.nandy.reader.mvp.contract.TranslationsContract;
 
 import java.util.List;
 

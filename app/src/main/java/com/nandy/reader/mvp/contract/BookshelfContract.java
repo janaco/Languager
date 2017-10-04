@@ -13,9 +13,9 @@ public class BookshelfContract {
 
     public interface View extends BaseView<Presenter>{
 
-        void onBookLoaded(Book book);
+        void addBook(Book book);
 
-        void onBookNotFound(String message);
+        void onEmptySearchResults(String message);
 
         void moveToPosition(int index);
     }

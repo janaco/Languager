@@ -1,8 +1,6 @@
 package com.nandy.reader.readers.task;
 
-import com.nandy.reader.app.Preferences;
 import com.nandy.reader.emums.FileType;
-import com.nandy.reader.model.Book;
 import com.nandy.reader.pagination.Pagination;
 import com.nandy.reader.readers.EPUBReader;
 import com.nandy.reader.readers.PDFReader;

@@ -6,7 +6,10 @@ import com.nandy.reader.model.Book;
 import com.nandy.reader.mvp.contract.ViewerContract;
 import com.nandy.reader.pagination.Pagination;
 import com.nandy.reader.readers.task.BaseParser;
+import com.nandy.reader.translator.yandex.Language;
 import com.nandy.reader.utils.ReaderPrefs;
+
+import java.util.Locale;
 
 import io.reactivex.Single;
 
@@ -21,8 +24,22 @@ public class ViewerModel {
     private Context context;
 
     public ViewerModel(Context context, Book book) {
-        this.context=context;
+        this.context = context;
         this.book = book;
+        setupLanguages();
+    }
+
+    private void setupLanguages() {
+        if (!book.hasOriginLanguage()) {
+            Language originLanguage = book.getMetaData() == null ? Language.ENGLISH
+                    : Language.getLanguage(book.getMetaData().getLanguage());
+            book.setOriginLanguage(originLanguage);
+        }
+
+        if (!book.hasTranslationLanguage()) {
+            Language translationLanguage = Language.getLanguage(Locale.getDefault().getLanguage());
+            book.setTranslationLanguage(translationLanguage);
+        }
     }
 
     public void setPagination(Pagination pagination) {
