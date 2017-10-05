@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements Navigable {
 
         switch (requestCode) {
             case 1:
-                NavigationManager.replaceFragment(this, new BookshelfFragment());
+                replace( new BookshelfFragment());
                 break;
         }
     }
@@ -71,6 +71,15 @@ public class MainActivity extends AppCompatActivity implements Navigable {
                 .beginTransaction()
                 .addToBackStack(fragment.getClass().getSimpleName())
                 .replace(R.id.container, fragment, fragment.getClass().getSimpleName())
+                .commitAllowingStateLoss();
+    }
+
+    @Override
+    public void add(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(fragment.getClass().getSimpleName())
+                .add(R.id.container, fragment, fragment.getClass().getSimpleName())
                 .commitAllowingStateLoss();
     }
 

@@ -3,6 +3,7 @@ package com.nandy.reader.fragment.statistics;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import com.nandy.reader.R;
 import com.nandy.reader.charts.GeneralLearningProgressChart;
 import com.nandy.reader.charts.Period;
 import com.nandy.reader.model.test.Result;
-import com.nandy.reader.view.Fragment;
 
 import java.util.List;
 

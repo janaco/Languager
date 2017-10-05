@@ -31,10 +31,10 @@ public class TestProgressMonitor {
         this.numberOfTasks = numberOfTasks;
     }
 
-    public void saveResults(Context context){
+    public void saveResults(){
         int percentage = getResult();
         Result result = new Result(System.currentTimeMillis(), percentage, isTestPassed(percentage));
-        result.insert(context);
+        result.insert();
     }
 
     private int getResult(){

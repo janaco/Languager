@@ -1,47 +1,25 @@
 package com.nandy.reader.ui.fragment;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
+import android.support.v4.app.Fragment;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.nandy.reader.model.Book;
-import com.nandy.reader.model.word.Word;
-import com.nandy.reader.mvp.contract.PageContract;
-import com.nandy.reader.mvp.model.PageModel;
-import com.nandy.reader.mvp.presenter.PagePresenter;
 import com.nandy.reader.translator.yandex.Language;
 import com.nandy.reader.ui.dialog.TranslationDialog;
 import com.nandy.reader.mvp.model.TranslationsModel;
 import com.nandy.reader.mvp.presenter.TranslationsPresenter;
 import com.softes.clickabletextview.ClickableTextView;
 import com.nandy.reader.R;
-import com.nandy.reader.adapter.DictionaryAdapter;
 import com.nandy.reader.core.ActionModeCallback;
-import com.nandy.reader.model.word.DictionaryItem;
 import com.nandy.reader.utils.ReaderPrefs;
-import com.nandy.reader.view.Fragment;
-import com.nandy.reader.view.PopupFragment;
 import com.nandy.reader.view.StyleCallback;
-
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

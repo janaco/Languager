@@ -2,6 +2,7 @@ package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,8 @@ import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.nandy.reader.R;
 import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.model.Book;
-import com.nandy.reader.mvp.BasePresenter;
 import com.nandy.reader.mvp.contract.BookListItemContract;
 import com.nandy.reader.mvp.presenter.BookListItemPresenter;
-import com.nandy.reader.view.Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -81,7 +80,7 @@ public class FragmentBottom extends Fragment implements BookListItemContract.Vie
 
     @Override
     public void openBook(Book book) {
-        ((MainActivity) getActivity()).replace(ViewerFragment.getInstance(getContext(), book));
+        ((MainActivity) getActivity()).add(ViewerFragment.getInstance(getContext(), book));
     }
 
     public static FragmentBottom newInstance(Book book) {

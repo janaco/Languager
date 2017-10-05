@@ -2,6 +2,7 @@ package com.nandy.reader.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.nandy.reader.emums.Status;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.word.DictionaryItem;
 import com.nandy.reader.model.word.Word;
-import com.nandy.reader.view.Fragment;
 
 import java.util.List;
 import java.util.Locale;

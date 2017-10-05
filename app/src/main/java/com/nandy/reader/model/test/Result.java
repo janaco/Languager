@@ -97,8 +97,7 @@ public class Result extends RealmObject implements Parcelable {
 
     }
 
-    public void insert(Context context) {
-        Realm.init(context);
+    public void insert() {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.copyToRealm(this);

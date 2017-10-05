@@ -1,53 +1,29 @@
-package com.nandy.reader.tests;
+package com.nandy.reader.mvp.model;
 
-import android.content.Context;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
-import com.nandy.reader.R;
 import com.nandy.reader.emums.TaskType;
 import com.nandy.reader.model.test.BooleanTest;
 import com.nandy.reader.model.test.Test;
 import com.nandy.reader.model.word.RealmString;
 import com.nandy.reader.model.word.Word;
+import com.nandy.reader.tests.TestBuilder;
+import com.nandy.reader.tests.TestsListener;
 
 import java.util.List;
 import java.util.Random;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
- * Created by yana on 18.07.17.
+ * Created by yana on 05.10.17.
  */
 
-public class BooleanTestManager extends TestBuilder {
+public class BooleanTestModel extends TestBuilder {
 
 
-    @Bind(R.id.boolean_text)
-    TextView viewTask;
-    @Bind(R.id.boolean_answer)
-    TextView viewAnswer;
-    @Bind(R.id.approve)
-    TextView btnApprove;
-    @Bind(R.id.reject)
-    TextView btnReject;
-
-    private Context context;
     private TestsListener testsListener;
 
-    public static BooleanTestManager init(View view, TestsListener testsListener){
-        return new BooleanTestManager(view, testsListener);
-    }
-
-    private BooleanTestManager(View view, TestsListener testsListener) {
+    public BooleanTestModel(TestsListener testsListener) {
         this.testsListener = testsListener;
-        context = view.getContext();
-        ButterKnife.bind(this, view);
     }
 
     @Override
@@ -80,60 +56,33 @@ public class BooleanTestManager extends TestBuilder {
     @Override
     public boolean showNext() {
 
-        if (hasNext()){
+        if (hasNext()) {
             BooleanTest test = (BooleanTest) getNext();
-            viewTask.setText(test.getTask());
-            viewAnswer.setText(test.getAnswer());
-
-            btnApprove.setBackgroundColor(ContextCompat.getColor(context, R.color.verdigris));
-            btnReject.setBackgroundColor(ContextCompat.getColor(context, R.color.tea_rose));
             testsListener.onNextTest(test, TaskType.BOOLEAN);
-
             return true;
         }
+
         return false;
     }
 
-    @OnClick(R.id.approve)
-    void onApproveClick() {
+    boolean approve() {
 
         final BooleanTest test = (BooleanTest) getCurrentTest();
         test.setPassed(test.isApprovable());
-        Log.d("TESTS_", "APPROVE.test: " + test);
 
+        new Handler().postDelayed(() -> testsListener.onTextIsDone(test), 500);
 
-        int color = test.isPassed() ?
-                    ContextCompat.getColor(context, R.color.verdigris) :
-                    ContextCompat.getColor(context, R.color.tea_rose);
-
-        btnApprove.setBackgroundColor(color);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                testsListener.onTextIsDone(test);
-            }
-        }, 500);
+        return test.isPassed();
     }
 
-    @OnClick(R.id.reject)
-    void onRejectClick() {
+    boolean reject() {
 
         final BooleanTest test = (BooleanTest) getCurrentTest();
         test.setPassed(!test.isApprovable());
 
-        int color = test.isPassed() ?
-                    ContextCompat.getColor(context, R.color.verdigris) :
-                    ContextCompat.getColor(context, R.color.tea_rose);
+        new Handler().postDelayed(() -> testsListener.onTextIsDone(test), 500);
 
-        btnReject.setBackgroundColor(color);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-              testsListener.onTextIsDone(test);
-            }
-        }, 500);
+        return test.isPassed();
     }
 
 

@@ -3,6 +3,7 @@ package com.nandy.reader.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -12,26 +13,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
+import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.adapter.DictionariesListAdapter;
-import com.nandy.reader.emums.Status;
 import com.nandy.reader.manager.NavigationManager;
-import com.nandy.reader.model.word.Word;
-import com.nandy.reader.model.word.WordInfo;
 import com.nandy.reader.mvp.contract.DictionaryListContract;
 import com.nandy.reader.mvp.model.DictionaryListModel;
 import com.nandy.reader.mvp.presenter.DictionaryListPresenter;
-import com.nandy.reader.view.Fragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * Created by yana on 21.05.17.
@@ -93,7 +84,7 @@ this.presenter = presenter;
     @Override
     public void onListItemClick(DictionariesListAdapter.Item item, int position) {
 
-        NavigationManager.addFragment(getActivity(), DictionaryFragment.newInstance(new Pair<>(item.langOrigin, item.langTranslation)));
+        ((MainActivity) getActivity()).add( DictionaryFragment.newInstance(new Pair<>(item.langOrigin, item.langTranslation)));
 
     }
 

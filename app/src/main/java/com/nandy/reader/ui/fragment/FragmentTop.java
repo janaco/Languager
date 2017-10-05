@@ -2,11 +2,11 @@ package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nandy.reader.mvp.BasePresenter;
@@ -14,11 +14,7 @@ import com.nandy.reader.mvp.contract.BookCoverContract;
 import com.nandy.reader.mvp.presenter.BookCoverPresenter;
 import com.softes.cardviewer.OnExpandableItemClickListener;
 import com.nandy.reader.R;
-import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
-import com.nandy.reader.view.Fragment;
-
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Display;
@@ -24,7 +25,6 @@ import com.nandy.reader.SimpleOnPageChangeListener;
 import com.nandy.reader.SimpleOnTextChangedListener;
 import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.fragment.FragmentStatistics;
-import com.nandy.reader.fragment.FragmentTests;
 import com.nandy.reader.mvp.contract.BookshelfContract;
 import com.nandy.reader.mvp.model.BookshelfModel;
 import com.nandy.reader.mvp.presenter.BookshelfPresenter;
@@ -34,7 +34,6 @@ import com.nandy.reader.R;
 import com.nandy.reader.adapter.AutocompleteAdapter;
 import com.nandy.reader.adapter.BooksAdapter;
 import com.nandy.reader.model.Book;
-import com.nandy.reader.view.Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -135,7 +134,7 @@ public class BookshelfFragment extends Fragment
 
     @OnClick(R.id.item_dictionary)
     void onDictionaryButtonClick() {
-        ((MainActivity) getActivity()).replace(DictionariesListFragment.newInstance(getContext()));
+        ((MainActivity) getActivity()).add(DictionariesListFragment.newInstance(getContext()));
     }
 
     @OnClick(R.id.item_open_search)
@@ -151,17 +150,17 @@ public class BookshelfFragment extends Fragment
 
     @OnClick(R.id.item_settings)
     void onSettingsClick() {
-        ((MainActivity) getActivity()).replace(new SettingsFragment());
+        ((MainActivity) getActivity()).add(new SettingsFragment());
     }
 
     @OnClick(R.id.item_statistics)
     void onStatisticsClick() {
-        ((MainActivity) getActivity()).replace(new FragmentStatistics());
+        ((MainActivity) getActivity()).add(new FragmentStatistics());
     }
 
     @OnClick(R.id.item_exams)
     void onExamsClick() {
-        ((MainActivity) getActivity()).replace(new FragmentTests());
+        ((MainActivity) getActivity()).add(TestTypesFragment.newInstance());
     }
 
     @Override

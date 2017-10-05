@@ -3,6 +3,7 @@ package com.nandy.reader.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import com.nandy.reader.adapter.PagerAdapter;
 import com.nandy.reader.ui.popup.BookMenuPanel;
 import com.nandy.reader.mvp.model.MenuModel;
 import com.nandy.reader.mvp.presenter.MenuPresenter;
-import com.nandy.reader.view.Fragment;
 import com.victor.loading.book.BookLoading;
 
 import java.util.List;

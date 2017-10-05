@@ -2,6 +2,7 @@ package com.nandy.reader.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.nandy.reader.fragment.statistics.ColumnChartFragment;
 import com.nandy.reader.fragment.statistics.LineChartFragment;
 import com.nandy.reader.fragment.statistics.PieChartFragment;
 import com.nandy.reader.model.test.Result;
-import com.nandy.reader.view.Fragment;
 
 import java.util.ArrayList;
 

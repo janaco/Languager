@@ -2,12 +2,14 @@ package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.mvp.contract.DictionaryContract;
 import com.nandy.reader.mvp.model.DictionaryModel;
 import com.nandy.reader.mvp.presenter.DictionaryPresenter;
@@ -17,7 +19,6 @@ import com.nandy.reader.adapter.BaseDictionaryAdapter;
 import com.nandy.reader.core.DictionaryItemListener;
 import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.word.Word;
-import com.nandy.reader.view.Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -79,7 +80,7 @@ public class DictionaryFragment extends Fragment
 
     @Override
     public void onItemClick(String key, Word word, int position) {
-        NavigationManager.addFragment(getActivity(), WordDetailsFragment.newInstance(word.getText()));
+        ((MainActivity) getActivity()).add( WordDetailsFragment.newInstance(word.getText()));
     }
 
     @Override

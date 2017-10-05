@@ -1,9 +1,8 @@
 package com.nandy.reader.adapter;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
-import com.nandy.reader.view.Fragment;
 
 /**
  * Created by yana on 06.08.17.

@@ -11,5 +11,7 @@ public interface Navigable {
 
     void replace(Fragment fragment);
 
+    void add(Fragment fragment);
+
     void remove(Fragment fragment);
 }

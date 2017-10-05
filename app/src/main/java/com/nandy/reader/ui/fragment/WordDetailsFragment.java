@@ -2,6 +2,7 @@ package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +13,11 @@ import android.widget.TextView;
 
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.DictionaryAdapter;
-import com.nandy.reader.core.DictionaryItemListener;
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.model.word.Word;
 import com.nandy.reader.mvp.contract.WordContract;
 import com.nandy.reader.mvp.model.WordModel;
 import com.nandy.reader.mvp.presenter.WordPresenter;
-import com.nandy.reader.view.Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

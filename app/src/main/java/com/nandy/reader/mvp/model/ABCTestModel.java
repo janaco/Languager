@@ -1,55 +1,40 @@
-package com.nandy.reader.tests;
+package com.nandy.reader.mvp.model;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
 
-import com.nandy.reader.R;
 import com.nandy.reader.adapter.ABCTestAdapter;
 import com.nandy.reader.core.OnListItemClickListener;
 import com.nandy.reader.emums.TaskType;
 import com.nandy.reader.model.test.ABCTest;
 import com.nandy.reader.model.test.Test;
 import com.nandy.reader.model.word.Word;
+import com.nandy.reader.tests.TestBuilder;
+import com.nandy.reader.tests.TestsListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
- * Created by yana on 18.07.17.
+ * Created by yana on 05.10.17.
  */
 
-public class ABCTestManager extends TestBuilder implements OnListItemClickListener<ABCTest.Variant> {
+public class ABCTestModel extends TestBuilder implements OnListItemClickListener<ABCTest.Variant> {
 
-    @Bind(R.id.abc_text)
-    TextView viewTask;
-    @Bind(R.id.recycler_view)
-    RecyclerView recyclerView;
 
     private ABCTestAdapter adapter;
     private TestsListener testsListener;
 
-    public static ABCTestManager init(View view, TestsListener testsListener) {
-        return new ABCTestManager(view.getContext(), view, testsListener);
-    }
-
-    private ABCTestManager(Context context, View view, TestsListener testsListener) {
-        ButterKnife.bind(this, view);
-
+    public ABCTestModel(Context context, TestsListener testsListener) {
         this.testsListener = testsListener;
 
         adapter = new ABCTestAdapter(context);
         adapter.setOnListItemClickListener(this);
+    }
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(adapter);
+    public ABCTestAdapter getAdapter() {
+        return adapter;
     }
 
     @Override
@@ -66,9 +51,7 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
     public boolean showNext() {
         if (hasNext()) {
             ABCTest test = (ABCTest) getNext();
-            viewTask.setText(test.getTask());
             adapter.setTests(test.getAnswer());
-            recyclerView.setAdapter(adapter);
             testsListener.onNextTest(test, TaskType.CHOOSE);
             return true;
         }
@@ -81,12 +64,7 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
         final ABCTest test = (ABCTest) getCurrentTest();
         test.setPassed(item.isCorrect());
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                testsListener.onTextIsDone(test);
-            }
-        }, 500);
+        new Handler().postDelayed(() -> testsListener.onTextIsDone(test), 500);
     }
 
 
@@ -134,6 +112,4 @@ public class ABCTestManager extends TestBuilder implements OnListItemClickListen
                 new Test.MetaData(word.getText(), word.getOriginLanguage(), word.getTranslationLanguage()),
                 word.getText(), variants);
     }
-
-
 }

@@ -11,6 +11,7 @@ import com.github.chuross.library.ExpandableLayout;
 import com.nandy.reader.R;
 import com.nandy.reader.emums.TestType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,12 +21,9 @@ import java.util.Locale;
 
 public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.ViewHolder> {
 
-    private List<Item> list;
+    private List<Item> list = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
-    public TestGroupsAdapter(List<Item> list) {
-        this.list = list;
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -68,17 +66,17 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
     }
 
     private View.OnClickListener getMenuClickListener(final Item item, final TestType testType){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onItemClick(item.langOrigin, item.langTranslation, testType);
-            }
-        };
+        return v -> onItemClickListener.onItemClick(item.langOrigin, item.langTranslation, testType);
     }
 
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void addItem(Item item){
+        list.add(item);
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

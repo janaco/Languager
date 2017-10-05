@@ -3,7 +3,7 @@ package com.nandy.reader.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +14,9 @@ import android.widget.TextView;
 import com.nandy.reader.R;
 import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.core.DialogListener;
-import com.nandy.reader.core.OnLanguageSelectedListener;
 import com.nandy.reader.dialog.ChooseLanguageDialog;
-import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.translator.yandex.Language;
-import com.nandy.reader.view.Fragment;
 
 import java.util.Locale;
 
