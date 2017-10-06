@@ -1,5 +1,6 @@
 package com.nandy.reader.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -11,20 +12,20 @@ import android.widget.RadioGroup;
 
 import com.nandy.reader.R;
 import com.nandy.reader.charts.Period;
-import com.nandy.reader.charts.PieChart;
-import com.nandy.reader.model.test.Result;
-
-import java.util.List;
+import com.nandy.reader.mvp.contract.PieChartContract;
+import com.nandy.reader.mvp.model.PieChartModel;
+import com.nandy.reader.mvp.presenter.PieChartPresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.view.PieChartView;
 
 /**
  * Created by yana on 06.08.17.
  */
 
-public class PieChartFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
+public class PieChartFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PieChartContract.View {
 
     @Bind(R.id.chart_pie)
     PieChartView pieChartView;
@@ -32,14 +33,7 @@ public class PieChartFragment extends Fragment implements RadioGroup.OnCheckedCh
     @Bind(R.id.radio_group)
     RadioGroup radioGroup;
 
-    private PieChart pieChart;
-    private List<Result> testResults;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        testResults = getArguments().getParcelableArrayList("results");
-    }
+    private PieChartContract.Presenter presenter;
 
     @Nullable
     @Override
@@ -47,16 +41,29 @@ public class PieChartFragment extends Fragment implements RadioGroup.OnCheckedCh
         View view = inflater.inflate(R.layout.fragment_general_pie_progress, container, false);
         ButterKnife.bind(this, view);
         radioGroup.setOnCheckedChangeListener(this);
-        pieChart = PieChart.init(pieChartView);
         return view;
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter.start();
+    }
 
-        onCheckedChanged(radioGroup, radioGroup.getCheckedRadioButtonId());
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.destroy();
+    }
+
+    @Override
+    public void setPresenter(PieChartContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void drawChart(PieChartData data) {
+        pieChartView.setPieChartData(data);
     }
 
     @Override
@@ -65,17 +72,26 @@ public class PieChartFragment extends Fragment implements RadioGroup.OnCheckedCh
         switch (checkedId) {
 
             case R.id.button_days:
-                pieChart.showChart(Period.DAY);
+                presenter.setPeriod(Period.DAY);
                 break;
 
             case R.id.button_months:
-                pieChart.showChart(Period.MONTH);
+                presenter.setPeriod(Period.MONTH);
                 break;
 
             case R.id.button_year:
-                pieChart.showChart(Period.YEAR);
+                presenter.setPeriod(Period.YEAR);
                 break;
         }
+    }
+
+    public static PieChartFragment newInstance(Context context){
+        PieChartFragment fragment = new PieChartFragment();
+        PieChartPresenter presenter = new PieChartPresenter(fragment);
+        presenter.setPieChartModel(new PieChartModel(context));
+        fragment.setPresenter(presenter);
+
+        return fragment;
     }
 
 }

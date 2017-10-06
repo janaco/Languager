@@ -51,38 +51,32 @@ public class FragmentStatistics extends Fragment {
 
         ArrayList<Result> testResults = getTestResults();
 
-        if (testResults.size() == 0){
+        if (testResults.size() == 0) {
             viewEmpty.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.GONE);
             viewAlert.setText(R.string.no_learning_progress);
             return;
         }
 
-        Bundle args = new Bundle();
-        args.putParcelableArrayList("results", testResults);
-
-
-        PieChartFragment pieChartFragment = new PieChartFragment();
-        pieChartFragment.setArguments(args);
-
 
         adapter = new StatisticsPagerAdapter(getFragmentManager(),
-                new Fragment[]{LineChartFragment.newInstance(testResults), pieChartFragment, new ColumnChartFragment()});
+                new Fragment[]{LineChartFragment.newInstance(testResults),
+                        PieChartFragment.newInstance(getContext()), new ColumnChartFragment()});
         viewPager.setAdapter(adapter);
 
     }
 
     @OnClick(R.id.close)
-    void onCloseWindowClick(){
+    void onCloseWindowClick() {
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.share)
-    void onShareClick(){
+    void onShareClick() {
 
     }
 
-    private ArrayList<Result> getTestResults(){
+    private ArrayList<Result> getTestResults() {
         RealmResults<Result> results =
                 Realm.getDefaultInstance()
                         .where(Result.class)

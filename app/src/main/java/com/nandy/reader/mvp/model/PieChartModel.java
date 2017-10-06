@@ -1,57 +1,59 @@
-package com.nandy.reader.charts;
+package com.nandy.reader.mvp.model;
 
+import android.content.Context;
 import android.support.v4.content.ContextCompat;
 
 import com.nandy.reader.R;
+import com.nandy.reader.charts.Period;
 import com.nandy.reader.model.test.Result;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
-import lecho.lib.hellocharts.view.PieChartView;
 
 /**
- * Created by yana on 22.07.17.
+ * Created by yana on 06.10.17.
  */
 
-public class PieChart {
+public class PieChartModel {
 
-    private PieChartView pieChartView;
+    private Context context;
 
-    private PieChart(PieChartView pieChartView){
-        this.pieChartView = pieChartView;
+    public PieChartModel(Context context) {
+        this.context = context;
     }
 
-    public static PieChart init(PieChartView pieChartView){
-        return new PieChart(pieChartView);
-    }
 
-    public void showChart(Period period) {
+    public Single<PieChartData> getChart(Period period) {
 
-        Calendar calendar = Calendar.getInstance();
+        return Single.create(e -> {
 
-        switch (period) {
+            Calendar calendar = Calendar.getInstance();
 
-            case DAY:
-                calendar.set(Calendar.HOUR_OF_DAY, -1);
-                break;
+            switch (period) {
 
-            case MONTH:
-                calendar.set(Calendar.MONTH, -1);
-                break;
+                case DAY:
+                    calendar.set(Calendar.HOUR_OF_DAY, -1);
+                    break;
 
-            case YEAR:
-                calendar.set(Calendar.YEAR, -1);
-                break;
-        }
+                case MONTH:
+                    calendar.set(Calendar.MONTH, -1);
+                    break;
 
-        float successPercent = getSuccessPercent(getTestResults(calendar.getTimeInMillis()));
-        drawChart(successPercent);
+                case YEAR:
+                    calendar.set(Calendar.YEAR, -1);
+                    break;
+            }
+
+            float successPercent = getSuccessPercent(getTestResults(calendar.getTimeInMillis()));
+            e.onSuccess(getChartData(successPercent));
+        });
     }
 
     private List<Result> getTestResults(long timeFrom) {
@@ -63,14 +65,14 @@ public class PieChart {
         return results;
     }
 
-    private void drawChart(float successPercent) {
+    private PieChartData getChartData(float successPercent) {
 
         float failedPercent = 100 - successPercent;
 
         List<SliceValue> values = new ArrayList<>();
 
-        values.add(new SliceValue(successPercent, ContextCompat.getColor(pieChartView.getContext(), R.color.verdigris)));
-        values.add(new SliceValue(failedPercent, ContextCompat.getColor(pieChartView.getContext(), R.color.tea_rose)));
+        values.add(new SliceValue(successPercent, ContextCompat.getColor(context, R.color.verdigris)));
+        values.add(new SliceValue(failedPercent, ContextCompat.getColor(context, R.color.tea_rose)));
 
 
         PieChartData data = new PieChartData(values);
@@ -80,7 +82,7 @@ public class PieChart {
         data.setSlicesSpacing(24);
         data.setValueLabelBackgroundEnabled(false);
 
-        pieChartView.setPieChartData(data);
+        return data;
     }
 
     private float getSuccessPercent(List<Result> results) {
@@ -95,8 +97,9 @@ public class PieChart {
             }
         }
 
-        return numberOfPassedTests / numberOfTests * 100 ;
+        return numberOfPassedTests / numberOfTests * 100;
 
     }
+
 
 }
