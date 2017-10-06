@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment;
+package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.StatisticsPagerAdapter;
-import com.nandy.reader.fragment.statistics.ColumnChartFragment;
-import com.nandy.reader.fragment.statistics.LineChartFragment;
-import com.nandy.reader.fragment.statistics.PieChartFragment;
 import com.nandy.reader.model.test.Result;
 
 import java.util.ArrayList;
@@ -64,15 +61,13 @@ public class FragmentStatistics extends Fragment {
         Bundle args = new Bundle();
         args.putParcelableArrayList("results", testResults);
 
-        LineChartFragment lineChartFragment = new LineChartFragment();
-        lineChartFragment.setArguments(args);
 
         PieChartFragment pieChartFragment = new PieChartFragment();
         pieChartFragment.setArguments(args);
 
 
         adapter = new StatisticsPagerAdapter(getFragmentManager(),
-                new Fragment[]{lineChartFragment, pieChartFragment, new ColumnChartFragment()});
+                new Fragment[]{LineChartFragment.newInstance(testResults), pieChartFragment, new ColumnChartFragment()});
         viewPager.setAdapter(adapter);
 
     }

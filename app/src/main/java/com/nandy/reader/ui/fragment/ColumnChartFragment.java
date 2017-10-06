@@ -1,4 +1,4 @@
-package com.nandy.reader.fragment.statistics;
+package com.nandy.reader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

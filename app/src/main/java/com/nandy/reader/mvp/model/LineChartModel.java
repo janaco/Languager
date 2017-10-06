@@ -1,10 +1,13 @@
-package com.nandy.reader.charts;
+package com.nandy.reader.mvp.model;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.Pair;
 
 import com.nandy.reader.R;
+import com.nandy.reader.charts.Period;
 import com.nandy.reader.model.test.Result;
 
 import java.util.ArrayList;
@@ -14,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -24,85 +30,45 @@ import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
- * Created by yana on 22.07.17.
+ * Created by yana on 06.10.17.
  */
 
-public class GeneralLearningProgressChart {
+public class LineChartModel {
 
     private static final String[] MONTHS = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-    private LineChartView lineChartView;
+    private List<Result> testResults;
 
-    private GeneralLearningProgressChart(LineChartView lineChartView) {
-        this.lineChartView = lineChartView;
-    }
-
-    public static GeneralLearningProgressChart init(LineChartView lineChartView) {
-        return new GeneralLearningProgressChart(lineChartView);
-    }
-
-    public void showChart(List<Result> testResults, Period period) {
-
-        List<PointValue> points = new ArrayList<>();
-        List<AxisValue> xLegendValues = new ArrayList<>();
-
-        switch (period) {
-
-            case DAY:
-                getDailyStatisticsData(testResults, points, xLegendValues);
-                break;
-
-            case MONTH:
-                getMonthlyStatisticsData(testResults, points, xLegendValues);
-                break;
-
-            case YEAR:
-                getYearlyStatisticsData(testResults, points, xLegendValues);
-                break;
-        }
-        drawChart(points, xLegendValues);
+    public LineChartModel(List<Result> testResults) {
+        this.testResults = testResults;
     }
 
 
-    private void drawChart(List<PointValue> points, List<AxisValue> xLegendValues) {
+    public Single<Pair<List<PointValue>, List<AxisValue>>> getChart(Period period) {
 
-        Line line = new Line(points);
-        line.setColor(ContextCompat.getColor(lineChartView.getContext(), R.color.pale_brown));
-        line.setCubic(true);
-        line.setHasLabels(true);
+        return Single.create(e -> {
+            List<PointValue> points = new ArrayList<>();
+            List<AxisValue> xLegendValues = new ArrayList<>();
 
-        List<Line> lines = new ArrayList<>();
-        lines.add(line);
+            switch (period) {
 
-        LineChartData lineData = new LineChartData(lines);
+                case DAY:
+                    getDailyStatisticsData(testResults, points, xLegendValues);
+                    break;
 
-        Axis axisX = new Axis(xLegendValues);
-        axisX.setHasLines(false);
-        axisX.setTextColor(ContextCompat.getColor(lineChartView.getContext(), R.color.pale_sandy_brown));
-        lineData.setAxisXBottom(axisX);
+                case MONTH:
+                    getMonthlyStatisticsData(testResults, points, xLegendValues);
+                    break;
 
-        Axis axisY = new Axis();
-        axisY.setHasLines(true);
-        axisY.setHasSeparationLine(false);
-        axisY.setHasTiltedLabels(false);
-        axisY.setTextColor(Color.TRANSPARENT);
-        lineData.setAxisYLeft(axisY);
+                case YEAR:
+                    getYearlyStatisticsData(testResults, points, xLegendValues);
+                    break;
+            }
 
-        lineData.setValueLabelBackgroundEnabled(false);
-        lineData.setValueLabelsTextColor(ContextCompat.getColor(lineChartView.getContext(), R.color.pale_sandy_brown));
+            e.onSuccess(new Pair<>(points, xLegendValues));
+        });
 
-        lineChartView.setLineChartData(lineData);
-        lineChartView.setViewportCalculationEnabled(false);
 
-        int items = lineData.getAxisXBottom().getValues().size();
-        Viewport maxViewport = new Viewport(0, 105, items, 0);
-        lineChartView.setCurrentViewport(items > 5 ? new Viewport(items - 5, 110, items, 0) : maxViewport);
-        lineChartView.setMaximumViewport(maxViewport);
-
-        lineChartView.setScrollEnabled(true);
-        lineChartView.setZoomType(ZoomType.HORIZONTAL_AND_VERTICAL);
-        lineChartView.cancelDataAnimation();
-        lineChartView.startDataAnimation(300);
     }
 
 
@@ -112,8 +78,6 @@ public class GeneralLearningProgressChart {
             Result result = results.get(i);
             values.add(new PointValue(i, result.getPercentage()));
             axisValues.add(new AxisValue(i).setLabel(result.getDate()));
-
-            Log.d("STATISTICS_", result.getPercentage() + ", i=" + i + ", " + result.getDate());
         }
     }
 
@@ -194,8 +158,8 @@ public class GeneralLearningProgressChart {
     }
 
     private static void convertToMonthlyChartData(Map<Integer, TreeMap<Integer, List<Integer>>> data,
-                                           List<PointValue> points,
-                                           List<AxisValue> xLegendValues){
+                                                  List<PointValue> points,
+                                                  List<AxisValue> xLegendValues) {
 
         int xIndex = 0;
         for (Map.Entry<Integer, TreeMap<Integer, List<Integer>>> entryYear : data.entrySet()) {
@@ -219,6 +183,5 @@ public class GeneralLearningProgressChart {
             }
         }
     }
-
 
 }
