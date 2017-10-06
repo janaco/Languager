@@ -1,12 +1,11 @@
 package com.nandy.reader.mvp.presenter;
 
-import com.nandy.reader.charts.Period;
+import com.nandy.reader.emums.Period;
 import com.nandy.reader.mvp.contract.PieChartContract;
 import com.nandy.reader.mvp.model.PieChartModel;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by yana on 06.10.17.

@@ -1,6 +1,6 @@
 package com.nandy.reader.mvp.contract;
 
-import com.nandy.reader.charts.Period;
+import com.nandy.reader.emums.Period;
 import com.nandy.reader.mvp.BasePresenter;
 import com.nandy.reader.mvp.BaseView;
 

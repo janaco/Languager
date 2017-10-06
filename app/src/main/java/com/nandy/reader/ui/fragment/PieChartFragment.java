@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.nandy.reader.R;
-import com.nandy.reader.charts.Period;
+import com.nandy.reader.emums.Period;
 import com.nandy.reader.mvp.contract.PieChartContract;
 import com.nandy.reader.mvp.model.PieChartModel;
 import com.nandy.reader.mvp.presenter.PieChartPresenter;

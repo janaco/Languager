@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 
 import com.nandy.reader.R;
-import com.nandy.reader.charts.Period;
+import com.nandy.reader.emums.Period;
 import com.nandy.reader.model.test.Result;
 
 import java.util.ArrayList;

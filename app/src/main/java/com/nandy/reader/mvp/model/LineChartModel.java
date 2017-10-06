@@ -1,13 +1,8 @@
 package com.nandy.reader.mvp.model;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.Pair;
 
-import com.nandy.reader.R;
-import com.nandy.reader.charts.Period;
+import com.nandy.reader.emums.Period;
 import com.nandy.reader.model.test.Result;
 
 import java.util.ArrayList;
@@ -18,16 +13,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
-import lecho.lib.hellocharts.gesture.ZoomType;
-import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.view.LineChartView;
 
 /**
  * Created by yana on 06.10.17.

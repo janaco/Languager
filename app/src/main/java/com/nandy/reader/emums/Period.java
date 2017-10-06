@@ -1,4 +1,4 @@
-package com.nandy.reader.charts;
+package com.nandy.reader.emums;
 
 /**
  * Created by yana on 22.07.17.
