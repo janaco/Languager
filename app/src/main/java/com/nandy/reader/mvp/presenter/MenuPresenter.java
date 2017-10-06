@@ -49,8 +49,8 @@ public class MenuPresenter implements MenuContract.Presenter{
 
         if (itemsCount > 0) {
             int unknownItems = getUnknownItemsInTheDictionaty();
-            view.setItemsInDictionary(itemsCount + " words in the dictionary.");
-            view.setItemsToLearn(unknownItems + " words to learn");
+            view.setItemsInDictionary(itemsCount + " hasWords in the dictionary.");
+            view.setItemsToLearn(unknownItems + " hasWords to learn");
         } else {
             view.setNoItemsInTheDictionary();
         }

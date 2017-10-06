@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.nandy.reader.R;
 import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.emums.TestType;
-import com.nandy.reader.fragment.FragmentTestLearning;
 import com.nandy.reader.mvp.BasePresenter;
 import com.nandy.reader.mvp.contract.TestTypesContract;
 import com.nandy.reader.mvp.model.TestTypesModel;
@@ -86,7 +85,7 @@ public class TestTypesFragment extends Fragment implements TestTypesContract.Vie
 
     @Override
     public void replaceWithLearningFragment(String originLanguage, String translationLanguage) {
-        ((MainActivity) getActivity()).replace(FragmentTestLearning.getInstance(originLanguage, translationLanguage));
+        ((MainActivity) getActivity()).replace(FragmentTestLearning.newInstence(originLanguage, translationLanguage));
     }
 
     @Override

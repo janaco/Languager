@@ -139,7 +139,7 @@ public class ColumnsChart {
                     .equalTo("info.bookId", book.getPath())
                     .count();
 
-            Log.d("COLUMN_VALUE", "book: " + book.getName() + ", words: " + wordsCount);
+            Log.d("COLUMN_VALUE", "book: " + book.getName() + ", hasWords: " + wordsCount);
 
             if (wordsCount > 0) {
                 int unknownWordsCount = (int) realm.where(Word.class)

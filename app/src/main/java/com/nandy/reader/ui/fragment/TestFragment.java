@@ -178,7 +178,7 @@ public class TestFragment extends Fragment implements TestContract.View {
         viewTestBoolean.setVisibility(View.GONE);
         viewWritingTest.setVisibility(View.GONE);
         viewCurtain.setVisibility(View.VISIBLE);
-        itemAlert.setText("There are no test. You have already learned all words.");
+        itemAlert.setText("There are no test. You have already learned all hasWords.");
     }
 
     @Override

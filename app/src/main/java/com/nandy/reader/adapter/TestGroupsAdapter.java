@@ -38,12 +38,12 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
         String translationLanguage = new Locale(item.langTranslation).getDisplayLanguage();
 
         holder.viewLanguages.setText(originLanguage + " - " + translationLanguage);
-        holder.viewWordsCount.setText(item.wordsCount + " words");
+        holder.viewWordsCount.setText(item.wordsCount + " hasWords");
 
         if (item.wordsCount == item.unknownWordsCount) {
-            holder.viewInfo.setText("No learned words");
+            holder.viewInfo.setText("No learned hasWords");
         } else {
-            holder.viewInfo.setText(item.unknownWordsCount + " words to learn");
+            holder.viewInfo.setText(item.unknownWordsCount + " hasWords to learn");
         }
 
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {

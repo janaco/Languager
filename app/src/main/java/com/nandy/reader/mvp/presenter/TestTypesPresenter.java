@@ -2,8 +2,6 @@ package com.nandy.reader.mvp.presenter;
 
 import com.nandy.reader.adapter.TestGroupsAdapter;
 import com.nandy.reader.emums.TestType;
-import com.nandy.reader.ui.fragment.TestFragment;
-import com.nandy.reader.fragment.FragmentTestLearning;
 import com.nandy.reader.mvp.BasePresenter;
 import com.nandy.reader.mvp.contract.TestTypesContract;
 import com.nandy.reader.mvp.model.TestTypesModel;
