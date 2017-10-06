@@ -1,5 +1,6 @@
 package com.nandy.reader.adapter;
 
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by yana on 23.07.17.
  */
@@ -27,33 +31,28 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_languages, null));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_languages, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Item item = list.get(position);
-        String originLanguage = new Locale(item.langOrigin).getDisplayLanguage();
-        String translationLanguage = new Locale(item.langTranslation).getDisplayLanguage();
 
-        holder.viewLanguages.setText(originLanguage + " - " + translationLanguage);
-        holder.viewWordsCount.setText(item.wordsCount + " hasWords");
+        holder.setLanguages(new Locale(item.langOrigin).getDisplayLanguage() + " - " + new Locale(item.langTranslation).getDisplayLanguage());
+        holder.setWordsCount(item.wordsCount);
 
         if (item.wordsCount == item.unknownWordsCount) {
-            holder.viewInfo.setText("No learned hasWords");
+            holder.setInfo(R.string.no_learned_words);
         } else {
-            holder.viewInfo.setText(item.unknownWordsCount + " hasWords to learn");
+            holder.setInfo(String.valueOf(item.unknownWordsCount));
         }
 
-        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.expandableLayout.isCollapsed()) {
-                    holder.expandableLayout.expand();
-                } else {
-                    holder.expandableLayout.collapse();
-                }
+        holder.mainLayout.setOnClickListener(v -> {
+            if (holder.expandableLayout.isCollapsed()) {
+                holder.expandableLayout.expand();
+            } else {
+                holder.expandableLayout.collapse();
             }
         });
 
@@ -65,7 +64,7 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
 
     }
 
-    private View.OnClickListener getMenuClickListener(final Item item, final TestType testType){
+    private View.OnClickListener getMenuClickListener(final Item item, final TestType testType) {
         return v -> onItemClickListener.onItemClick(item.langOrigin, item.langTranslation, testType);
     }
 
@@ -74,7 +73,7 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
         return list.size();
     }
 
-    public void addItem(Item item){
+    public void addItem(Item item) {
         list.add(item);
         notifyDataSetChanged();
     }
@@ -85,30 +84,46 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView viewLanguages;
-        private TextView viewWordsCount;
-        private TextView viewInfo;
-        private ExpandableLayout expandableLayout;
-        private TextView viewLearn;
-        private TextView viewGeneralTest;
-        private TextView viewQuickTest;
-        private TextView viewExam;
-        private TextView viewCheckSkills;
-        private LinearLayout mainLayout;
+        @Bind(R.id.languages)
+        TextView viewLanguages;
+        @Bind(R.id.words_count)
+        TextView viewWordsCount;
+        @Bind(R.id.words_info)
+        TextView viewInfo;
+        @Bind(R.id.layout_expandable)
+        ExpandableLayout expandableLayout;
+        @Bind(R.id.item_learn)
+        TextView viewLearn;
+        @Bind(R.id.item_general_test)
+        TextView viewGeneralTest;
+        @Bind(R.id.item_quick_test)
+        TextView viewQuickTest;
+        @Bind(R.id.item_exam)
+        TextView viewExam;
+        @Bind(R.id.item_check_skills)
+        TextView viewCheckSkills;
+        @Bind(R.id.layout_main)
+        LinearLayout mainLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
 
-            viewLanguages = (TextView) itemView.findViewById(R.id.languages);
-            viewWordsCount = (TextView) itemView.findViewById(R.id.words_count);
-            viewInfo = (TextView) itemView.findViewById(R.id.words_info);
-            viewLearn = (TextView) itemView.findViewById(R.id.item_learn);
-            viewGeneralTest = (TextView) itemView.findViewById(R.id.item_general_test);
-            viewQuickTest = (TextView) itemView.findViewById(R.id.item_quick_test);
-            viewExam = (TextView) itemView.findViewById(R.id.item_exam);
-            viewCheckSkills = (TextView) itemView.findViewById(R.id.item_check_skills);
-            expandableLayout = (ExpandableLayout) itemView.findViewById(R.id.layout_expandable);
-            mainLayout = (LinearLayout) itemView.findViewById(R.id.layout_main);
+        void setLanguages(String text) {
+            viewLanguages.setText(text);
+        }
+
+        void setWordsCount(int count) {
+            viewWordsCount.setText(String.valueOf(count).concat(" ").concat(viewWordsCount.getContext().getString(R.string.has_words)));
+        }
+
+        void setInfo(String countOfWords){
+            viewInfo.setText(countOfWords.concat(" ").concat(viewInfo.getContext().getString(R.string.words_to_learn)));
+        }
+
+        void setInfo(@StringRes int resId){
+            viewInfo.setText(resId);
         }
     }
 
@@ -127,7 +142,7 @@ public class TestGroupsAdapter extends RecyclerView.Adapter<TestGroupsAdapter.Vi
         }
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(String originLanguage, String translationLanguage, TestType testType);
     }
 }

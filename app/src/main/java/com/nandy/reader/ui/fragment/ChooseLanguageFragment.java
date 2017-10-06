@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.nandy.reader.R;
 import com.nandy.reader.activity.MainActivity;
-import com.nandy.reader.core.DialogListener;
+import com.nandy.reader.DialogListener;
 import com.nandy.reader.dialog.ChooseLanguageDialog;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.translator.yandex.Language;

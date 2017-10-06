@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.nandy.reader.adapter.ABCTestAdapter;
-import com.nandy.reader.core.OnListItemClickListener;
+import com.nandy.reader.OnListItemClickListener;
 import com.nandy.reader.emums.TaskType;
 import com.nandy.reader.model.test.ABCTest;
 import com.nandy.reader.model.test.Test;

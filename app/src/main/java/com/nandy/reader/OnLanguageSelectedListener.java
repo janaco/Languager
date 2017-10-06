@@ -1,4 +1,4 @@
-package com.nandy.reader.core;
+package com.nandy.reader;
 
 import com.nandy.reader.translator.yandex.Language;
 

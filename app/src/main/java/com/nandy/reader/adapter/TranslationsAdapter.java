@@ -1,10 +1,10 @@
 package com.nandy.reader.adapter;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -19,6 +19,9 @@ import com.nandy.reader.R;
 import com.nandy.reader.model.word.Translation;
 
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Used to adapt list of possible translations with its explanations to word.
@@ -36,8 +39,8 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(parent.getContext(),
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_translation, null, false));
+        return new ViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_translation, parent, false));
     }
 
     @Override
@@ -45,32 +48,11 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
         Translation translation = list.get(position);
 
-        String translated = translation.getText();
-        String meanings = translation.hasMeanings() ? " (" + translation.getMeaningsAsString() + ")" : "";
-        String synonyms = translation.hasSynonyms() ? ", " + translation.getSynonymsAsString() : "";
-
-        SpannableString text = new SpannableString(translated + meanings + synonyms);
-
-        //highlight possible meanings
-        int indexFrom = translated.length();
-        int indexTo = indexFrom + meanings.length();
-        text.setSpan(new StyleSpan(Typeface.ITALIC), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.itemTranslation.getContext(),
-                R.color.colorSecondaryText)), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        holder.itemTranslation.setText(text);
-
+        holder.setTranslation(holder.representAsSpannable(translation));
+        holder.showUsages(translation.hasUsageExamples());
         if (translation.hasUsageExamples()) {
-            holder.layoutUsages.setVisibility(View.VISIBLE);
-
-            //show usage examples
-            UsagesAdapter adapter = new UsagesAdapter(translation.getUsageSamples());
-            holder.recyclerView.setAdapter(adapter);
-        }else {
-            holder.layoutUsages.setVisibility(View.GONE);
+            holder.setUsages(new UsagesAdapter(translation.getUsageSamples()));
         }
-
-
     }
 
     @Override
@@ -85,24 +67,45 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView itemTranslation;
-        private RecyclerView recyclerView;
-        private LinearLayout layoutUsages;
+        @Bind(R.id.item_translation)
+        TextView itemTranslation;
+        @Bind(R.id.recycler_view)
+        RecyclerView recyclerView;
+        @Bind(R.id.layout_examples)
+        LinearLayout layoutUsages;
 
-        public ViewHolder(Context context, View view) {
+        public ViewHolder(View view) {
             super(view);
+            ButterKnife.bind(this, view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        }
 
-            itemTranslation = (TextView) view.findViewById(R.id.item_translation);
+        void setTranslation(Spannable text){
+            itemTranslation.setText(text);
+        }
 
-            recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        void setUsages(UsagesAdapter adapter){
+            recyclerView.setAdapter(adapter);
+        }
 
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        void showUsages(boolean show){
+            layoutUsages.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
 
-            recyclerView.setLayoutManager(layoutManager);
+        Spannable representAsSpannable(Translation translation){
+            String translated = translation.getText();
+            String meanings = translation.hasMeanings() ? " (" + translation.getMeaningsAsString() + ")" : "";
+            String synonyms = translation.hasSynonyms() ? ", " + translation.getSynonymsAsString() : "";
 
-            layoutUsages = (LinearLayout) view.findViewById(R.id.layout_examples);
+            SpannableString text = new SpannableString(translated + meanings + synonyms);
 
+            //highlight possible meanings
+            int indexFrom = translated.length();
+            int indexTo = indexFrom + meanings.length();
+            text.setSpan(new StyleSpan(Typeface.ITALIC), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(itemTranslation.getContext(), R.color.colorSecondaryText)), indexFrom, indexTo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            return text;
         }
     }
 }

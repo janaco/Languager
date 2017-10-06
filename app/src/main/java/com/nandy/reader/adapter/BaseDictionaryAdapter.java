@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -21,19 +22,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by yana on 21.05.17.
  */
 
-public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryAdapter.ViewHolder> {
-
-
-    public interface OnItemClickListener {
-        void onItemClick(String key, Word word, int position);
-    }
+public class BaseDictionaryAdapter extends RecyclerView.Adapter<BaseDictionaryAdapter.ViewHolder> {
 
     private final List<Word> list = new ArrayList<>();
     private OnItemClickListener onListItemClickListener;
+    private int textColor;
+
+    public BaseDictionaryAdapter(Context context) {
+        textColor = ContextCompat.getColor(context, R.color.colorSecondaryText);
+    }
 
 
     public void setOnListItemClickListener(OnItemClickListener onListItemClickListener) {
@@ -46,13 +50,13 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
                 LayoutInflater.from(parent.getContext()).inflate(R.layout.item_general_dictionary, null, false));
     }
 
-    public void addItem(Word word){
+    public void addItem(Word word) {
         list.add(word);
         notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder,  int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
         final Word word = list.get(position);
 
@@ -66,32 +70,28 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
         int from = origin.length();
         int to = text.length();
         text.setSpan(new StyleSpan(Typeface.ITALIC), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.context, R.color.colorSecondaryText)), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new ForegroundColorSpan(textColor), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new RelativeSizeSpan(0.8f), from, to, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        holder.itemText.setText(text);
+        holder.setText(text);
 
         holder.view.setOnClickListener(view -> onListItemClickListener.onItemClick(origin, word, holder.getAdapterPosition()));
 
 
-        if (position > 0){
-            Word prev = list.get(position-1);
+        if (position > 0) {
+            Word prev = list.get(position - 1);
             String prevIndex = prev.getText().substring(0, 1);
             String currentIndex = word.getText().substring(0, 1);
 
-            if (prevIndex.equalsIgnoreCase(currentIndex)){
-                holder.itemDelimiter.setVisibility(View.GONE);
-                holder.itemKey.setVisibility(View.GONE);
-            }else {
-                holder.itemDelimiter.setVisibility(View.VISIBLE);
-                holder.itemKey.setText(currentIndex);
-                holder.itemKey.setVisibility(View.VISIBLE);
+            if (prevIndex.equalsIgnoreCase(currentIndex)) {
+                holder.showDelimiterVisibility(View.GONE);
+            } else {
+                holder.showDelimiterVisibility(View.VISIBLE);
+                holder.setKey(currentIndex);
             }
-        }else {
-            String currentIndex = word.getText().substring(0, 1);
-            holder.itemDelimiter.setVisibility(View.VISIBLE);
-            holder.itemKey.setText(currentIndex);
-            holder.itemKey.setVisibility(View.VISIBLE);
+        } else {
+            holder.showDelimiterVisibility(View.VISIBLE);
+            holder.setKey(word.getText().substring(0, 1));
         }
 
     }
@@ -101,7 +101,7 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
         return list.size();
     }
 
-    public void remove(int position){
+    public void remove(int position) {
         list.remove(position);
         notifyItemRemoved(position);
         notifyDataSetChanged();
@@ -110,21 +110,35 @@ public class BaseDictionaryAdapter  extends RecyclerView.Adapter<BaseDictionaryA
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView itemText;
-        private TextView itemDelimiter;
-        private
+        @Bind(R.id.item_text)
+        TextView itemText;
+        @Bind(R.id.item_delimiter)
+        TextView itemDelimiter;
+        @Bind(R.id.item_key)
         TextView itemKey;
-
-        private View view;
-        private Context context;
+        View view;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            context = itemView.getContext();
-            itemText = (TextView) itemView.findViewById(R.id.item_text);
-            itemDelimiter = (TextView) itemView.findViewById(R.id.item_delimiter);
-            itemKey = (TextView) itemView.findViewById(R.id.item_key);
+            ButterKnife.bind(this, itemView);
         }
+
+        void setText(Spannable text) {
+            itemText.setText(text);
+        }
+
+        void showDelimiterVisibility(int visibility) {
+            itemDelimiter.setVisibility(visibility);
+            itemKey.setVisibility(visibility);
+        }
+
+        void setKey(String key) {
+            itemKey.setText(key);
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(String key, Word word, int position);
     }
 }

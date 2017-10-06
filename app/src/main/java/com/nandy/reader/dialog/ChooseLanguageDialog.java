@@ -18,9 +18,9 @@ import android.view.Window;
 
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.LanguagesListAdapter;
-import com.nandy.reader.core.DialogListener;
-import com.nandy.reader.core.OnLanguageSelectedListener;
-import com.nandy.reader.core.OnListItemClickListener;
+import com.nandy.reader.DialogListener;
+import com.nandy.reader.OnLanguageSelectedListener;
+import com.nandy.reader.OnListItemClickListener;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.util.Arrays;

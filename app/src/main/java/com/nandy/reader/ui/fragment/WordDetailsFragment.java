@@ -74,7 +74,7 @@ public class WordDetailsFragment extends Fragment implements WordContract.View {
         itemSubtitle.setTextColor(ContextCompat.getColor(getContext(), status.getColor()));
         itemSubtitle.setVisibility(View.VISIBLE);
 
-        DictionaryAdapter adapter = new DictionaryAdapter(word.getDictionaryItems());
+        DictionaryAdapter adapter = new DictionaryAdapter(getContext(), word.getDictionaryItems());
         recyclerView.setAdapter(adapter);
     }
 

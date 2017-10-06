@@ -1,4 +1,4 @@
-package com.nandy.reader.core;
+package com.nandy.reader;
 
 /**
  * Created by yana on 14.01.17.

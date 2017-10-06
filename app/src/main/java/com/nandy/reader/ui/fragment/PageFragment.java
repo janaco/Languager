@@ -17,7 +17,7 @@ import com.nandy.reader.mvp.model.TranslationsModel;
 import com.nandy.reader.mvp.presenter.TranslationsPresenter;
 import com.softes.clickabletextview.ClickableTextView;
 import com.nandy.reader.R;
-import com.nandy.reader.core.ActionModeCallback;
+import com.nandy.reader.ActionModeCallback;
 import com.nandy.reader.utils.ReaderPrefs;
 import com.nandy.reader.view.StyleCallback;
 

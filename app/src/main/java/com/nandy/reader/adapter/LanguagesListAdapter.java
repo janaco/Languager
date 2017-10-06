@@ -1,5 +1,6 @@
 package com.nandy.reader.adapter;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,12 +9,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
-import com.nandy.reader.core.OnListItemClickListener;
+import com.nandy.reader.OnListItemClickListener;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Displays all languages available on this or another case.
@@ -35,29 +39,21 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_language, null, false));
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_language, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder,  int position) {
 
         final Language language = list.get(position);
-
-        String displayLanguage = new Locale(language.toString()).getDisplayLanguage();
-        holder.textView.setText(displayLanguage);
 
         int drawableRes = new Random().nextInt(colors.length);
         drawableRes = drawableRes >= colors.length ? colors.length - 1 : drawableRes;
 
-        holder.textView.setBackground(
-                ContextCompat.getDrawable(holder.textView.getContext(), colors[drawableRes]));
+        holder.setText(new Locale(language.toString()).getDisplayLanguage());
+        holder.setBackground(ContextCompat.getDrawable(holder.textView.getContext(), colors[drawableRes]));
 
-        holder.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemClickListener.onListItemClick(language, position);
-            }
-        });
+        holder.textView.setOnClickListener(view -> onItemClickListener.onListItemClick(language, holder.getAdapterPosition()));
     }
 
     @Override
@@ -71,12 +67,20 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesListAdap
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
+        @Bind(R.id.item_name)
+        TextView textView;
 
         ViewHolder(View view) {
             super(view);
+            ButterKnife.bind(this, view);
+        }
 
-            textView = (TextView) view.findViewById(R.id.item_name);
+        void setBackground(Drawable drawable){
+            textView.setBackground(drawable);
+        }
+
+        void setText(String text){
+            textView.setText(text);
         }
     }
 }

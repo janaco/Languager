@@ -16,8 +16,7 @@ import com.nandy.reader.mvp.presenter.DictionaryPresenter;
 import com.softes.categorizedlistview.CategorizedListView;
 import com.nandy.reader.R;
 import com.nandy.reader.adapter.BaseDictionaryAdapter;
-import com.nandy.reader.core.DictionaryItemListener;
-import com.nandy.reader.manager.NavigationManager;
+import com.nandy.reader.DictionaryItemListener;
 import com.nandy.reader.model.word.Word;
 
 import butterknife.Bind;
@@ -44,7 +43,7 @@ public class DictionaryFragment extends Fragment
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new BaseDictionaryAdapter();
+        adapter = new BaseDictionaryAdapter(getContext());
         adapter.setOnListItemClickListener(this);
         recyclerView.setAdapter(adapter);
         return view;

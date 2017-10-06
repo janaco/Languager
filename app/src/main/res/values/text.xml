@@ -26,4 +26,7 @@
     <string name="nothing_found">Oops… Nothing found =(</string>
     <string name="my_dictionary">My dictionary</string>
     <string name="enter_correct_name">Please, enter correct name.</string>
+    <string name="has_words">has words</string>
+    <string name="no_learned_words">No learned hasWords</string>
+    <string name="words_to_learn">hasWords to learn</string>
 </resources>

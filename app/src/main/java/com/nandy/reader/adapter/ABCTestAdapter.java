@@ -9,13 +9,17 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import com.nandy.reader.SimpleAnimationEndListener;
 import com.softes.flippy.FlipView;
 import com.nandy.reader.R;
-import com.nandy.reader.core.OnListItemClickListener;
+import com.nandy.reader.OnListItemClickListener;
 import com.nandy.reader.model.test.ABCTest;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by yana on 27.05.17.
@@ -38,7 +42,7 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_abc, null, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_abc, parent, false));
     }
 
     public void setOnListItemClickListener(OnListItemClickListener<ABCTest.Variant> onListItemClickListener) {
@@ -46,35 +50,20 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
         final ABCTest.Variant variant = tests.get(position);
 
-        holder.flipView.reset();
-        holder.textFront.setText(variant.getText());
-        holder.textBack.setText(variant.getAnswer());
+        holder.reset();
+        holder.setFrontText(variant.getText());
+        holder.setBackText(variant.getAnswer());
 
-        if (holder.flipView.isFlipped()){
-            holder.flipView.toggleView();
-        }
-
-        holder.textBack.setBackgroundColor(variant.isCorrect() ? colorCorrect : colorWrong);
-        holder.textFront.setBackgroundColor(colorBase);
-
-        holder.flipView.setAnimationListener(new Animation.AnimationListener() {
+        holder.setBackColor(variant.isCorrect() ? colorCorrect : colorWrong);
+        holder.setFrontColor(colorBase);
+        holder.flipView.setAnimationListener(new SimpleAnimationEndListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                onListItemClickListener.onListItemClick(variant, position);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
+            public void onAnimationEnd() {
+                onListItemClickListener.onListItemClick(variant, holder.getAdapterPosition());
             }
         });
     }
@@ -83,7 +72,7 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
     public int getItemCount() {
         try {
             return tests.size();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -98,16 +87,39 @@ public class ABCTestAdapter extends RecyclerView.Adapter<ABCTestAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textFront;
-        private TextView textBack;
-        private FlipView flipView;
+        @Bind(R.id.text_front)
+        TextView textFront;
+        @Bind(R.id.text_back)
+        TextView textBack;
+        @Bind(R.id.flip_view)
+        FlipView flipView;
 
-        private ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
 
-            textFront = (TextView) itemView.findViewById(R.id.text_front);
-            textBack = (TextView) itemView.findViewById(R.id.text_back);
-            flipView = (FlipView) itemView.findViewById(R.id.flip_view);
+        void reset() {
+            flipView.reset();
+            if (flipView.isFlipped()) {
+                flipView.toggleView();
+            }
+        }
+
+        void setFrontText(String text) {
+            textFront.setText(text);
+        }
+
+        void setBackText(String text) {
+            textBack.setText(text);
+        }
+
+        void setBackColor(int color) {
+            textBack.setBackgroundColor(color);
+        }
+
+        void setFrontColor(int color) {
+            textFront.setBackgroundColor(color);
         }
     }
 }

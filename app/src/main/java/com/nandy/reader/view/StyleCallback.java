@@ -4,7 +4,6 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -15,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
-import com.nandy.reader.core.ActionModeCallback;
+import com.nandy.reader.ActionModeCallback;
 
 /**
  * Created by yana on 11.12.16.
