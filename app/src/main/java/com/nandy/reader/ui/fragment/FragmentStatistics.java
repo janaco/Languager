@@ -34,8 +34,6 @@ public class FragmentStatistics extends Fragment {
     @Bind(R.id.alert)
     TextView viewAlert;
 
-    private StatisticsPagerAdapter adapter;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,9 +57,10 @@ public class FragmentStatistics extends Fragment {
         }
 
 
-        adapter = new StatisticsPagerAdapter(getFragmentManager(),
+        StatisticsPagerAdapter adapter = new StatisticsPagerAdapter(getFragmentManager(),
                 new Fragment[]{LineChartFragment.newInstance(testResults),
-                        PieChartFragment.newInstance(getContext()), new ColumnChartFragment()});
+                        PieChartFragment.newInstance(getContext()),
+                        ColumnChartFragment.newInstance()});
         viewPager.setAdapter(adapter);
 
     }

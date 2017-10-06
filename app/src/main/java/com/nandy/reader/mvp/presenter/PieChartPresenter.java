@@ -41,7 +41,6 @@ public class PieChartPresenter implements PieChartContract.Presenter {
     @Override
     public void setPeriod(Period period) {
         chartSubscription = pieChartModel.getChart(period)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> view.drawChart(data));
     }

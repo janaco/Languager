@@ -58,7 +58,6 @@ public class LineChartPresenter implements LineChartContract.Presenter {
     @Override
     public void setPeriod(Period period) {
        chartSubscription = lineChartModel.getChart(period)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listListPair -> view.drawChart(listListPair.first, listListPair.second));
     }
