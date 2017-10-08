@@ -1,18 +1,14 @@
 package com.nandy.reader.model;
 
 import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.nandy.reader.emums.FileType;
-import com.nandy.reader.readers.EPUBReader;
-import com.nandy.reader.readers.XMLMetadataParser;
+import com.nandy.reader.parser.EPUBParser;
+import com.nandy.reader.parser.XMLMetadataParser;
 import com.nandy.reader.translator.yandex.Language;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -94,7 +90,7 @@ public class Book extends RealmObject implements Comparable<Book> {
         switch (fileType) {
 
             case "EPUB":
-                metaData = EPUBReader.getMetadata(path);
+                metaData = EPUBParser.getMetadata(path);
                 break;
 
             case "FB2":

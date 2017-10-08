@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.style.MetricAffectingSpan;
 import android.text.style.ScaleXSpan;
 import android.widget.TextView;
 
@@ -20,8 +18,7 @@ import java.util.regex.Pattern;
 /**
  * Created by yana on 25.12.16.
  */
-
-public class TextUtils {
+class TextUtils {
 
     private static Character[] punctuations =
             new Character[]{',', '.', ';', '!', '"', '，', '。', '！', '；',
@@ -30,10 +27,10 @@ public class TextUtils {
 
     private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
 
-    public static final float DEFAULT_MAX_PROPORTION = 10f;
-    public static final int MAX_SPANS = 10;
+    private static final float DEFAULT_MAX_PROPORTION = 10f;
+    private static final int MAX_SPANS = 10;
 
-    public static void justifyText(final @NotNull Spannable spannable, TextView textView) {
+    static void justifyText(final @NotNull Spannable spannable, TextView textView) {
 
         int[] textViewSpanStarts = new int[MAX_SPANS];
         int[] textViewSpanEnds = new int[MAX_SPANS];
@@ -50,7 +47,6 @@ public class TextUtils {
             }
         }
 
-        // We use the layout to get line widths before justification
         final Layout layout = textView.getLayout();
 
         if (layout == null || layout.getLineCount() == 0) {
@@ -59,12 +55,8 @@ public class TextUtils {
 
         final int lineCount = layout.getLineCount();
 
-        // Layout line widths do not include the padding
         final int wantedWidth = textView.getMeasuredWidth() -
                 textView.getCompoundPaddingLeft() - textView.getCompoundPaddingRight();
-
-        // We won't justify lines if it requires expanding the spaces beyond the maximum proportion.
-        final float maxProportion = DEFAULT_MAX_PROPORTION;
 
         for (int line = 0; line < lineCount; ++line) {
 
@@ -153,9 +145,8 @@ public class TextUtils {
                 final float proportion = (spaceWidth + remaining) / spaceWidth;
 
                 // Don't justify the line if we can't do it without expanding whitespaces too much.
-                if (proportion > maxProportion) continue;
+                if (proportion > DEFAULT_MAX_PROPORTION) continue;
 
-                int l = spannable.length();
                 // Add ScaleX spans on the whitespace sections we want to expand.
                 for (int i = 0; i < sectionNumber; ++i) {
 
@@ -174,7 +165,7 @@ public class TextUtils {
     }
 
     @NonNull
-    public static List<ClickableWord> getWordIndices(String content) {
+    static List<ClickableWord> getWordIndices(String content) {
         List<Integer> separatorIndices = getSeparatorIndices(content, ' ');
         for (Character punctuation : punctuations) {
             separatorIndices.addAll(getSeparatorIndices(content, punctuation));
@@ -205,23 +196,4 @@ public class TextUtils {
         return indices;
     }
 
-    public static class ScaleSpan extends MetricAffectingSpan {
-
-        private final float mProportion;
-
-        public ScaleSpan(final float proportion) {
-            mProportion = proportion;
-        }
-
-        @Override
-        public void updateDrawState(final @NotNull TextPaint ds) {
-            ds.setTextScaleX(ds.getTextScaleX() * mProportion);
-        }
-
-        @Override
-        public void updateMeasureState(final @NotNull TextPaint ds) {
-            ds.setTextScaleX(ds.getTextScaleX() * mProportion);
-        }
-
-    }
 }

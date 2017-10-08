@@ -2,13 +2,10 @@ package com.softes.flippy;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.softes.flippy.listeners.OnSwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,79 +16,76 @@ import java.util.List;
 
 public class OnFlipTouchListener implements View.OnTouchListener {
 
-        private final GestureDetector gestureDetector;
-        public List<OnSwipeListener> swipeListeners = new ArrayList<>();
+    private final GestureDetector gestureDetector;
+    private List<OnSwipeListener> swipeListeners = new ArrayList<>();
 
-        public OnFlipTouchListener(Context context) {
-            gestureDetector = new GestureDetector(context.getApplicationContext(), new GestureListener());
+    OnFlipTouchListener(Context context) {
+        gestureDetector = new GestureDetector(context.getApplicationContext(), new GestureListener());
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    void addSwipeListener(OnSwipeListener swipeListener) {
+        if (swipeListener != null && !swipeListeners.contains(swipeListener)) {
+            swipeListeners.add(swipeListener);
         }
+    }
 
-        @Override public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
+    public void removeSwipeListener(OnSwipeListener swipeListener) {
+        if (swipeListener != null && swipeListeners.contains(swipeListener)) {
+            swipeListeners.remove(swipeListener);
         }
+    }
 
-        public void addSwipeListener(OnSwipeListener swipeListener) {
-            if (swipeListener != null && !swipeListeners.contains(swipeListener)) {
-                swipeListeners.add(swipeListener);
-            }
-        }
+    public void removeSwipeListeners() {
+        swipeListeners.clear();
+    }
 
-        public void removeSwipeListener(OnSwipeListener swipeListener) {
-            if (swipeListener != null && swipeListeners.contains(swipeListener)) {
-                swipeListeners.remove(swipeListener);
-            }
-        }
+    private final class GestureListener extends SimpleOnGestureListener {
 
-        public void removeSwipeListeners() {
-            swipeListeners.clear();
-        }
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
-        private final class GestureListener extends SimpleOnGestureListener {
-
-            private static final int SWIPE_THRESHOLD = 100;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                boolean result = false;
-                try {
-                    float diffY = e2.getY() - e1.getY();
-                    float diffX = e2.getX() - e1.getX();
-                    if (Math.abs(diffX) > Math.abs(diffY)) {
-                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                            if (diffX > 0) {
-                                for (OnSwipeListener swipeListener : swipeListeners) {
-                                    swipeListener.onSwipeRight();
-                                    Log.d("Gesture", "SwipeRight");
-                                }
-                            } else {
-                                for (OnSwipeListener swipeListener : swipeListeners) {
-                                    swipeListener.onSwipeLeft();
-                                    Log.d("Gesture", "SwipeLeft");
-                                }
-                            }
-                        }
-                        result = true;
-                    } else if (Math.abs(diffY) > SWIPE_THRESHOLD
-                            && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffY > 0) {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            boolean result = false;
+            try {
+                float diffY = e2.getY() - e1.getY();
+                float diffX = e2.getX() - e1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
                             for (OnSwipeListener swipeListener : swipeListeners) {
-                                swipeListener.onSwipeDown();
-                                Log.d("Gesture", "SwipeDown");
+                                swipeListener.onSwipeRight();
                             }
                         } else {
                             for (OnSwipeListener swipeListener : swipeListeners) {
-                                swipeListener.onSwipeUp();
-                                Log.d("Gesture", "SwipeUp");
+                                swipeListener.onSwipeLeft();
                             }
                         }
                     }
                     result = true;
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+                } else if (Math.abs(diffY) > SWIPE_THRESHOLD
+                        && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffY > 0) {
+                        for (OnSwipeListener swipeListener : swipeListeners) {
+                            swipeListener.onSwipeDown();
+                        }
+                    } else {
+                        for (OnSwipeListener swipeListener : swipeListeners) {
+                            swipeListener.onSwipeUp();
+                        }
+                    }
                 }
-
-                return result;
+                result = true;
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
+
+            return result;
         }
     }
+}

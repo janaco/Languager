@@ -22,8 +22,10 @@ public class Pagination {
 
     private final int width;
     private final int height;
+
     private final float lineSpacingMultiplier;
     private final float lineSpacingExtra;
+
     private final TextPaint textPaint;
     private final List<CharSequence> pages;
 
@@ -43,8 +45,7 @@ public class Pagination {
 
     public void splitOnPages(CharSequence content) {
         final StaticLayout layout =
-                new StaticLayout(content, textPaint, width, Layout.Alignment.ALIGN_NORMAL,
-                        lineSpacingMultiplier, lineSpacingExtra, false);
+                new StaticLayout(content, textPaint, width, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, false);
 
         final int lineCount = layout.getLineCount();
         final CharSequence text = layout.getText();
@@ -61,53 +62,11 @@ public class Pagination {
             }
 
             if (i == lineCount - 1) {
-                // Put the rest of the text into the last page
                 addPage(text.subSequence(startOffset, layout.getLineEnd(i)));
                 return;
             }
         }
     }
-
-    public List<CharSequence> appendContent(CharSequence content) {
-        int lastPageIndex = getPagesCount() - 1;
-        if (lastPageIndex >= 0) {
-            content = new StringBuilder().append(get(lastPageIndex)).append(content).toString();
-            pages.remove(lastPageIndex);
-        }
-
-        final StaticLayout layout =
-                new StaticLayout(content, textPaint, width, Layout.Alignment.ALIGN_NORMAL,
-                        lineSpacingMultiplier, lineSpacingExtra, false);
-
-        final int lineCount = layout.getLineCount();
-        final CharSequence text = layout.getText();
-        int startOffset = 0;
-        int height = this.height;
-
-
-        List<CharSequence> newPages = new ArrayList<>();
-        for (int i = 0; i < lineCount; ++i) {
-            if (height < layout.getLineBottom(i)) {
-                int to = layout.getLineEnd(i);
-                CharSequence t = text.subSequence(startOffset, to);
-                addPage(t);
-                startOffset = to;
-                height = layout.getLineTop(i) + this.height;
-            }
-
-            if (i == lineCount - 1) {
-                // Put the rest of the text into the last page
-                newPages.add(text.subSequence(startOffset, layout.getLineEnd(i)));
-                break;
-            }
-        }
-
-        Log.d("PDF_", "appendContent: " + newPages.size() + "("+pages.size()+")");
-
-        pages.addAll(newPages);
-        return newPages;
-    }
-
 
     private void addPage(CharSequence text) {
         pages.add(text);

@@ -1,4 +1,4 @@
-package com.softes.flippy.listeners;
+package com.softes.flippy;
 
 /**
  * Created by yana on 27.05.17.

@@ -1,4 +1,4 @@
-package com.nandy.reader.readers;
+package com.nandy.reader.parser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

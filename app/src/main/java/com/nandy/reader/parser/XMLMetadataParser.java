@@ -1,6 +1,5 @@
-package com.nandy.reader.readers;
+package com.nandy.reader.parser;
 
-import android.util.Log;
 import android.util.Xml;
 
 import com.nandy.reader.model.MetaData;
@@ -21,7 +20,7 @@ public class XMLMetadataParser {
 
     public static MetaData getMetadata(String path) {
 
-        String xml = TxtReader.parseAsText(new File(path)).toString();
+        String xml = new TXTParser().parse(path).toString();
 
         XmlPullParser parser = Xml.newPullParser();
         try {

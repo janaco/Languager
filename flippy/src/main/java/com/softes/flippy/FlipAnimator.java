@@ -5,8 +5,6 @@ import android.graphics.Matrix;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-import com.softes.flippy.listeners.ToggleListener;
-
 /**
  * Created by yana on 27.05.17.
  */
@@ -21,11 +19,11 @@ public class FlipAnimator extends Animation {
     private Direction direction;
     private ToggleListener toggleListener;
 
-    public FlipAnimator() {
+    FlipAnimator() {
         setFillAfter(true);
     }
 
-    public void setVisibilitySwapped() {
+    void setVisibilitySwapped() {
         visibilitySwapped = false;
     }
 
@@ -98,15 +96,15 @@ public class FlipAnimator extends Animation {
         matrix.postTranslate(centerX, centerY);
     }
 
-    public void setDirection(Direction direction) {
+    void setDirection(Direction direction) {
         this.direction = direction;
     }
 
-    public Direction getDirection() {
+    Direction getDirection() {
         return direction;
     }
 
-    public void setToggleListener(ToggleListener toggleListener) {
+    void setToggleListener(ToggleListener toggleListener) {
         this.toggleListener = toggleListener;
     }
 }

@@ -1,28 +1,19 @@
 package com.softes.flippy;
 
 import android.content.Context;
-import android.graphics.Camera;
-import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.Transformation;
 import android.widget.FrameLayout;
-
-import com.softes.flippy.listeners.OnFlipListener;
-import com.softes.flippy.listeners.OnSwipeListener;
-import com.softes.flippy.listeners.ToggleListener;
 
 /**
  * Created by yana on 27.05.17.
  */
 
 public class FlipView extends FrameLayout
-        implements Animation.AnimationListener, View.OnClickListener, OnSwipeListener
-        , ToggleListener
-{
+        implements Animation.AnimationListener, View.OnClickListener, OnSwipeListener, ToggleListener {
     public static final int ANIM_DURATION_MILLIS = 500;
     private static final Interpolator fDefaultInterpolator = new DecelerateInterpolator();
     private OnFlipListener listener;

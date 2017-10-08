@@ -1,40 +1,38 @@
-package com.nandy.reader.readers;
+package com.nandy.reader.parser;
 
 import android.util.Xml;
-
-import com.nandy.reader.model.MetaData;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
-
-import nl.siegmann.epublib.domain.Book;
-import nl.siegmann.epublib.domain.Metadata;
-import nl.siegmann.epublib.epub.EpubReader;
 
 /**
  * Created by yana on 10.06.17.
  */
 
-public class XMLReader {
+public class XMLParser implements Parser{
 
 
-
-    public static CharSequence parseAsText(File file) {
-        String xml = TxtReader.parseAsText(file).toString();
+    @Override
+    public  CharSequence parse(String path) {
+        String xml = new TXTParser().parse(path).toString();
 
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(new StringReader(xml));
             parser.nextTag();
+            parser.require(XmlPullParser.START_TAG, null, "FictionBook");
 
-            return parseFBook(parser);
+            while (parser.next() != XmlPullParser.END_DOCUMENT) {
+
+                if (parser.getName().equals("body")) {
+                    return parseBook(parser);
+                }
+            }
 
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
@@ -43,19 +41,8 @@ public class XMLReader {
         return null;
     }
 
-    private static String parseFBook(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "FictionBook");
-        while (parser.next() != XmlPullParser.END_DOCUMENT) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            } else if (parser.getName().equals("body")) {
-                return parseBook(parser);
-            }
-        }
-        return null;
-    }
 
-    private static String parseBook(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String parseBook(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "body");
 
         StringBuilder builder = new StringBuilder();
@@ -75,7 +62,7 @@ public class XMLReader {
         return builder.toString();
     }
 
-    private static String parseSection(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String parseSection(XmlPullParser parser) throws IOException, XmlPullParserException {
 
         StringBuilder builder = new StringBuilder();
 
@@ -94,7 +81,7 @@ public class XMLReader {
         return builder.toString();
     }
 
-    private static String parseTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String parseTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "title");
         StringBuilder builder = new StringBuilder();
 

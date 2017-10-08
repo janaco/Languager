@@ -1,4 +1,4 @@
-package com.nandy.reader.dialog;
+package com.nandy.reader.ui.dialog;
 
 import android.animation.ObjectAnimator;
 import android.app.Dialog;

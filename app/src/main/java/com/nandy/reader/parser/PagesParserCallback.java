@@ -1,4 +1,4 @@
-package com.nandy.reader.readers;
+package com.nandy.reader.parser;
 
 import com.nandy.reader.pagination.Pagination;
 

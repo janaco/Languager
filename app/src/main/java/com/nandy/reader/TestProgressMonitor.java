@@ -1,6 +1,4 @@
-package com.nandy.reader.tests;
-
-import android.content.Context;
+package com.nandy.reader;
 
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.model.test.Result;
@@ -15,7 +13,7 @@ import io.realm.Realm;
 
 public class TestProgressMonitor {
 
-    private static final int MIN_SUCCESSFULL_RESULT = 70;
+    private static final int MIN_SUCCESFULL_RESULT = 70;
 
     private int numberOfTasks;
     private int numberSuccessfullyDoneTasks;
@@ -42,7 +40,7 @@ public class TestProgressMonitor {
     }
 
     private boolean isTestPassed(int result){
-        return result >= MIN_SUCCESSFULL_RESULT;
+        return result >= MIN_SUCCESFULL_RESULT;
     }
 
     public void reset(){

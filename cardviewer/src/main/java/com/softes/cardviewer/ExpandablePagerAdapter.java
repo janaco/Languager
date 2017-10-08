@@ -14,13 +14,13 @@ import java.lang.ref.WeakReference;
 
 public abstract class ExpandablePagerAdapter extends FragmentStatePagerAdapter {
 
-    WeakReference<Fragment> currentFragmentReference;
+    private WeakReference<Fragment> currentFragmentReference;
 
     public ExpandablePagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public Fragment getCurrentFragment() {
+    Fragment getCurrentFragment() {
         if(currentFragmentReference != null){
             return currentFragmentReference.get();
         }

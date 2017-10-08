@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.nandy.reader.R;
 import com.nandy.reader.model.Book;
 import com.nandy.reader.mvp.contract.ViewerContract;
+import com.nandy.reader.mvp.model.ParserModel;
 import com.nandy.reader.mvp.model.ViewerModel;
 import com.nandy.reader.mvp.presenter.ViewerPresenter;
 import com.nandy.reader.ui.SimpleOnPageChangeListener;
@@ -21,6 +22,7 @@ import com.nandy.reader.adapter.PagerAdapter;
 import com.nandy.reader.ui.popup.BookMenuPanel;
 import com.nandy.reader.mvp.model.MenuModel;
 import com.nandy.reader.mvp.presenter.MenuPresenter;
+import com.nandy.reader.utils.ReaderPrefs;
 import com.victor.loading.book.BookLoading;
 
 import java.util.List;
@@ -126,7 +128,8 @@ public class ViewerFragment extends Fragment implements ViewerContract.View {
 
         ViewerFragment fragment = new ViewerFragment();
         ViewerPresenter presenter = new ViewerPresenter(fragment);
-        presenter.setViewerModel(new ViewerModel(context, book));
+        presenter.setViewerModel(new ViewerModel(book));
+        presenter.setParserModel(new ParserModel(book.getPath(), ReaderPrefs.getPreferences(context)));
 
         fragment.setPresenter(presenter);
         return fragment;

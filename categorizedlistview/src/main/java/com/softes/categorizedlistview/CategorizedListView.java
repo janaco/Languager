@@ -7,35 +7,31 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yana on 09.03.17.
  */
 
 public class CategorizedListView extends RecyclerView
-        implements CategoryFilter
-{
+        implements CategoryFilter {
 
-    IndexBarView indexBarView;
-    TextView previewTextView;
+    private IndexBarView indexBarView;
+    private TextView previewTextView;
 
-    boolean previewVisibility = false;
-    boolean indexBarVisibility = true;
+    private boolean previewVisibility = false;
+    private boolean indexBarVisibility = true;
 
-    int indexBarViewWidth,
-            indexBarViewHeight,
+    private int indexBarViewWidth,
             indexBarViewMargin,
             previewTextViewWidth,
             previewTextViewHeight;
 
-    float indexBarY;
+    private float indexBarY;
 
     public CategorizedListView(Context context) {
         super(context);
@@ -71,11 +67,11 @@ public class CategorizedListView extends RecyclerView
         indexBarView = (IndexBarView) LayoutInflater.from(getContext()).inflate(R.layout.category_bar, this, false);
     }
 
-    public void setIndexBarItems(ArrayList<String> items){
+    public void setIndexBarItems(ArrayList<String> items) {
         indexBarView.setData(this, items);
     }
 
-    public void setIndexBarVisibility(int visibility){
+    public void setIndexBarVisibility(int visibility) {
         indexBarView.setVisibility(visibility);
         setIndexBarVisibility(visibility);
         indexBarVisibility = visibility == VISIBLE;
@@ -93,7 +89,6 @@ public class CategorizedListView extends RecyclerView
         if (indexBarView != null && indexBarVisibility) {
             measureChild(indexBarView, widthMeasureSpec, heightMeasureSpec);
             indexBarViewWidth = indexBarView.getMeasuredWidth();
-            indexBarViewHeight = indexBarView.getMeasuredHeight();
         }
 
         if (previewTextView != null && previewVisibility) {
@@ -143,7 +138,6 @@ public class CategorizedListView extends RecyclerView
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (indexBarView != null && (indexBarView).onTouchEvent(ev)) {
-            Log.d("CATEGORY_LIST", "onTouchEvent: " + ev);
             setPreviewTextVisibility(true);
             return true;
         } else {

@@ -1,4 +1,4 @@
-package com.softes.flippy.listeners;
+package com.softes.flippy;
 
 import com.softes.flippy.FlipView;
 

@@ -3,7 +3,6 @@ package com.nandy.reader.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,24 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nandy.reader.R;
-import com.nandy.reader.emums.Status;
-import com.nandy.reader.manager.NavigationManager;
-import com.nandy.reader.model.word.DictionaryItem;
-import com.nandy.reader.model.word.Word;
 import com.nandy.reader.mvp.contract.LearningContract;
 import com.nandy.reader.mvp.model.LearningModel;
 import com.nandy.reader.mvp.presenter.LearningPresenter;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by yana on 27.05.17.

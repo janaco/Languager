@@ -1,4 +1,4 @@
-package com.nandy.reader.tests;
+package com.nandy.reader;
 
 import com.nandy.reader.model.test.Test;
 import com.nandy.reader.model.word.Word;
@@ -55,7 +55,6 @@ public abstract class TestBuilder {
      * Test task should be written on native language and translation
      * or answers variants should be on unknown(learning) language.
      *
-     * @return
      */
     protected boolean nativeLanguageTask() {
 

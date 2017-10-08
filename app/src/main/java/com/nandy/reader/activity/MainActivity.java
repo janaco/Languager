@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.nandy.reader.Navigable;
 import com.nandy.reader.R;
 import com.nandy.reader.ui.fragment.BookshelfFragment;
-import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.utils.ReaderPrefs;
 
 import io.realm.Realm;

@@ -1,4 +1,4 @@
-package com.nandy.reader.tests;
+package com.nandy.reader;
 
 import com.nandy.reader.emums.TaskType;
 import com.nandy.reader.model.test.Test;

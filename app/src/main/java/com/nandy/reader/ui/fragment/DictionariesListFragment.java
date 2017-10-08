@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.nandy.reader.R;
 import com.nandy.reader.activity.MainActivity;
 import com.nandy.reader.adapter.DictionariesListAdapter;
-import com.nandy.reader.manager.NavigationManager;
 import com.nandy.reader.mvp.contract.DictionaryListContract;
 import com.nandy.reader.mvp.model.DictionaryListModel;
 import com.nandy.reader.mvp.presenter.DictionaryListPresenter;

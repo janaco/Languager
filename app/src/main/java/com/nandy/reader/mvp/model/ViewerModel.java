@@ -1,17 +1,10 @@
 package com.nandy.reader.mvp.model;
 
-import android.content.Context;
-
 import com.nandy.reader.model.Book;
-import com.nandy.reader.mvp.contract.ViewerContract;
 import com.nandy.reader.pagination.Pagination;
-import com.nandy.reader.readers.task.BaseParser;
 import com.nandy.reader.translator.yandex.Language;
-import com.nandy.reader.utils.ReaderPrefs;
 
 import java.util.Locale;
-
-import io.reactivex.Single;
 
 /**
  * Created by yana on 26.08.17.
@@ -21,10 +14,8 @@ public class ViewerModel {
 
     private Book book;
     private Pagination pagination;
-    private Context context;
 
-    public ViewerModel(Context context, Book book) {
-        this.context = context;
+    public ViewerModel(Book book) {
         this.book = book;
         setupLanguages();
     }
@@ -67,8 +58,4 @@ public class ViewerModel {
         return null;
     }
 
-    public Single<Pagination> parseBook() {
-        return new BaseParser().parse(ReaderPrefs.getPreferences(context), book.getPath());
-
-    }
 }

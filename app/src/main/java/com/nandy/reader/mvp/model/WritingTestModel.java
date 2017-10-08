@@ -6,8 +6,8 @@ import com.nandy.reader.emums.TaskType;
 import com.nandy.reader.model.test.Test;
 import com.nandy.reader.model.test.WritingTest;
 import com.nandy.reader.model.word.Word;
-import com.nandy.reader.tests.TestBuilder;
-import com.nandy.reader.tests.TestsListener;
+import com.nandy.reader.TestBuilder;
+import com.nandy.reader.TestsListener;
 
 import java.util.List;
 

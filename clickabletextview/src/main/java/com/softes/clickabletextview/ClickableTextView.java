@@ -1,10 +1,7 @@
 package com.softes.clickabletextview;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.text.Spannable;
@@ -12,12 +9,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
-import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,16 +28,11 @@ import java.util.List;
 
 public class ClickableTextView extends android.support.v7.widget.AppCompatTextView {
 
-    public static final String TAG = "JCTextView";
-
     private CharSequence charSequence;
     private BufferType bufferType;
 
     private OnWordClickListener onWordClickListener;
     private SpannableString spannableString;
-
-    private ForegroundColorSpan foregroundColorSpan;
-    private CharacterStyle characterStyle;
 
     private CharSequence content;
 
@@ -89,27 +77,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
     }
 
 
-    public void setSelectedSpan(int indexStart, int indexEnd) {
-        if (foregroundColorSpan == null || characterStyle == null) {
-            foregroundColorSpan = new ForegroundColorSpan(
-                    ContextCompat.getColor(getContext(), R.color.pine_green));
-            characterStyle = new StyleSpan(Typeface.BOLD);
-
-        } else {
-            spannableString.removeSpan(foregroundColorSpan);
-            spannableString.removeSpan(characterStyle);
-        }
-        spannableString.setSpan(foregroundColorSpan, indexStart, indexEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(characterStyle, indexStart, indexEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        super.setText(spannableString, bufferType);
-    }
-
-    public void dismissSelected() {
-        spannableString.removeSpan(foregroundColorSpan);
-        spannableString.removeSpan(characterStyle);
-        super.setText(spannableString, bufferType);
-    }
-
     private ClickableSpan getClickableSpan() {
         return new ClickableSpan() {
             @Override
@@ -122,7 +89,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
                 try {
 
                     String word = new StringBuilder( tv.getText()).substring(indexStart, indexEnd);
-//                    setSelectedSpan(indexStart, indexEnd);
 
                     if (onWordClickListener != null) {
 
@@ -130,7 +96,6 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
 
                         Rect parentTextViewRect = new Rect();
 
-                        // Initialize values for the computing of clickedText position
                         SpannableString completeText = (SpannableString)(parentTextView).getText();
                         Layout textViewLayout = parentTextView.getLayout();
 
@@ -140,22 +105,19 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
                         double endXCoordinatesOfClickedText = textViewLayout.getPrimaryHorizontal((int)endOffsetOfClickedText);
 
 
-                        // Get the rectangle of the clicked text
                         int currentLineStartOffset = textViewLayout.getLineForOffset((int)startOffsetOfClickedText);
                         int currentLineEndOffset = textViewLayout.getLineForOffset((int)endOffsetOfClickedText);
                         boolean keywordIsInMultiLine = currentLineStartOffset != currentLineEndOffset;
                         textViewLayout.getLineBounds(currentLineStartOffset, parentTextViewRect);
 
 
-                        // Update the rectangle position to his real position on screen
                         int[] parentTextViewLocation = {0,0};
                         parentTextView.getLocationOnScreen(parentTextViewLocation);
 
                         double parentTextViewTopAndBottomOffset = (
                                 parentTextViewLocation[1] -
                                         parentTextView.getScrollY() +
-                                        parentTextView.getCompoundPaddingTop()
-                        );
+                                        parentTextView.getCompoundPaddingTop());
                         parentTextViewRect.top += parentTextViewTopAndBottomOffset;
                         parentTextViewRect.bottom += parentTextViewTopAndBottomOffset;
 
@@ -217,10 +179,5 @@ public class ClickableTextView extends android.support.v7.widget.AppCompatTextVi
         if (layout != null) {
             TextUtils.justifyText((Spannable) content, this);
         }
-    }
-
-
-    public interface OnWordClickListener {
-        void onClick(String word, int x, int y, int start, int end);
     }
 }

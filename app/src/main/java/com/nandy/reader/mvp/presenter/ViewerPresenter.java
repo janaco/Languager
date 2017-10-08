@@ -1,9 +1,8 @@
 package com.nandy.reader.mvp.presenter;
 
-import android.content.Context;
-
 import com.nandy.reader.model.Book;
 import com.nandy.reader.mvp.contract.ViewerContract;
+import com.nandy.reader.mvp.model.ParserModel;
 import com.nandy.reader.mvp.model.ViewerModel;
 
 import io.reactivex.disposables.Disposable;
@@ -15,7 +14,8 @@ import io.reactivex.disposables.Disposable;
 public class ViewerPresenter implements ViewerContract.Presenter {
 
     private ViewerContract.View view;
-    private ViewerModel model;
+    private ViewerModel viewerModel;
+    private ParserModel parserModel;
 
     private Disposable parserSubscription;
 
@@ -23,19 +23,23 @@ public class ViewerPresenter implements ViewerContract.Presenter {
         this.view = view;
     }
 
-    public void setViewerModel(ViewerModel model) {
-        this.model = model;
+    public void setViewerModel(ViewerModel viewerModel) {
+        this.viewerModel = viewerModel;
+    }
+
+    public void setParserModel(ParserModel parserModel) {
+        this.parserModel = parserModel;
     }
 
     @Override
     public void start() {
 
-      parserSubscription =   model.parseBook()
-                .doOnSubscribe(disposable -> view.startLoadingProgress(model.getTitle()))
+      parserSubscription =   parserModel.parse()
+                .doOnSubscribe(disposable -> view.startLoadingProgress(viewerModel.getTitle()))
                 .doFinally(() -> view.cancelLoadingProgress())
                 .subscribe(pagination -> {
-                    model.setPagination(pagination);
-                    view.afterParsingFinished(pagination.getPages(), pagination.getPagesCount(), model.getBookmark());
+                    viewerModel.setPagination(pagination);
+                    view.afterParsingFinished(pagination.getPages(), pagination.getPagesCount(), viewerModel.getBookmark());
 
                 });
     }
@@ -53,18 +57,18 @@ public class ViewerPresenter implements ViewerContract.Presenter {
 
     @Override
     public void onPageSelected(int position) {
-        model.setBookmark(position);
+        viewerModel.setBookmark(position);
         view.notifyNextPageOpened(position);
     }
 
 
     @Override
     public void saveBookmarkOnDestroy(int bookmark) {
-        model.setBookmark(bookmark);
+        viewerModel.setBookmark(bookmark);
     }
 
     @Override
     public Book getBook() {
-        return model.getBook();
+        return viewerModel.getBook();
     }
 }

@@ -87,7 +87,6 @@ dependencies {
     compile files('libs/epublib-core-latest.jar') //epub parser
     compile files('libs/slf4j-api-1.7.25.jar') //binder (for epub)
 
-    compile project(path: ':slideBottomPanel')
     compile project(path: ':clickabletextview')
     compile project(path: ':categorizedlistview')
     compile project(path: ':cardviewer')

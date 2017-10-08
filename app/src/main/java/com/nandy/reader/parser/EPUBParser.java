@@ -1,8 +1,7 @@
-package com.nandy.reader.readers;
+package com.nandy.reader.parser;
 
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 
 import com.nandy.reader.model.MetaData;
 
@@ -24,16 +23,17 @@ import nl.siegmann.epublib.epub.EpubReader;
  * Created by yana on 25.12.16.
  */
 
-public class EPUBReader {
+public class EPUBParser implements Parser {
 
-    public static CharSequence parseAsText(File file) {
+    @Override
+    public CharSequence parse(String path) {
 
         try {
-            InputStream inputStream = new FileInputStream(file);
+            InputStream inputStream = new FileInputStream(path);
             Book book = (new EpubReader()).readEpub(inputStream);
 
 
-            String text = readContent(book.getTableOfContents().getTocReferences(), 0);
+            String text = read(book.getTableOfContents().getTocReferences(), 0);
             Spanned spanned;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 spanned = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
@@ -46,8 +46,30 @@ public class EPUBReader {
             e.printStackTrace();
         }
 
-        return "";
+        return null;
 
+    }
+
+    private String read(List<TOCReference> tocReferences, int depth) {
+        if (tocReferences == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        for (TOCReference tocReference : tocReferences) {
+            for (int i = 0; i < depth; i++) {
+                builder.append("\t");
+            }
+            try {
+                builder.append(Reader.readInputStream(tocReference.getResource().getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            builder.append(read(tocReference.getChildren(), ++depth));
+        }
+
+        return builder.toString();
     }
 
 
@@ -58,7 +80,7 @@ public class EPUBReader {
             InputStream inputStream = new FileInputStream(new File(path));
             Book book = (new EpubReader()).readEpub(inputStream);
 
-            Metadata data =  book.getMetadata();
+            Metadata data = book.getMetadata();
 
             MetaData metaData = new MetaData();
             metaData.setAuthor(getNames(data.getAuthors()));
@@ -80,43 +102,21 @@ public class EPUBReader {
         return null;
     }
 
-    private static String getNames(List<Author> authors){
+    private static String getNames(List<Author> authors) {
         StringBuilder builder = new StringBuilder();
-        for (Author author: authors){
+        for (Author author : authors) {
             builder.append(author.getFirstname()).append(" ").append(author.getLastname()).append(", ");
         }
         return builder.length() > 0 ? builder.substring(0, builder.length() - 2) : builder.toString();
 
     }
 
-    private static String getValue(List<String> list){
+    private static String getValue(List<String> list) {
         StringBuilder builder = new StringBuilder();
-        for (String s: list){
+        for (String s : list) {
             builder.append(s.replace(" -0", "").replace("-0", "")).append(", ");
         }
         return builder.length() > 0 ? builder.substring(0, builder.length() - 2) : builder.toString();
-    }
-
-    private static String readContent(List<TOCReference> tocReferences, int depth) {
-        if (tocReferences == null) {
-            return null;
-        }
-
-        StringBuilder builder = new StringBuilder();
-
-        for (TOCReference tocReference : tocReferences) {
-            for (int i = 0; i < depth; i++) {
-                builder.append("\t");
-            }
-            try {
-                builder.append(Reader.readInputStream(tocReference.getResource().getInputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            builder.append(readContent(tocReference.getChildren(), ++depth));
-        }
-
-        return builder.toString();
     }
 
 

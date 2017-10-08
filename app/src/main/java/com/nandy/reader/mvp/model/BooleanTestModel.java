@@ -7,8 +7,8 @@ import com.nandy.reader.model.test.BooleanTest;
 import com.nandy.reader.model.test.Test;
 import com.nandy.reader.model.word.RealmString;
 import com.nandy.reader.model.word.Word;
-import com.nandy.reader.tests.TestBuilder;
-import com.nandy.reader.tests.TestsListener;
+import com.nandy.reader.TestBuilder;
+import com.nandy.reader.TestsListener;
 
 import java.util.List;
 import java.util.Random;

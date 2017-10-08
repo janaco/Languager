@@ -2,15 +2,14 @@ package com.nandy.reader.mvp.model;
 
 import android.content.Context;
 import android.util.Pair;
-import android.view.View;
 
 import com.nandy.reader.emums.Status;
 import com.nandy.reader.emums.TaskType;
 import com.nandy.reader.emums.TestType;
 import com.nandy.reader.model.test.Test;
 import com.nandy.reader.model.word.Word;
-import com.nandy.reader.tests.TestProgressMonitor;
-import com.nandy.reader.tests.TestsListener;
+import com.nandy.reader.TestProgressMonitor;
+import com.nandy.reader.TestsListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +19,6 @@ import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmQuery;
