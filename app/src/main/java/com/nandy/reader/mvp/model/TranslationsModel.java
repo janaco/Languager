@@ -8,6 +8,8 @@ import com.nandy.reader.model.word.Word;
 import com.nandy.reader.translator.yandex.Language;
 import com.nandy.reader.translator.yandex.Translator;
 
+import io.reactivex.Observable;
+
 /**
  * Created by yana on 02.09.17.
  */
@@ -22,12 +24,12 @@ public class TranslationsModel {
         this.languages = languages;
     }
 
-    public void translate(String text, Translator.Callback<Word> callback) {
-        new Translator().setCallback(callback).translate(text, languages);
+    public Observable<Word> translate(String text) {
+        return Translator.translate(text, languages);
     }
 
-    public void requestDictionary(String text, Translator.Callback<Dictionary> callback) {
-        new Translator().setCallback(callback).getDictionary(text, languages);
+    public Observable<Dictionary> requestDictionary(String text) {
+       return Translator.getDictionary(text, languages);
     }
 
     public void saveWord(Word word) {

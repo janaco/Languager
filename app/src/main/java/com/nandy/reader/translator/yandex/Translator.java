@@ -14,11 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.realm.RealmList;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -33,69 +35,23 @@ import retrofit2.http.QueryMap;
 
 public class Translator {
 
-   private Callback callback;
-
-
-    public Translator setCallback(Callback callback) {
-        this.callback = callback;
-        return this;
-    }
-
-    public void translate(final CharSequence textToTranslate, Pair<Language, Language> languages) {
+    public static Observable<Word> translate(final CharSequence textToTranslate, Pair<Language, Language> languages) {
 
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_TRANSLATOR_KEY);
         map.put("lang", languages.first.toString() + "-" + languages.second.toString());
         map.put("text", textToTranslate.toString());
 
-        Call<Word> call = getService(Api.TRANSLATOR_URL).translate(map);
-
-
-        call.enqueue(new retrofit2.Callback<Word>() {
-            @Override
-            public void onResponse(Call<Word> call, Response<Word> response) {
-                if (response.isSuccessful()) {
-                    Word word = response.body();
-                    word.setText(textToTranslate.toString());
-                    word.setOriginLanguage(languages.first);
-                    word.setTranslationLanguage(languages.second);
-                    callback.translationSuccess(word);
-                } else {
-                    callback.translationFailure(call, response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Word> call, Throwable t) {
-                callback.translationError(call, t);
-            }
-        });
+        return getService(Api.TRANSLATOR_URL).translate(map);
     }
 
-    public  void getDictionary(final CharSequence textToTranslate, Pair<Language, Language> languages) {
+    public static Observable<Dictionary> getDictionary(final CharSequence textToTranslate, Pair<Language, Language> languages) {
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_DICTIONARY_KEY);
         map.put("lang", languages.first.toString() + "-" + languages.second.toString());
         map.put("text", textToTranslate.toString());
-        final Call<Dictionary> call = getService(Api.DICTIONARY_URL).lookup(map);
+        return getService(Api.DICTIONARY_URL).lookup(map);
 
-
-        call.enqueue(new retrofit2.Callback<Dictionary>() {
-            @Override
-            public void onResponse(Call<Dictionary> call, Response<Dictionary> response) {
-                if (response.isSuccessful()) {
-
-                    callback.translationSuccess(response.body());
-                } else {
-                    callback.translationFailure(call, response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Dictionary> call, Throwable t) {
-                callback.translationError(call, t);
-            }
-        });
     }
 
     private static OkHttpClient getClient() {
@@ -118,6 +74,7 @@ public class Translator {
                 .baseUrl(baseUrl)
                 .client(getClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
     }
@@ -135,20 +92,11 @@ public class Translator {
         String DICTIONARY_URL = "https://dictionary.yandex.net/api/v1/dicservice.json/";
 
         @POST("translate?")
-        Call<Word> translate(@QueryMap Map<String, String> params);
+        Observable<Word> translate(@QueryMap Map<String, String> params);
 
         @GET("lookup?")
-        Call<Dictionary> lookup(@QueryMap Map<String, String> params);
+        Observable<Dictionary> lookup(@QueryMap Map<String, String> params);
 
 
-    }
-
-    public interface Callback<T> {
-
-        void translationSuccess(T item);
-
-        void translationFailure(Call call, Response response);
-
-        void translationError(Call call, Throwable error);
     }
 }

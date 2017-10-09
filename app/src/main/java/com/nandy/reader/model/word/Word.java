@@ -38,6 +38,14 @@ public class Word extends RealmObject implements Comparable<Word> {
     private WordInfo info;
 
 
+    @Override
+    public String toString() {
+        return "Word{" +
+                "original='" + original + '\'' +
+                ", translations=" + translations +
+                '}';
+    }
+
     public Word() {
     }
 

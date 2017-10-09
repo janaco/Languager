@@ -20,6 +20,7 @@ import com.nandy.reader.R;
 import com.nandy.reader.ActionModeCallback;
 import com.nandy.reader.utils.ReaderPrefs;
 import com.nandy.reader.view.StyleCallback;
+import com.softes.clickabletextview.OnWordClickListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
  */
 
 public class PageFragment extends Fragment
-        implements ClickableTextView.OnWordClickListener, ActionModeCallback {
+        implements OnWordClickListener, ActionModeCallback {
 
     private static final String KEY_CONTENT = "text";
     private static final String KEY_BOOK_ID = "book_id";
