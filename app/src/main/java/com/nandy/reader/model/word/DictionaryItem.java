@@ -32,24 +32,12 @@ public class DictionaryItem extends RealmObject {
         return originText;
     }
 
-    public void setOriginText(String originText) {
-        this.originText = originText;
-    }
-
     public String getPartOfSpeech() {
         return partOfSpeech;
     }
 
-    public void setPartOfSpeech(String partOfSpeech) {
-        this.partOfSpeech = partOfSpeech;
-    }
-
     public String getTranscription() {
         return transcription;
-    }
-
-    public void setTranscription(String transcription) {
-        this.transcription = transcription;
     }
 
     public List<Translation> getTranslations() {
@@ -75,23 +63,12 @@ public class DictionaryItem extends RealmObject {
         this.translations = (RealmList<Translation>) translations;
     }
 
-    public void addTranslation(Translation translation) {
-        if (translations == null) {
-            setTranslations(new ArrayList<Translation>());
-        }
-        translations.add(translation);
-    }
-
     public boolean isKnownPartOfSpeech() {
         return partOfSpeech != null && !partOfSpeech.isEmpty();
     }
 
     public boolean hasTranscription() {
         return transcription != null && !transcription.isEmpty();
-    }
-
-    public String getAsJson() {
-        return new Gson().toJson(this);
     }
 
 }

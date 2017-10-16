@@ -14,11 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.realm.RealmList;
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -35,7 +33,7 @@ import retrofit2.http.QueryMap;
 
 public class Translator {
 
-    public static Observable<Word> translate(final CharSequence textToTranslate, Pair<Language, Language> languages) {
+    public static Single<Word> translate(final CharSequence textToTranslate, Pair<Language, Language> languages) {
 
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_TRANSLATOR_KEY);
@@ -45,7 +43,7 @@ public class Translator {
         return getService(Api.TRANSLATOR_URL).translate(map);
     }
 
-    public static Observable<Dictionary> getDictionary(final CharSequence textToTranslate, Pair<Language, Language> languages) {
+    public static Single<Dictionary> getDictionary(final CharSequence textToTranslate, Pair<Language, Language> languages) {
         Map<String, String> map = new HashMap<>();
         map.put("key", Api.YANDEX_DICTIONARY_KEY);
         map.put("lang", languages.first.toString() + "-" + languages.second.toString());
@@ -92,10 +90,10 @@ public class Translator {
         String DICTIONARY_URL = "https://dictionary.yandex.net/api/v1/dicservice.json/";
 
         @POST("translate?")
-        Observable<Word> translate(@QueryMap Map<String, String> params);
+        Single<Word> translate(@QueryMap Map<String, String> params);
 
         @GET("lookup?")
-        Observable<Dictionary> lookup(@QueryMap Map<String, String> params);
+        Single<Dictionary> lookup(@QueryMap Map<String, String> params);
 
 
     }

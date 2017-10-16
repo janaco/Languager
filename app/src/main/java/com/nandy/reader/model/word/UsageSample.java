@@ -47,7 +47,11 @@ public class UsageSample extends RealmObject implements Parcelable{
     }
 
     public String getTranslationsAsString() {
-        return translations.toString().replace("[", "").replace("]", "");
+        StringBuilder builder = new StringBuilder();
+        for (Text text: translations){
+            builder.append(text.getText()).append(", ");
+        }
+        return builder.length() > 0 ? builder.substring(0, builder.length() - 2) : builder.toString();
     }
 
     public String getText() {

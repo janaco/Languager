@@ -3,6 +3,7 @@ package com.nandy.reader.adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -45,7 +46,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_word, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_word, null));
     }
 
     @Override
@@ -109,6 +110,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         }
 
         void setText(Spannable text){

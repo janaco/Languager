@@ -9,6 +9,8 @@ import com.nandy.reader.translator.yandex.Language;
 import com.nandy.reader.translator.yandex.Translator;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.realm.Realm;
 
 /**
  * Created by yana on 02.09.17.
@@ -24,11 +26,11 @@ public class TranslationsModel {
         this.languages = languages;
     }
 
-    public Observable<Word> translate(String text) {
+    public Single<Word> translate(String text) {
         return Translator.translate(text, languages);
     }
 
-    public Observable<Dictionary> requestDictionary(String text) {
+    public Single<Dictionary> requestDictionary(String text) {
        return Translator.getDictionary(text, languages);
     }
 
@@ -38,4 +40,13 @@ public class TranslationsModel {
         word.setBookId(bookId);
         word.insert();
     }
+
+//    public void saveDictionary(String text, Dictionary dictionary) {
+//        Word word = Realm.getDefaultInstance().where(Word.class)
+//                .equalTo("original", text)
+//                .equalTo("info.originLanguage", languages.first.toString())
+//                .equalTo("info.translationLanguage", languages.second.toString()).findFirst();
+//        word.setDictionary(dictionary);
+//        word.insert();
+//    }
 }

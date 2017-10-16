@@ -1,10 +1,6 @@
 package com.nandy.reader.mvp.presenter;
 
-import android.util.Log;
-
-import com.nandy.reader.model.word.Dictionary;
 import com.nandy.reader.model.word.DictionaryItem;
-import com.nandy.reader.model.word.RealmString;
 import com.nandy.reader.model.word.Translation;
 import com.nandy.reader.model.word.Word;
 import com.nandy.reader.mvp.contract.TranslationsContract;
@@ -13,9 +9,9 @@ import com.nandy.reader.mvp.model.TranslationsModel;
 import java.util.List;
 
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -58,36 +54,33 @@ public class TranslationsPresenter implements TranslationsContract.Presenter {
         translationsModel.translate(text.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Word>() {
+                .subscribe(new SingleObserver<Word>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         translationSubscription = d;
                     }
 
                     @Override
-                    public void onNext(Word word) {
+                    public void onSuccess(Word word) {
                         word.setText(text.toString());
-                        translationsModel.saveWord(word);
                         view.setTranslation(word.getTranslationsAsString());
+                        requestDictionary(word);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         view.onTranslationFailed();
                     }
-
-                    @Override
-                    public void onComplete() {
-                        requestDictionary(text);
-                    }
                 });
     }
 
-    private void requestDictionary(CharSequence text) {
-       dictionarySubscription =  translationsModel.requestDictionary(text.toString())
+    private void requestDictionary(Word word) {
+       dictionarySubscription =  translationsModel.requestDictionary(word.getText())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dictionary -> {
+                    word.setDictionary(dictionary);
+                    translationsModel.saveWord(word);
                     view.setHasDictionary(dictionary.getItems().size() > 0);
                     if (dictionary.getItems().size() > 0) {
                         view.setDictionaryPreview(getTranslationsPreviewString(dictionary.getItems()));

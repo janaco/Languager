@@ -9,6 +9,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,7 @@ class UsagesAdapter extends RecyclerView.Adapter<UsagesAdapter.ViewHolder> {
 
             String origin = example.getText();
             String translations = example.hasTranslations() ? ": " + example.getTranslationsAsString() : " ";
+
 
             SpannableString text = new SpannableString(origin + " " + translations);
 
